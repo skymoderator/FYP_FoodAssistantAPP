@@ -48,10 +48,10 @@ fileprivate struct InfoSession: View {
     @State var priceText = ""
     var body: some View {
         Section {
-            PriceRow(
-                price: vm.product.price.formatted(),
-                showPopover: $showPopover
-            )
+//            PriceRow(
+//                price: vm.product.price.formatted(),
+//                showPopover: $showPopover
+//            )
             Row(
                 image: "hammer.circle",
                 color: .systemOrange,
@@ -64,12 +64,12 @@ fileprivate struct InfoSession: View {
                 leading: "Brand",
                 trailig: vm.product.brand ?? "Unknown"
             )
-            Row(
-                image: "cart.circle",
-                color: .systemGreen,
-                leading: "Supermarket",
-                trailig: vm.product.supermarket?.rawValue ?? "Unknown"
-            )
+//            Row(
+//                image: "cart.circle",
+//                color: .systemGreen,
+//                leading: "Supermarket",
+//                trailig: vm.product.supermarket?.rawValue ?? "Unknown"
+//            )
         } header: {
             Text("Information")
                 .productFont(.regular, relativeTo: .footnote)
@@ -248,15 +248,15 @@ fileprivate struct NutTableSession: View {
             VStack {
                 NutRow(
                     leading: "脂肪總量 / Total Fat",
-                    trailig: "\(nut.totalFat.formatted())克/g"
+                    trailig: "\(nut.total_fat.formatted())克/g"
                 )
                 NutRow(
                     leading: "- 飽和脂肪 / Saturated Fat",
-                    trailig: "\(nut.saturatedFat.formatted())克/g"
+                    trailig: "\(nut.saturated_fat.formatted())克/g"
                 )
                 NutRow(
                     leading: "- 反式脂肪 / Trans Fat",
-                    trailig: "\(nut.transFat.formatted())克/g"
+                    trailig: "\(nut.trans_fat.formatted())克/g"
                 )
             }
             VStack {
@@ -321,8 +321,8 @@ fileprivate struct NutBarChart: View {
         self.nut = nut
         let energy = Double(nut.energy)
         let proteun: Double = nut.protein
-        let satFat: Double = nut.saturatedFat
-        let transFat: Double = nut.transFat
+        let satFat: Double = nut.saturated_fat
+        let transFat: Double = nut.trans_fat
         let carbo: Double = nut.carbohydrates
         let sugar: Double = nut.sugars
         let sodium: Double = nut.sodium

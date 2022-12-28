@@ -11,7 +11,7 @@ import Introspect
 struct ContentView: View {
     
     @StateObject var mvm = MainViewModel()
-    
+    @StateObject var foodproductListVM = FoodProductListViewModel()
     @Namespace var nspace
     
     var body: some View {

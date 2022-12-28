@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum Ingredient {
+enum Ingredient: Codable {
     
     case purifiedWater
     case fullCreamEvaporatedMilk

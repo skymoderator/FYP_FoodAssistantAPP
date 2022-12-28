@@ -7,20 +7,26 @@
 
 import Foundation
 
-struct Product: Identifiable, Equatable {
+struct Product: Identifiable, Equatable, Codable {
     
     static func ==(lhs: Product, rhs: Product) -> Bool {
         lhs.id == rhs.id
     }
     
-    var id = UUID()
+    var id = UUID().uuidString
     var name: String = ""
     var barcode: String = ""
-    var price: Double = 0
     var nutrition = NutritionInformation()
-    var ingredients: [Ingredient] = []
     var manufacturer: String?
-    var supermarket: Supermarket?
     var brand: String?
-    
+    var product_price: [ProductPrice] = []
+//    var ingredients: [Ingredient] = []
+    //var price: Double = 0
+    //var supermarket: Supermarket?
+}
+
+struct ProductPrice: Codable{
+    var price: Double
+    var supermarket: Supermarket
+    var date: Date
 }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct NutritionInformation: Identifiable, Equatable {
+struct NutritionInformation: Identifiable, Equatable, Codable {
     
     /*
      All units are per 100ml, not per serving
@@ -21,9 +21,9 @@ struct NutritionInformation: Identifiable, Equatable {
     
     var energy: Int = 0
     var protein: Double = 0
-    var totalFat: Double = 0
-    var saturatedFat: Double = 0
-    var transFat: Double = 0
+    var total_fat: Double = 0
+    var saturated_fat: Double = 0
+    var trans_fat: Double = 0
     var carbohydrates: Double = 0
     var sugars: Double = 0
     var sodium: Double = 0
