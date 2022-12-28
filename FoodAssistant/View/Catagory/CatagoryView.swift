@@ -30,7 +30,10 @@ struct CatagoryView: View {
             }
             .edgesIgnoringSafeArea(.bottom)
             .navigationTitle("Catagory")
-            .nativeSearchBar(text: cvm.searchedCatagory, placeHolder: "Search Catagory")
+            .nativeSearchBar(
+                text: cvm.searchedCatagory,
+                placeHolder: "Search Catagory"
+            )
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     NavTrailingButton()
@@ -81,8 +84,10 @@ fileprivate struct NavTrailingButton: View {
 }
 
 struct ProductView_Previews: PreviewProvider {
+    @StateObject static var mvm = MainViewModel()
     static var previews: some View {
         CatagoryView()
 //        ContentView()
+            .environmentObject(mvm)
     }
 }

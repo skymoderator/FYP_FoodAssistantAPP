@@ -20,5 +20,7 @@ struct Product: Identifiable, Equatable {
     var nutrition = NutritionInformation()
     var ingredients: [Ingredient] = []
     var manufacturer: String?
+    var supermarket: Supermarket?
+    var brand: String?
     
 }
