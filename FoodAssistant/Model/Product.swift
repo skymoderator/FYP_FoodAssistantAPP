@@ -13,10 +13,10 @@ struct Product: Identifiable, Equatable, Codable {
         lhs.id == rhs.id
     }
     
-    var id = UUID().uuidString
+    var id: UUID = UUID()
     var name: String = ""
     var barcode: String = ""
-    var nutrition = NutritionInformation()
+    var nutrition: NutritionInformation? = NutritionInformation()
     var manufacturer: String?
     var brand: String?
     var product_price: [ProductPrice] = []

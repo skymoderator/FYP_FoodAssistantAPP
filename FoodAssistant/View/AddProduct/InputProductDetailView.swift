@@ -17,7 +17,7 @@ struct InputProductDetailView: View {
         List {
             NameSession(vm: vm)
             InfoSession(vm: vm)
-            NutTableSession(nut: vm.product.nutrition)
+            NutTableSession(nut: vm.product.nutrition ?? NutritionInformation())
         }
         .navigationTitle("Product Detail")
         .productLargeNavigationBar()
