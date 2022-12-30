@@ -25,7 +25,6 @@
 		8868E686291A94C900545D7C /* BoundingBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8868E685291A94C900545D7C /* BoundingBox.swift */; };
 		8868E688291A972F00545D7C /* SessionSetupResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8868E687291A972F00545D7C /* SessionSetupResult.swift */; };
 		8868E68A291B9CE100545D7C /* AlertError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8868E689291B9CE100545D7C /* AlertError.swift */; };
-		8868E68C291B9F8000545D7C /* YOLOv4.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = 8868E68B291B9F8000545D7C /* YOLOv4.mlpackage */; };
 		886C76E429055D7000B1026D /* FoodAssistantApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 886C76E329055D7000B1026D /* FoodAssistantApp.swift */; };
 		886C76E629055D7000B1026D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 886C76E529055D7000B1026D /* ContentView.swift */; };
 		886C76E829055D7200B1026D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 886C76E729055D7200B1026D /* Assets.xcassets */; };
@@ -82,6 +81,13 @@
 		88F214042924CD3200940928 /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F214032924CD3200940928 /* ColorExtension.swift */; };
 		88F214062925117100940928 /* CameraBottomBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F214052925117100940928 /* CameraBottomBar.swift */; };
 		88F2140B29251B9300940928 /* SFButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F2140A29251B9300940928 /* SFButton.swift */; };
+		FEF71172295C27C80051A586 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEF71171295C27C80051A586 /* AppState.swift */; };
+		FEF71174295C27E10051A586 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEF71173295C27E10051A586 /* APIService.swift */; };
+		FEF71176295C27EC0051A586 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEF71175295C27EC0051A586 /* AuthService.swift */; };
+		FEF71178295C28850051A586 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEF71177295C28850051A586 /* User.swift */; };
+		FEF7117A295C29850051A586 /* FoodProductService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEF71179295C29850051A586 /* FoodProductService.swift */; };
+		FEF7117E295C2AC50051A586 /* FoodProductListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEF7117D295C2AC50051A586 /* FoodProductListViewModel.swift */; };
+		FEF71180295C2ACD0051A586 /* FoodProductViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEF7117F295C2ACD0051A586 /* FoodProductViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -119,7 +125,6 @@
 		8868E685291A94C900545D7C /* BoundingBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoundingBox.swift; sourceTree = "<group>"; };
 		8868E687291A972F00545D7C /* SessionSetupResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionSetupResult.swift; sourceTree = "<group>"; };
 		8868E689291B9CE100545D7C /* AlertError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertError.swift; sourceTree = "<group>"; };
-		8868E68B291B9F8000545D7C /* YOLOv4.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = YOLOv4.mlpackage; sourceTree = "<group>"; };
 		886C76E029055D7000B1026D /* FoodAssistant.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FoodAssistant.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		886C76E329055D7000B1026D /* FoodAssistantApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodAssistantApp.swift; sourceTree = "<group>"; };
 		886C76E529055D7000B1026D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -178,6 +183,14 @@
 		88F214032924CD3200940928 /* ColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtension.swift; sourceTree = "<group>"; };
 		88F214052925117100940928 /* CameraBottomBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraBottomBar.swift; sourceTree = "<group>"; };
 		88F2140A29251B9300940928 /* SFButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SFButton.swift; sourceTree = "<group>"; };
+		FEF71170295C0E470051A586 /* YOLOv4.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = YOLOv4.mlpackage; sourceTree = "<group>"; };
+		FEF71171295C27C80051A586 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		FEF71173295C27E10051A586 /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
+		FEF71175295C27EC0051A586 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
+		FEF71177295C28850051A586 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		FEF71179295C29850051A586 /* FoodProductService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodProductService.swift; sourceTree = "<group>"; };
+		FEF7117D295C2AC50051A586 /* FoodProductListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodProductListViewModel.swift; sourceTree = "<group>"; };
+		FEF7117F295C2ACD0051A586 /* FoodProductViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodProductViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -267,12 +280,16 @@
 		8868E681291A931F00545D7C /* Service */ = {
 			isa = PBXGroup;
 			children = (
+				FEF71179295C29850051A586 /* FoodProductService.swift */,
 				884F0B67291BEAE700B5FEC3 /* PhotoCaptureProcessor.swift */,
 				8868E682291A93BD00545D7C /* CameraService.swift */,
 				88F213F3292478D700940928 /* ImageRescaler.swift */,
 				88A7979029252728007AE689 /* ImagePickerService.swift */,
 				8845AB12293CC29000BF6C5E /* NutritionTableDetectionService.swift */,
 				88D053B4293EFF8800277155 /* ScanBarcodeService.swift */,
+				FEF71171295C27C80051A586 /* AppState.swift */,
+				FEF71173295C27E10051A586 /* APIService.swift */,
+				FEF71175295C27EC0051A586 /* AuthService.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -280,6 +297,7 @@
 		8868E684291A93D900545D7C /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				FEF71170295C0E470051A586 /* YOLOv4.mlpackage */,
 				8868E685291A94C900545D7C /* BoundingBox.swift */,
 				8868E687291A972F00545D7C /* SessionSetupResult.swift */,
 				8868E689291B9CE100545D7C /* AlertError.swift */,
@@ -290,6 +308,7 @@
 				88D053AC293EE3E200277155 /* NutritionInformation.swift */,
 				88D053AE293EE54E00277155 /* Ingredient.swift */,
 				88C229282952C6F6005E5A27 /* Supermarket.swift */,
+				FEF71177295C28850051A586 /* User.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -327,7 +346,6 @@
 				88F21407292518A900940928 /* Component */,
 				88F213FE2924B4B700940928 /* Extension */,
 				88F213F729247B1400940928 /* Utility */,
-				8868E68B291B9F8000545D7C /* YOLOv4.mlpackage */,
 				8868E684291A93D900545D7C /* Model */,
 				8868E681291A931F00545D7C /* Service */,
 				8868E67C291A87EE00545D7C /* View */,
@@ -384,6 +402,8 @@
 				88D053AA293E146400277155 /* AddProductViewModel.swift */,
 				88D053B2293EF7C400277155 /* BottomBarViewModel.swift */,
 				88C2292F295414BD005E5A27 /* SettingViewModel.swift */,
+				FEF7117D295C2AC50051A586 /* FoodProductListViewModel.swift */,
+				FEF7117F295C2ACD0051A586 /* FoodProductViewModel.swift */,
 			);
 			path = "View Model";
 			sourceTree = "<group>";
@@ -603,15 +623,19 @@
 				88F213F4292478D700940928 /* ImageRescaler.swift in Sources */,
 				88F214022924B50F00940928 /* LaunchScreen.swift in Sources */,
 				8894EBC329262C9800204185 /* ProductFontExtension.swift in Sources */,
+				FEF71174295C27E10051A586 /* APIService.swift in Sources */,
+				FEF71180295C2ACD0051A586 /* FoodProductViewModel.swift in Sources */,
 				884E3155292A62C1009DF3CA /* ProductDetailView.swift in Sources */,
 				8894EBF729274FC400204185 /* NativeSearchBar.swift in Sources */,
 				8894EBF3292740F500204185 /* Catagory.swift in Sources */,
 				882D014D29277C2100609357 /* CatagoryDetailView.swift in Sources */,
 				88F213F929247B2B00940928 /* NMS.swift in Sources */,
 				88D053A9293E143600277155 /* ScanBarcodeView.swift in Sources */,
-				8868E68C291B9F8000545D7C /* YOLOv4.mlpackage in Sources */,
 				88C2293229541631005E5A27 /* GeneralView.swift in Sources */,
 				88A7979129252728007AE689 /* ImagePickerService.swift in Sources */,
+				FEF71172295C27C80051A586 /* AppState.swift in Sources */,
+				FEF71178295C28850051A586 /* User.swift in Sources */,
+				FEF71176295C27EC0051A586 /* AuthService.swift in Sources */,
 				8868E686291A94C900545D7C /* BoundingBox.swift in Sources */,
 				8894EBD929264CD900204185 /* SizeExtensions.swift in Sources */,
 				8894EBC129261D9D00204185 /* CGRectPreferenceKey.swift in Sources */,
@@ -639,9 +663,11 @@
 				88D053AD293EE3E200277155 /* NutritionInformation.swift in Sources */,
 				88C22930295414BD005E5A27 /* SettingViewModel.swift in Sources */,
 				88D053B3293EF7C400277155 /* BottomBarViewModel.swift in Sources */,
+				FEF7117A295C29850051A586 /* FoodProductService.swift in Sources */,
 				88D053BB2946D62D00277155 /* PreviewContextView.swift in Sources */,
 				8894EBD729264B6C00204185 /* MainViewModel.swift in Sources */,
 				884099C429571FE900AFC290 /* UserDefaultExtension.swift in Sources */,
+				FEF7117E295C2AC50051A586 /* FoodProductListViewModel.swift in Sources */,
 				8894EBDF2926544200204185 /* SafeAreaInset.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -798,7 +824,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"FoodAssistant/Preview Content\"";
-				DEVELOPMENT_TEAM = 4BLFZ67N8X;
+				DEVELOPMENT_TEAM = QR86LD5729;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -841,7 +867,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"FoodAssistant/Preview Content\"";
-				DEVELOPMENT_TEAM = 4BLFZ67N8X;
+				DEVELOPMENT_TEAM = QR86LD5729;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
