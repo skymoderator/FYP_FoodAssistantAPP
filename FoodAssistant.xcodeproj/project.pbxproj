@@ -85,9 +85,7 @@
 		FEF71174295C27E10051A586 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEF71173295C27E10051A586 /* APIService.swift */; };
 		FEF71176295C27EC0051A586 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEF71175295C27EC0051A586 /* AuthService.swift */; };
 		FEF71178295C28850051A586 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEF71177295C28850051A586 /* User.swift */; };
-		FEF7117A295C29850051A586 /* FoodProductService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEF71179295C29850051A586 /* FoodProductService.swift */; };
-		FEF7117E295C2AC50051A586 /* FoodProductListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEF7117D295C2AC50051A586 /* FoodProductListViewModel.swift */; };
-		FEF71180295C2ACD0051A586 /* FoodProductViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEF7117F295C2ACD0051A586 /* FoodProductViewModel.swift */; };
+		FEF7117A295C29850051A586 /* FoodProductDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEF71179295C29850051A586 /* FoodProductDataService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -188,9 +186,7 @@
 		FEF71173295C27E10051A586 /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
 		FEF71175295C27EC0051A586 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 		FEF71177295C28850051A586 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
-		FEF71179295C29850051A586 /* FoodProductService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodProductService.swift; sourceTree = "<group>"; };
-		FEF7117D295C2AC50051A586 /* FoodProductListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodProductListViewModel.swift; sourceTree = "<group>"; };
-		FEF7117F295C2ACD0051A586 /* FoodProductViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodProductViewModel.swift; sourceTree = "<group>"; };
+		FEF71179295C29850051A586 /* FoodProductDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodProductDataService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -280,7 +276,7 @@
 		8868E681291A931F00545D7C /* Service */ = {
 			isa = PBXGroup;
 			children = (
-				FEF71179295C29850051A586 /* FoodProductService.swift */,
+				FEF71179295C29850051A586 /* FoodProductDataService.swift */,
 				884F0B67291BEAE700B5FEC3 /* PhotoCaptureProcessor.swift */,
 				8868E682291A93BD00545D7C /* CameraService.swift */,
 				88F213F3292478D700940928 /* ImageRescaler.swift */,
@@ -402,8 +398,6 @@
 				88D053AA293E146400277155 /* AddProductViewModel.swift */,
 				88D053B2293EF7C400277155 /* BottomBarViewModel.swift */,
 				88C2292F295414BD005E5A27 /* SettingViewModel.swift */,
-				FEF7117D295C2AC50051A586 /* FoodProductListViewModel.swift */,
-				FEF7117F295C2ACD0051A586 /* FoodProductViewModel.swift */,
 			);
 			path = "View Model";
 			sourceTree = "<group>";
@@ -624,7 +618,6 @@
 				88F214022924B50F00940928 /* LaunchScreen.swift in Sources */,
 				8894EBC329262C9800204185 /* ProductFontExtension.swift in Sources */,
 				FEF71174295C27E10051A586 /* APIService.swift in Sources */,
-				FEF71180295C2ACD0051A586 /* FoodProductViewModel.swift in Sources */,
 				884E3155292A62C1009DF3CA /* ProductDetailView.swift in Sources */,
 				8894EBF729274FC400204185 /* NativeSearchBar.swift in Sources */,
 				8894EBF3292740F500204185 /* Catagory.swift in Sources */,
@@ -663,11 +656,10 @@
 				88D053AD293EE3E200277155 /* NutritionInformation.swift in Sources */,
 				88C22930295414BD005E5A27 /* SettingViewModel.swift in Sources */,
 				88D053B3293EF7C400277155 /* BottomBarViewModel.swift in Sources */,
-				FEF7117A295C29850051A586 /* FoodProductService.swift in Sources */,
+				FEF7117A295C29850051A586 /* FoodProductDataService.swift in Sources */,
 				88D053BB2946D62D00277155 /* PreviewContextView.swift in Sources */,
 				8894EBD729264B6C00204185 /* MainViewModel.swift in Sources */,
 				884099C429571FE900AFC290 /* UserDefaultExtension.swift in Sources */,
-				FEF7117E295C2AC50051A586 /* FoodProductListViewModel.swift in Sources */,
 				8894EBDF2926544200204185 /* SafeAreaInset.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

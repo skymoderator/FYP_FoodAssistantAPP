@@ -13,6 +13,7 @@ class MainViewModel: ObservableObject {
     @Published var bottomBarVM: BottomBarViewModel
     @Published var cameraService: CameraService
     @Published var cvm: CameraViewModel
+    @Published var foodsService = FoodProductDataService()
     
     var anyCancellables = Set<AnyCancellable>()
     
@@ -39,15 +40,12 @@ class MainViewModel: ObservableObject {
         }
         .store(in: &anyCancellables)
         
-//        bottomBarVM.$tabOffset.sink { [weak self] _ in
-//            guard let self = self else { return }
-//            if self.bottomBarVM.tabScrollProgress < 0.1 {
-//                self.cvm.cameraService.stop()
-//            } else if !self.cvm.cameraService.isSessionRunning {
-//                self.cvm.cameraService.start()
-//            }
-//        }
-//        .store(in: &anyCancellables)
+        foodsService.objectWillChange.sink { [weak self] _ in
+            self?.objectWillChange.send()
+        }
+        .store(in: &anyCancellables)
+        
+        AppState.shared.authService.getUserProfile()
     }
     
 }

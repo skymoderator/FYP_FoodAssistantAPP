@@ -8,34 +8,12 @@
 import Foundation
 import Combine
 
-protocol Authentication: ObservableObject{
-    var token: String? { get set}
-    var authenticated: Bool { get set }
-    
-    func register(
-        userName: String,
-        password: String,
-        lastname: String,
-        firstname: String,
-        genderIndex: Int,
-        birthDate: Date,
-        imageData: Data?
-    )
-    func login(
-        userName: String,
-        password: String
-    )
-    func logout()
-    func getUserProfile(apiService: APIEngine)
-    func uploadUserProfile(imageData: Data)
-}
-
-
-class AuthService: Authentication {
+class AuthService: ObservableObject {
     @Published var authenticated: Bool = false
     @Published var token: String? = nil
     @Published var user: User? = nil
     @Published var avator: URL? = nil
+    
     var scheme: String
     var host: String
     var port: Int
@@ -47,18 +25,22 @@ class AuthService: Authentication {
         self.host = host
         self.port = port
         
-        let savedToken = UserDefaults.standard.string(forKey: "token")
-        guard let savedToken = savedToken else {
-            self.authenticated = false
-            return
-        }
+        guard let savedToken: String = UserDefaults
+            .standard
+            .string(forKey: "token") else {
+                self.authenticated = false
+                return
+            }
         
         self.authenticated = true
         self.token = savedToken
     }
     
-    func getUserProfile(apiService: APIEngine){
-        apiService.get(type: User.self, path: "/api/userprofile/")
+    func getUserProfile() {
+        AppState
+            .shared
+            .dataService
+            .get(type: User.self, path: "/api/userprofile/")
             .receive(on: DispatchQueue.main)
             .sink { (completion: Subscribers.Completion<Error>) in
                 switch completion {
@@ -76,7 +58,7 @@ class AuthService: Authentication {
     func uploadUserProfile(imageData: Data) {
         AppState
             .shared
-            .apiService
+            .dataService
             .putFile(type: User.self, path: "/upload/\(UUID().uuidString).jpg", data: imageData)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { (completion) in
@@ -96,7 +78,7 @@ class AuthService: Authentication {
     }
     
     func register(userName: String, password: String, lastname: String, firstname: String, genderIndex: Int, birthDate: Date, imageData: Data?){
-        AppState.shared.apiService.post(object: User(email: userName, password: password, last_name: lastname, first_name: firstname, date_of_birth: birthDate, gender: genderIndex == 0 ? "M" : "F"), type: User.self, path: "/api/users/create/")
+        AppState.shared.dataService.post(object: User(email: userName, password: password, last_name: lastname, first_name: firstname, date_of_birth: birthDate, gender: genderIndex == 0 ? "M" : "F"), type: User.self, path: "/api/users/create/")
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { (completion) in
                 switch completion {
