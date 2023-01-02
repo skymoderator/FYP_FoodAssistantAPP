@@ -12,15 +12,26 @@ protocol Authentication: ObservableObject{
     var token: String? { get set}
     var authenticated: Bool { get set }
     
-    func register(userName: String, password: String, lastname: String, firstname: String, genderIndex: Int, birthDate: Date, imageData: Data?)
-    func login(userName: String, password: String)
+    func register(
+        userName: String,
+        password: String,
+        lastname: String,
+        firstname: String,
+        genderIndex: Int,
+        birthDate: Date,
+        imageData: Data?
+    )
+    func login(
+        userName: String,
+        password: String
+    )
     func logout()
     func getUserProfile(apiService: APIEngine)
-    func upload_user_profile(image_data: Data)
+    func uploadUserProfile(imageData: Data)
 }
 
 
-class AuthService: Authentication{
+class AuthService: Authentication {
     @Published var authenticated: Bool = false
     @Published var token: String? = nil
     @Published var user: User? = nil
@@ -30,14 +41,14 @@ class AuthService: Authentication{
     var port: Int
     
     var subscriptions = Set<AnyCancellable>()
-
+    
     init (scheme: String, host: String, port: Int){
         self.scheme = scheme
         self.host = host
         self.port = port
-
+        
         let savedToken = UserDefaults.standard.string(forKey: "token")
-        guard let savedToken = savedToken else{
+        guard let savedToken = savedToken else {
             self.authenticated = false
             return
         }
@@ -48,65 +59,63 @@ class AuthService: Authentication{
     
     func getUserProfile(apiService: APIEngine){
         apiService.get(type: User.self, path: "/api/userprofile/")
-                    .receive(on: DispatchQueue.main)
-                    .sink(receiveCompletion: { (completion) in
-                    switch completion {
-                    case let .failure(error):
-                        print("Couldn't get users: \(error)")
-                    case .finished: break
-                    }
-                }) {  user in //[weak self]
-                    
-                    self.user = user
-                    self.avator = user.user_avator
-//                    print(self.user)
+            .receive(on: DispatchQueue.main)
+            .sink { (completion: Subscribers.Completion<Error>) in
+                switch completion {
+                case let .failure(error):
+                    print("Couldn't get users: \(error)")
+                case .finished: break
                 }
-                .store(in: &subscriptions)
-            
+            } receiveValue: { (user: User) in //[weak self]
+                self.user = user
+                self.avator = user.user_avator
+            }
+            .store(in: &subscriptions)
     }
     
-    func upload_user_profile(
-            image_data: Data
-        ) {
-            AppState.shared.apiService.putFile(type: User.self, path: "/upload/\(UUID().uuidString).jpg", data: image_data)
-                    .receive(on: DispatchQueue.main)
-                    .sink(receiveCompletion: { (completion) in
-                    switch completion {
-                    case let .failure(error):
-                        print("Couldn't get users: \(error)")
-                    case .finished: break
-                    }
-                    }) {  user in //[weak self]
-                    
-                    self.user = user
-                    self.avator = user.user_avator
-//                    print(self.user)
+    func uploadUserProfile(imageData: Data) {
+        AppState
+            .shared
+            .apiService
+            .putFile(type: User.self, path: "/upload/\(UUID().uuidString).jpg", data: imageData)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { (completion) in
+                switch completion {
+                case let .failure(error):
+                    print("Couldn't get users: \(error)")
+                case .finished: break
                 }
-                .store(in: &subscriptions)
-            
-        }
+            }) {  user in //[weak self]
+                
+                self.user = user
+                self.avator = user.user_avator
+                //                    print(self.user)
+            }
+            .store(in: &subscriptions)
+        
+    }
     
     func register(userName: String, password: String, lastname: String, firstname: String, genderIndex: Int, birthDate: Date, imageData: Data?){
         AppState.shared.apiService.post(object: User(email: userName, password: password, last_name: lastname, first_name: firstname, date_of_birth: birthDate, gender: genderIndex == 0 ? "M" : "F"), type: User.self, path: "/api/users/create/")
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { (completion) in
-            switch completion {
-            case let .failure(error):
-                print("Couldn't get userssssss: \(error)")
-//                self.login(userName: userName, password: password)
-//                AppState.shared.authService.upload_user_profile(image_data: imageData!)
-            case .finished:
-                break
-//                self.login(userName: userName, password: password)
-//                AppState.shared.authService.upload_user_profile(image_data: imageData!)
+                switch completion {
+                case let .failure(error):
+                    print("Couldn't get userssssss: \(error)")
+                    //                self.login(userName: userName, password: password)
+                    //                AppState.shared.authService.upload_user_profile(image_data: imageData!)
+                case .finished:
+                    break
+                    //                self.login(userName: userName, password: password)
+                    //                AppState.shared.authService.upload_user_profile(image_data: imageData!)
+                }
+            }) {  user in //[weak self]
+                //            self.login(userName: userName, password: password)
+                self.user = user
+                
+                //print(self.user)
             }
-        }) {  user in //[weak self]
-//            self.login(userName: userName, password: password)
-            self.user = user
-            
-            //print(self.user)
-        }
-        .store(in: &subscriptions)
+            .store(in: &subscriptions)
         
     }
     
@@ -119,8 +128,8 @@ class AuthService: Authentication{
         components.path = "/api/token/"
         
         guard let url = components.url else {
-                    preconditionFailure("Invalid URL components: \(components)")
-                }
+            preconditionFailure("Invalid URL components: \(components)")
+        }
         var urlRequest = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData)
         urlRequest.httpMethod = "POST"
         let parameters: [String: Any] = [
@@ -130,59 +139,59 @@ class AuthService: Authentication{
         urlRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
         do {
             urlRequest.httpBody = try JSONSerialization.data(withJSONObject: parameters, options: .prettyPrinted)
-          } catch let error {
+        } catch let error {
             print(error.localizedDescription)
             return
-          }
+        }
         
         let task = URLSession.shared.dataTask(with: urlRequest) { data, response, error in
             
             if let error = error {
-              print("Post Request Error: \(error.localizedDescription)")
-              return
+                print("Post Request Error: \(error.localizedDescription)")
+                return
             }
             
             // ensure there is valid response code returned from this HTTP response
             guard let httpResponse = response as? HTTPURLResponse,
                   (200...299).contains(httpResponse.statusCode)
             else {
-              print("Invalid Response received from the server")
-              return
+                print("Invalid Response received from the server")
+                return
             }
             
             // ensure there is data returned
             guard let responseData = data else {
-              print("nil Data received from the server")
-              return
+                print("nil Data received from the server")
+                return
             }
             
             do {
-              // create json object from data or use JSONDecoder to convert to Model stuct
-              if let jsonResponse = try JSONSerialization.jsonObject(with: responseData, options: .mutableContainers) as? [String: String] {
-                print(jsonResponse)
-                  DispatchQueue.main.async {
-                      self.token = jsonResponse["access"]
-                      UserDefaults.standard.set(self.token, forKey: "token")
-                      self.authenticated = true
-                  }
-                  
-                // handle json response
-              } else {
-                print("data maybe corrupted or in wrong format")
-                throw URLError(.badServerResponse)
-              }
+                // create json object from data or use JSONDecoder to convert to Model stuct
+                if let jsonResponse = try JSONSerialization.jsonObject(with: responseData, options: .mutableContainers) as? [String: String] {
+                    print(jsonResponse)
+                    DispatchQueue.main.async {
+                        self.token = jsonResponse["access"]
+                        UserDefaults.standard.set(self.token, forKey: "token")
+                        self.authenticated = true
+                    }
+                    
+                    // handle json response
+                } else {
+                    print("data maybe corrupted or in wrong format")
+                    throw URLError(.badServerResponse)
+                }
             } catch let error {
-              print(error.localizedDescription)
+                print(error.localizedDescription)
             }
-          }
-          task.resume()
+        }
+        task.resume()
     }
     
     func logout() {
         print("logout")
         self.token = nil
         UserDefaults.standard.removeObject(forKey: "token")
-//        self.keychain["token"] = self.token
+        //        self.keychain["token"] = self.token
         self.authenticated = false
     }
     

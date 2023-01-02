@@ -16,60 +16,68 @@ protocol APIEngine {
 }
 
 
-class APIService: APIEngine{
-
+class APIService: APIEngine {
+    
     var scheme: String
     var host: String
     var port: Int
     var authService: AuthService
     private var jsonDecoder: JSONDecoder
     
-    init(scheme: String, host: String, port: Int, authService: AuthService){
+    init(
+        scheme: String,
+        host: String,
+        port: Int,
+        authService: AuthService
+    ) {
         self.scheme = scheme
         self.host = host
         self.port = port
         self.authService = authService
+        
         self.jsonDecoder = JSONDecoder()
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         self.jsonDecoder.dateDecodingStrategy = .formatted(dateFormatter)
     }
     
+    // Get Decodable Data from designated path
     func get<T: Decodable>(type: T.Type, path: String) -> AnyPublisher<T, Error>{
-        
         var components = URLComponents()
         components.scheme = self.scheme
         components.host = self.host
         components.port = self.port
         components.path = path //"/api/xxx/"
-
-        guard let url = components.url else {
-                    preconditionFailure("Invalid URL components: \(components)")
-                }
+        
+        guard let url: URL = components.url else {
+            preconditionFailure("Invalid URL components: \(components)")
+        }
         var urlRequest = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
         URLCache.shared.removeAllCachedResponses()
-        if let token = self.authService.token{
-            urlRequest.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        if let token: String = self.authService.token {
+            urlRequest.setValue(
+                "Bearer \(token)",
+                forHTTPHeaderField: "Authorization"
+            )
         }
-
-        let dataTaskPublisher: AnyPublisher<T, Error>  = URLSession.shared.dataTaskPublisher(for: urlRequest)
-                .map { (data: Data, response: URLResponse) in
-                        
-                        return data
-                }
-                .tryCatch({ failure -> Just<Data> in
-                    //Try To Find From Cache
-                    guard let cacheedResponse = URLCache.shared.cachedResponse(for: urlRequest) else {
-                        throw failure
-                    }
-                    return Just(cacheedResponse.data)
-                   
-                })
-                .decode(type: T.self, decoder: self.jsonDecoder)
-                .eraseToAnyPublisher()
-
-        return dataTaskPublisher
         
+        let dataTaskPublisher: AnyPublisher<T, Error> = URLSession
+            .shared
+            .dataTaskPublisher(for: urlRequest)
+            .map { (data: Data, response: URLResponse) -> Data in data }
+            .tryCatch { (failure: URLSession.DataTaskPublisher.Failure) -> Just<Data> in
+                //Try To Find From Cache
+                guard let cacheedResponse: CachedURLResponse = URLCache
+                    .shared
+                    .cachedResponse(for: urlRequest) else {
+                    throw failure
+                }
+                return Just(cacheedResponse.data)
+            }
+            .decode(type: T.self, decoder: self.jsonDecoder)
+            .eraseToAnyPublisher()
+        
+        return dataTaskPublisher
     }
     
     
@@ -80,40 +88,38 @@ class APIService: APIEngine{
         components.host = self.host
         components.port = self.port
         components.path = path //"/api/xxx/"
-
-        guard let url = components.url else {
-                    preconditionFailure("Invalid URL components: \(components)")
-                }
+        
+        guard let url: URL = components.url else {
+            preconditionFailure("Invalid URL components: \(components)")
+        }
         var urlRequest = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
         URLCache.shared.removeAllCachedResponses()
-        if let token = self.authService.token{
+        if let token: String = self.authService.token {
             urlRequest.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         }
-
         urlRequest.httpMethod = "POST"
         urlRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
         do {
             urlRequest.httpBody = try JSONEncoder().encode(object)
-          } catch let error {
+        } catch let error {
             print(error.localizedDescription)
-            
-          }
-
-        let dataTaskPublisher: AnyPublisher<T, Error>  = URLSession.shared.dataTaskPublisher(for: urlRequest)
-                .map { (data: Data, response: URLResponse) in
-                        
-                        return data
+        }
+        
+        let dataTaskPublisher: AnyPublisher<T, Error> = URLSession
+            .shared
+            .dataTaskPublisher(for: urlRequest)
+            .map { (data: Data, response: URLResponse) -> Data in data }
+            .tryCatch { (failure: URLSession.DataTaskPublisher.Failure) -> Just<Data> in
+                //Try To Find From Cache
+                guard let cacheedResponse: CachedURLResponse = URLCache
+                    .shared
+                    .cachedResponse(for: urlRequest) else {
+                    throw failure
                 }
-                .tryCatch({ failure -> Just<Data> in
-                    //Try To Find From Cache
-                    guard let cacheedResponse = URLCache.shared.cachedResponse(for: urlRequest) else {
-                        throw failure
-                    }
-                    return Just(cacheedResponse.data)
-                   
-                })
-                .decode(type: T.self, decoder: self.jsonDecoder)
-                .eraseToAnyPublisher()
+                return Just(cacheedResponse.data)
+            }
+            .decode(type: T.self, decoder: self.jsonDecoder)
+            .eraseToAnyPublisher()
         
         return dataTaskPublisher
         
@@ -126,40 +132,39 @@ class APIService: APIEngine{
         components.host = self.host
         components.port = self.port
         components.path = path //"/api/xxx/"
-
-        guard let url = components.url else {
-                    preconditionFailure("Invalid URL components: \(components)")
-                }
+        
+        guard let url: URL = components.url else {
+            preconditionFailure("Invalid URL components: \(components)")
+        }
         var urlRequest = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
         URLCache.shared.removeAllCachedResponses()
-        if let token = self.authService.token{
+        if let token: String = self.authService.token {
             urlRequest.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         }
-
+        
         urlRequest.httpMethod = "PUT"
         urlRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
         do {
             urlRequest.httpBody = try JSONEncoder().encode(object)
-          } catch let error {
+        } catch let error {
             print(error.localizedDescription)
             
-          }
-
-        let dataTaskPublisher: AnyPublisher<T, Error>  = URLSession.shared.dataTaskPublisher(for: urlRequest)
-                .map { (data: Data, response: URLResponse) in
-                        
-                        return data
+        }
+        
+        let dataTaskPublisher: AnyPublisher<T, Error> = URLSession
+            .shared.dataTaskPublisher(for: urlRequest)
+            .map { (data: Data, response: URLResponse) -> Data in data }
+            .tryCatch{ (failure: URLSession.DataTaskPublisher.Failure) -> Just<Data> in
+                //Try To Find From Cache
+                guard let cacheedResponse: CachedURLResponse = URLCache
+                    .shared
+                    .cachedResponse(for: urlRequest) else {
+                    throw failure
                 }
-                .tryCatch({ failure -> Just<Data> in
-                    //Try To Find From Cache
-                    guard let cacheedResponse = URLCache.shared.cachedResponse(for: urlRequest) else {
-                        throw failure
-                    }
-                    return Just(cacheedResponse.data)
-                   
-                })
-                .decode(type: T.self, decoder: self.jsonDecoder)
-                .eraseToAnyPublisher()
+                return Just(cacheedResponse.data)
+            }
+            .decode(type: T.self, decoder: self.jsonDecoder)
+            .eraseToAnyPublisher()
         
         return dataTaskPublisher
         
@@ -171,31 +176,23 @@ class APIService: APIEngine{
         components.host = self.host
         components.port = self.port
         components.path = path
-
-        guard let url = components.url else {
-                    preconditionFailure("Invalid URL components: \(components)")
-                }
         
-        var request = URLRequest(
-            url: url,
-            cachePolicy: .reloadIgnoringLocalCacheData
-        )
+        guard let url: URL = components.url else {
+            preconditionFailure("Invalid URL components: \(components)")
+        }
+        
+        var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
         URLCache.shared.removeAllCachedResponses()
-        if let token = self.authService.token{
+        if let token: String = self.authService.token {
             request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         }
         request.httpMethod = "PUT"
         request.httpBody = data
         let dataTaskPublisher = URLSession.shared.dataTaskPublisher(for: request)
-            .map { (data: Data, response: URLResponse) in
-                    
-                    return data
-            }
+            .map { (data: Data, response: URLResponse) -> Data in data }
             .decode(type: T.self, decoder: self.jsonDecoder)
             .eraseToAnyPublisher()
-
+        
         return dataTaskPublisher
     }
-    
-
 }
