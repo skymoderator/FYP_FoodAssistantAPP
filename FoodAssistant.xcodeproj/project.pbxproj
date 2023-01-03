@@ -49,7 +49,6 @@
 		8894EBEF29273CB000204185 /* Product Sans Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8894EBEB29273CB000204185 /* Product Sans Italic.ttf */; };
 		8894EBF029273CB000204185 /* Product Sans Bold Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8894EBEC29273CB000204185 /* Product Sans Bold Italic.ttf */; };
 		8894EBF129273CB000204185 /* Product Sans Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8894EBED29273CB000204185 /* Product Sans Bold.ttf */; };
-		8894EBF3292740F500204185 /* Catagory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8894EBF2292740F500204185 /* Catagory.swift */; };
 		8894EBF529274CA100204185 /* CatagoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8894EBF429274CA100204185 /* CatagoryViewModel.swift */; };
 		8894EBF729274FC400204185 /* NativeSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8894EBF629274FC400204185 /* NativeSearchBar.swift */; };
 		88A7979129252728007AE689 /* ImagePickerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A7979029252728007AE689 /* ImagePickerService.swift */; };
@@ -150,7 +149,6 @@
 		8894EBEB29273CB000204185 /* Product Sans Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Product Sans Italic.ttf"; sourceTree = "<group>"; };
 		8894EBEC29273CB000204185 /* Product Sans Bold Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Product Sans Bold Italic.ttf"; sourceTree = "<group>"; };
 		8894EBED29273CB000204185 /* Product Sans Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Product Sans Bold.ttf"; sourceTree = "<group>"; };
-		8894EBF2292740F500204185 /* Catagory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Catagory.swift; sourceTree = "<group>"; };
 		8894EBF429274CA100204185 /* CatagoryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatagoryViewModel.swift; sourceTree = "<group>"; };
 		8894EBF629274FC400204185 /* NativeSearchBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NativeSearchBar.swift; sourceTree = "<group>"; };
 		88A7979029252728007AE689 /* ImagePickerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerService.swift; sourceTree = "<group>"; };
@@ -299,7 +297,6 @@
 				8868E689291B9CE100545D7C /* AlertError.swift */,
 				884F0B69291BEC2700B5FEC3 /* Photo.swift */,
 				88A7979229252AFC007AE689 /* CaptureSource.swift */,
-				8894EBF2292740F500204185 /* Catagory.swift */,
 				884E3156292A6311009DF3CA /* Product.swift */,
 				88D053AC293EE3E200277155 /* NutritionInformation.swift */,
 				88D053AE293EE54E00277155 /* Ingredient.swift */,
@@ -620,7 +617,6 @@
 				FEF71174295C27E10051A586 /* APIService.swift in Sources */,
 				884E3155292A62C1009DF3CA /* ProductDetailView.swift in Sources */,
 				8894EBF729274FC400204185 /* NativeSearchBar.swift in Sources */,
-				8894EBF3292740F500204185 /* Catagory.swift in Sources */,
 				882D014D29277C2100609357 /* CatagoryDetailView.swift in Sources */,
 				88F213F929247B2B00940928 /* NMS.swift in Sources */,
 				88D053A9293E143600277155 /* ScanBarcodeView.swift in Sources */,
