@@ -8,13 +8,13 @@
 import Foundation
 import SwiftUI
 
-
 class AppState {
     
     static let shared = AppState()
     
-    // An helper class to fetch/store/retrieve data from server
+    // A helper class to fetch/store/retrieve data from server
     var dataService: APIEngine
+    // A helper class to manage authentication matters
     var authService: AuthService
     
     private init() {

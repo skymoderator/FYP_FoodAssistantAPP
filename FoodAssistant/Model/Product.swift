@@ -25,7 +25,7 @@ struct Product: Identifiable, Equatable, Codable {
     //var supermarket: Supermarket?
 }
 
-struct ProductPrice: Codable{
+struct ProductPrice: Codable {
     var price: Double
     var supermarket: Supermarket
     var date: Date
