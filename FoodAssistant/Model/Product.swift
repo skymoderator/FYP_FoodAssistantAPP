@@ -20,9 +20,9 @@ struct Product: Identifiable, Equatable, Codable {
     var manufacturer: String?
     var brand: String?
     var product_price: [ProductPrice] = []
-    var catagory_1: String
-    var catagory_2: String
-    var catagory_3: String
+    var catagory_1: String = ""
+    var catagory_2: String = ""
+    var catagory_3: String = ""
 //    var ingredients: [Ingredient] = []
     //var price: Double = 0
     //var supermarket: Supermarket?
