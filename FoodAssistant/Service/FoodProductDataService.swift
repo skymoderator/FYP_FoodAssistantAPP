@@ -10,9 +10,12 @@ import Combine
 
 class FoodProductDataService: ObservableObject {
     
-    @Published var clicked = false
+    @Published var clicked: Bool = true
+    @Published var isLoading: Bool = true
     @Published var products: [Product] = []
-    
+    @Published var categories1: [String] = []
+    @Published var categories2: [String] = []
+    @Published var categories3: [String] = []
     private var subscriptions = Set<AnyCancellable>()
     
     init() {
@@ -37,11 +40,14 @@ class FoodProductDataService: ObservableObject {
                 path: "/api/foodproducts/"
             )
             .receive(on: DispatchQueue.main)
-            .sink { (completion: Subscribers.Completion<Error>) in
+            .sink { [weak self] (completion: Subscribers.Completion<Error>) in
                 switch completion {
                 case let .failure(error):
                     print("Couldn't load food products: \(error)")
-                case .finished: break
+                case .finished:
+                    self?.postProcessing()
+                    self?.isLoading = false
+                    break
                 }
             } receiveValue: { [weak self] (products: [Product]) in
                 self?.products = products
@@ -83,5 +89,29 @@ class FoodProductDataService: ObservableObject {
                 type: Product.self,
                 path: "/api/foodproducts/\(product.id)"
             )
+    }
+    
+    func postProcessing() {
+        // Find unique value in products.category{1/2/3}
+        self.categories1 = Array(Set(self.products.compactMap({ $0.category_1 })))
+        self.categories2 = Array(Set(self.products.compactMap({ $0.category_2 })))
+        self.categories3 = Array(Set(self.products.compactMap({ $0.category_3 })))
+    }
+    
+    // Return array of products whose categroy_{1,2,3} is categoryStr
+    func productWhoweCategory(number: Int, is categoryStr: String) -> [Product] {
+        if number == 1 {
+            return products.filter {
+                $0.category_1 == categoryStr
+            }
+        } else if number == 2 {
+            return products.filter {
+                $0.category_2 == categoryStr
+            }
+        } else {
+            return products.filter {
+                $0.category_3 == categoryStr
+            }
+        }
     }
 }

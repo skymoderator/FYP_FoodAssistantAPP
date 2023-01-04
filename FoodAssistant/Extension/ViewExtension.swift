@@ -13,7 +13,7 @@ extension View {
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
     
-    public func reverseMask<Mask: View>(
+    func reverseMask<Mask: View>(
         alignment: Alignment = .center,
         @ViewBuilder _ mask: () -> Mask
     ) -> some View {
@@ -24,5 +24,20 @@ extension View {
                         .blendMode(.destinationOut)
                 }
         }
+    }
+    
+    func offset(space: String, completion: @escaping (CGRect)->()) -> some View {
+        self
+            .overlay {
+                GeometryReader {
+                    let rect = $0.frame(in: .named(space))
+                    Color
+                        .clear
+                        .preference(key: CGRectPreferenceKey.self, value: rect)
+                        .onPreferenceChange(CGRectPreferenceKey.self) { value in
+                            completion(value)
+                        }
+                }
+            }
     }
 }

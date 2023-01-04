@@ -99,7 +99,7 @@ fileprivate struct NavBut: View {
     @ObservedObject var vm: AddProductViewModel
     var body: some View {
         NavigationLink {
-            InputProductDetailView(vm: vm)
+            InputProductDetailView(product: vm.product)
         } label: {
             Text("Next")
                 .productFont(.bold, relativeTo: .body)

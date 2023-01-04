@@ -13,27 +13,16 @@ struct CatagoryView: View {
     @EnvironmentObject var mvm: MainViewModel
     @StateObject var cvm = CatagoryViewModel()
     
-    @Namespace var ns
-    
     var body: some View {
         NavigationStack {
-            List {
-                Section {
-                    ForEach(cvm.filteredCats, id: \.self) { (cat: Catagory) in
-                        CatagoryRow(category: cat, ns: ns)
-                    }
-                } footer: {
-                    Rectangle()
-                        .frame(height: screenHeight/8)
-                        .opacity(0)
+            ZStack {
+                if cvm.foodsService.isLoading {
+                    LoadingView()
+                } else {
+                    ListView(cvm: cvm)
                 }
             }
-            .edgesIgnoringSafeArea(.bottom)
             .navigationTitle("Catagory")
-            .nativeSearchBar(
-                text: cvm.searchedCatagory,
-                placeHolder: "Search Catagory"
-            )
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     NavTrailingButton()
@@ -43,27 +32,76 @@ struct CatagoryView: View {
         .productLargeNavigationBar()
         .frame(width: screenWidth)
     }
+}
+
+fileprivate struct ListView: View {
+    @ObservedObject var cvm: CatagoryViewModel
+    @Namespace var ns
     
+    var body: some View {
+        List {
+            Section {
+                ForEach(cvm.filteredCats, id: \.self) { (cat: String) in
+                    CatagoryRow(
+                        cvm: cvm,
+                        category: cat,
+                        ns: ns,
+                        products:
+                            cvm
+                            .foodsService
+                            .productWhoweCategory(number: 1, is: cat)
+                    )
+                }
+            } footer: {
+                Rectangle()
+                    .frame(height: screenHeight/8)
+                    .opacity(0)
+            }
+        }
+        .edgesIgnoringSafeArea(.bottom)
+        .nativeSearchBar(
+            text: cvm.searchedCatagory,
+            placeHolder: "Search Catagory"
+        )
+
+    }
+}
+
+fileprivate struct LoadingView: View {
+    var body: some View {
+        VStack {
+            ProgressView()
+                .progressViewStyle(.circular)
+        }
+    }
 }
 
 fileprivate struct CatagoryRow: View {
-    let category: Catagory
+    @ObservedObject var cvm: CatagoryViewModel
+    let category: String
     let ns: Namespace.ID
+    let products: [Product]
+    private let color: Color = .random
     var body: some View {
         NavigationLink {
-            CatagoryDetailView(catagory: category)
+            CatagoryDetailView(
+                cvm: cvm,
+                catagory: category,
+                products: products,
+                color: color
+            )
         } label: {
             HStack {
                 Image(systemName: "circle.fill")
-                    .foregroundColor(.random)
-                Text("\(category.rawValue)")
+                    .foregroundColor(color)
+                Text("\(category)")
                     .productFont(.regular, relativeTo: .body)
                 Spacer()
-                Text("15 items")
+                Text("\(products.count) items")
                     .foregroundColor(.secondary)
                     .productFont(.regular, relativeTo: .callout)
             }
-            .matchedGeometryEffect(id: category.rawValue, in: ns)
+            .matchedGeometryEffect(id: category, in: ns)
         }
     }
 }

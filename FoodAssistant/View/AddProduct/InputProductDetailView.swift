@@ -12,12 +12,17 @@ import Charts
 import SwiftDate
 
 struct InputProductDetailView: View {
-    @ObservedObject var vm: AddProductViewModel
+    @State var product: Product
+    
+    init(product: Product) {
+        self._product = State(wrappedValue: product)
+    }
+    
     var body: some View {
         List {
-            NameSession(vm: vm)
-            InfoSession(vm: vm)
-            NutTableSession(nut: vm.product.nutrition ?? NutritionInformation())
+            NameSession(product: $product)
+            InfoSession(product: product)
+            NutTableSession(nut: product.nutrition ?? NutritionInformation())
         }
         .navigationTitle("Product Detail")
         .productLargeNavigationBar()
@@ -28,11 +33,11 @@ struct InputProductDetailView: View {
 }
 
 fileprivate struct NameSession: View {
-    @ObservedObject var vm: AddProductViewModel
+    @Binding var product: Product
     var body: some View {
         Section {
             ProductFontPlaceholderTextField(
-                text: $vm.product.name,
+                text: $product.name,
                 placeholder: "Product Name (e.g Coca Cola)"
             )
         } header: {
@@ -43,26 +48,26 @@ fileprivate struct NameSession: View {
 }
 
 fileprivate struct InfoSession: View {
-    @ObservedObject var vm: AddProductViewModel
+    let product: Product
     @State var showPopover = false
     @State var priceText = ""
     var body: some View {
         Section {
-//            PriceRow(
-//                price: vm.product.price.formatted(),
-//                showPopover: $showPopover
-//            )
+            PriceRow(
+                product: product,
+                showPopover: $showPopover
+            )
             Row(
                 image: "hammer.circle",
                 color: .systemOrange,
                 leading: "Manufacturer",
-                trailig: vm.product.manufacturer ?? "Unknown"
+                trailig: product.manufacturer ?? "Unknown"
             )
             Row(
                 image: "bag.circle",
                 color: .systemBlue,
                 leading: "Brand",
-                trailig: vm.product.brand ?? "Unknown"
+                trailig: product.brand ?? "Unknown"
             )
 //            Row(
 //                image: "cart.circle",
@@ -77,6 +82,7 @@ fileprivate struct InfoSession: View {
     }
     
     private struct PricePopoverBut: View {
+        let product: Product
         @Binding var show: Bool
         var body: some View {
             Button {
@@ -97,7 +103,7 @@ fileprivate struct InfoSession: View {
                     a.sourceFrameInset.bottom = -32
                 }
             ) {
-                PricePopover()
+                PricePopover(product: product)
             }
         }
     }
@@ -123,7 +129,7 @@ fileprivate struct InfoSession: View {
     }
     
     private struct PriceRow: View {
-        let price: String
+        let product: Product
         @Binding var showPopover: Bool
         var body: some View {
             HStack {
@@ -133,8 +139,8 @@ fileprivate struct InfoSession: View {
                     .productFont(.regular, relativeTo: .body)
                     .foregroundColor(.primary)
                 Spacer()
-                PricePopoverBut(show: $showPopover)
-                Text("HKD $\(price)")
+                PricePopoverBut(product: product, show: $showPopover)
+                Text("HKD $\(product.product_price.first?.price.formatted() ?? "NA")")
                     .productFont(.regular, relativeTo: .body)
                     .foregroundColor(.secondary)
             }
@@ -143,12 +149,12 @@ fileprivate struct InfoSession: View {
 }
 
 fileprivate struct PricePopover: View {
+    let product: Product
     let datas: [(Date, Double)]
-    init() {
-        let dates: [Date] = (0...7).map { (i: Int) in
-            Date() - i.days
-        }
-        let prices: [Double] = [10, 20, 30, 40, 30, 50, 60]
+    init(product: Product) {
+        self.product = product
+        let dates: [Date] = product.product_price.map { $0.date }
+        let prices: [Double] = product.product_price.map { $0.price }
         datas = zip(dates, prices).map { ($0, $1) }
     }
     var body: some View {
@@ -355,10 +361,10 @@ fileprivate struct NutBarChart: View {
 
 
 struct InputProductDetailView_Previews: PreviewProvider {
-    @StateObject static var vm = AddProductViewModel()
+    static var product = Product()
     static var previews: some View {
         NavigationStack {
-            InputProductDetailView(vm: vm)
+            InputProductDetailView(product: product)
         }
     }
 }

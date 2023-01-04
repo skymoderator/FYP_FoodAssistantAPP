@@ -13,7 +13,23 @@ struct SettingView: View {
         NavigationStack {
             List {
                 Section {
-                    General()
+                    Row(
+                        icon: "gear",
+                        text: "General",
+                        color: .systemGray
+                    )
+                }
+                Section {
+                    Row(
+                        icon: "fork.knife.circle",
+                        text: "Food Allergy",
+                        color: .systemRed
+                    )
+                    Row(
+                        icon: "star.circle",
+                        text: "Daily Calories Goal",
+                        color: .systemOrange
+                    )
                 } footer: {
                     Rectangle()
                         .frame(height: screenHeight/8)
@@ -29,17 +45,20 @@ struct SettingView: View {
     }
 }
 
-fileprivate struct General: View {
+fileprivate struct Row: View {
+    let icon: String
+    let text: String
+    let color: Color
     var body: some View {
         HStack {
-            Image(systemName: "gear")
+            Image(systemName: icon)
                 .foregroundColor(.white)
                 .padding(4)
                 .background {
                     RoundedRectangle(cornerRadius: 10, style: .continuous)
-                        .foregroundColor(.systemGray)
+                        .foregroundColor(color)
                 }
-            Text("General")
+            Text(text)
                 .productFont(.regular, relativeTo: .body)
                 .foregroundColor(.primary)
             Spacer()

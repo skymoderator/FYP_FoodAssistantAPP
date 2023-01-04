@@ -13,7 +13,6 @@ class MainViewModel: ObservableObject {
     @Published var bottomBarVM: BottomBarViewModel
     @Published var cameraService: CameraService
     @Published var cvm: CameraViewModel
-    @Published var foodsService = FoodProductDataService()
     
     var anyCancellables = Set<AnyCancellable>()
     
@@ -36,11 +35,6 @@ class MainViewModel: ObservableObject {
         .store(in: &anyCancellables)
         
         cameraService.objectWillChange.sink { [weak self] _ in
-            self?.objectWillChange.send()
-        }
-        .store(in: &anyCancellables)
-        
-        foodsService.objectWillChange.sink { [weak self] _ in
             self?.objectWillChange.send()
         }
         .store(in: &anyCancellables)

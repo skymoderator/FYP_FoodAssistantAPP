@@ -7,14 +7,16 @@
 
 import Foundation
 import SwiftUI
+import Combine
 
 class CatagoryViewModel: ObservableObject {
     
-    @Published var _searchedCatagory = ""
+    @Published private var _searchedCatagory = ""
+    @Published var foodsService = FoodProductDataService()
     
     var searchedCatagory: Binding<String> {
         Binding<String>(get: {
-            return self._searchedCatagory
+            self._searchedCatagory
         }, set: { (s: String) in
             withAnimation(.spring()) {
                 self._searchedCatagory = s
@@ -22,14 +24,23 @@ class CatagoryViewModel: ObservableObject {
         })
     }
     
-    var filteredCats: [Catagory] {
+    var anyCancellables = Set<AnyCancellable>()
+    
+    var filteredCats: [String] {
         if _searchedCatagory.isEmpty {
-            return Catagory.allCases
+            return foodsService.categories1
         } else {
-            return Catagory.allCases.filter { (cat: Catagory) in
-                cat.rawValue.contains(_searchedCatagory)
+            return foodsService.categories1.filter { (cat: String) in
+                cat.lowercased().contains(_searchedCatagory.lowercased())
             }
         }
+    }
+    
+    init() {
+        foodsService.objectWillChange.sink { [weak self] _ in
+            self?.objectWillChange.send()
+        }
+        .store(in: &anyCancellables)
     }
     
 }
