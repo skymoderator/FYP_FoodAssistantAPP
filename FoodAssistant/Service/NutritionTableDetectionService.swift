@@ -16,7 +16,7 @@ class NutritionTableDetectionService: ObservableObject {
     var model: VNCoreMLModel?
     
     init() {
-        self.model = try? VNCoreMLModel(for: YOLOv4(configuration: .init()).model)
+//        self.model = try? VNCoreMLModel(for: YOLOv4(configuration: .init()).model)
     }
     
     func detectNuritionTable(image: UIImage) {

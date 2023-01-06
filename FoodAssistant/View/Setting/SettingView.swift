@@ -16,19 +16,22 @@ struct SettingView: View {
                     Row(
                         icon: "gear",
                         text: "General",
-                        color: .systemGray
+                        color: .systemGray,
+                        destination: Text("hi")
                     )
                 }
                 Section {
                     Row(
                         icon: "fork.knife.circle",
                         text: "Food Allergy",
-                        color: .systemRed
+                        color: .systemRed,
+                        destination: AllergyView()
                     )
                     Row(
                         icon: "star.circle",
                         text: "Daily Calories Goal",
-                        color: .systemOrange
+                        color: .systemOrange,
+                        destination: Text("hi")
                     )
                 } footer: {
                     Rectangle()
@@ -45,10 +48,11 @@ struct SettingView: View {
     }
 }
 
-fileprivate struct Row: View {
+fileprivate struct Row<V: View>: View {
     let icon: String
     let text: String
     let color: Color
+    let destination: V
     var body: some View {
         HStack {
             Image(systemName: icon)
@@ -65,6 +69,7 @@ fileprivate struct Row: View {
             Image(systemName: "chevron.right")
                 .foregroundColor(.secondary)
         }
+        .onPress(navigateTo: destination)
     }
 }
 

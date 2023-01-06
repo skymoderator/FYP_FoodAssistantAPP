@@ -7,7 +7,47 @@
 
 import Foundation
 
-enum Ingredient: Codable {
+enum Ingredient: Codable, CaseIterable, Hashable, Comparable {
+    static var allCases: [Ingredient] {
+        [
+            .purifiedWater,
+            .fullCreamEvaporatedMilk,
+            .sugar,
+            .milkPowder,
+            .solubleCoffee,
+            .cream,
+            .emulsifier(code: ""),
+            .regulator(code: ""),
+            .carbonatedWater,
+            .sucrose,
+            .glucose,
+            .taurine,
+            .flavourings,
+            .caffeine,
+            .vitamins(code: ""),
+            .colours(code: ""),
+            .salt,
+            .antioxidant(code: ""),
+            .barley,
+            .oolongTea,
+            .greenTea,
+            .ltheanine,
+            .fructose,
+            .honey,
+            .peach,
+            .soyabean,
+            .milk,
+            .nut,
+            .wheat,
+            .egg,
+            .peanut,
+            .sesame
+        ]
+    }
+    
+    static func >(lhs: Ingredient, rhs: Ingredient) -> Bool {
+        lhs.englishName > rhs.englishName
+    }
     
     case purifiedWater
     case fullCreamEvaporatedMilk
