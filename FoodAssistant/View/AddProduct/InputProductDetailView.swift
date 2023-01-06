@@ -301,6 +301,10 @@ fileprivate struct NutTableSession: View {
         } header: {
             Text("Nutrition Table")
                 .productFont(.regular, relativeTo: .footnote)
+        } footer: {
+            Rectangle()
+                .opacity(0)
+                .frame(height: screenHeight/8)
         }
     }
 }

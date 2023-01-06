@@ -82,14 +82,19 @@ fileprivate struct CatagoryRow: View {
     let ns: Namespace.ID
     let products: [Product]
     private let color: Color = .random
+    
+    var destination: some View {
+        CatagoryDetailView(
+            cvm: cvm,
+            catagory: category,
+            products: products,
+            color: color
+        )
+    }
+    
     var body: some View {
         NavigationLink {
-            CatagoryDetailView(
-                cvm: cvm,
-                catagory: category,
-                products: products,
-                color: color
-            )
+            destination
         } label: {
             HStack {
                 Image(systemName: "circle.fill")
@@ -103,6 +108,10 @@ fileprivate struct CatagoryRow: View {
             }
             .matchedGeometryEffect(id: category, in: ns)
         }
+        .previewContextMenu(
+            destination: destination,
+            presentAsSheet: false
+        )
     }
 }
 

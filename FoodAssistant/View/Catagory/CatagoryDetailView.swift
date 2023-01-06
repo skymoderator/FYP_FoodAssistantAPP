@@ -33,7 +33,7 @@ struct CatagoryDetailView: View {
             GeometryReader { (proxy: GeometryProxy) in
                 let size: CGSize = proxy.size
                 ScrollView(.vertical, showsIndicators: false) {
-                    VStack {
+                    LazyVStack {
                         ForEach(cdvm.characters) {
                             (pc: CatagoryDetailViewModel.ProductCharacter) in
                             AlphabetSession(cdvm: cdvm, ns: namespace, pc: pc, color: color)
@@ -109,38 +109,47 @@ fileprivate struct Scroller: View {
     @ObservedObject var cdvm: CatagoryDetailViewModel
     let color: Color
     
+    var currentC: CatagoryDetailViewModel.ProductCharacter? {
+        cdvm.currentCharacter
+    }
+    
+    var shouldDisappear: Bool {
+        cdvm.hideIndicatorLabel || currentC == nil
+    }
+    
     var body: some View {
-        RoundedRectangle(cornerRadius: 10, style: .continuous)
-            .fill(color)
-            .frame(width: 2, height: cdvm.scrollerHeight)
-            .overlay(alignment: .trailing) {
-                // MARK: Bubble Image
-                Image(systemName: "bubble.middle.bottom.fill")
-                    .resizable()
-                    .renderingMode(.template)
-                    .aspectRatio(contentMode: .fit)
-                    .foregroundStyle(.ultraThinMaterial)
-                    .frame(width: 45, height: 45)
-                    .rotationEffect(.init(degrees: -90))
-                    .overlay {
-                        Text(cdvm.currentCharacter?.value ?? "")
-                            .productFont(.bold, relativeTo: .body)
-                            .offset(x: -3)
-                    }
-                    .environment(\.colorScheme, .dark)
-                    .offset(x: cdvm.hideIndicatorLabel ||
-                            cdvm.currentCharacter == nil ? 65 : 0)
-                    .animation(.interactiveSpring(
-                        response: 0.5,
-                        dampingFraction: 0.6,
-                        blendDuration: 0.6),
-                               value:
-                                cdvm.hideIndicatorLabel ||
-                               cdvm.currentCharacter == nil
-                    )
+        HStack {
+            HStack {
+                Text(currentC?.value ?? "")
+                    .productFont(.bold, relativeTo: .body)
+                    .foregroundColor(.primary)
+                Text("\(currentC?.products.count ?? 0) items")
+                    .productFont(.regular, relativeTo: .body)
+                    .foregroundColor(.secondary)
             }
-            .padding(.trailing,5)
-            .offset(y: cdvm.indicatorOffset)
+            .padding()
+            .padding(.trailing, 4)
+            .background(.ultraThinMaterial)
+            .clipShape(
+                RoundedRectangle(cornerRadius: 10, style: .continuous)
+            )
+            .padding(.trailing)
+            .offset(x: shouldDisappear ? 200 : 0)
+            .environment(\.colorScheme, .dark)
+            
+            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                .fill(color)
+                .frame(width: 2, height: cdvm.scrollerHeight)
+        }
+        .padding(.trailing, 5)
+        .offset(y: cdvm.indicatorOffset)
+        .animation(
+            .interactiveSpring(
+                response: 0.5,
+                dampingFraction: 0.6,
+                blendDuration: 0.6),
+            value: shouldDisappear
+        )
     }
 }
 
@@ -222,9 +231,13 @@ fileprivate struct Row: View {
     let product: Product
     let color: Color
     
+    var destination: some View {
+        InputProductDetailView(product: product)
+    }
+    
     var body: some View {
         NavigationLink {
-            InputProductDetailView(product: product)
+            destination
         } label: {
             HStack(spacing: 16) {
                 Image(systemName: "fork.knife.circle")
@@ -258,6 +271,10 @@ fileprivate struct Row: View {
             }
         }
         .matchedGeometryEffect(id: "\(product.barcode)\(product.name)", in: ns)
+        .previewContextMenu(
+            destination: destination,
+            presentAsSheet: false
+        )
     }
 }
 
