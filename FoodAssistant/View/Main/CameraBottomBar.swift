@@ -131,21 +131,22 @@ struct CameraBottomBar: View {
 }
 
 struct CameraBottomBar_Previews: PreviewProvider {
-    @StateObject static var mvm = MainViewModel()
+//    @StateObject static var mvm = MainViewModel()
     static var previews: some View {
-        GeometryReader { (proxy: GeometryProxy) in
-            let size: CGSize = proxy.size
-            ZStack {
-                Image("Appicon")
-                VStack {
-                    Spacer()
-                    CameraBottomBar(cvm: mvm.cvm)
-                        .frame(width: size.width, height: 80)
-                }
-                .frame(width: size.width, height: size.height)
-            }
-            .frame(width: size.width, height: size.height)
-        }
-        .edgesIgnoringSafeArea(.all)
+//        GeometryReader { (proxy: GeometryProxy) in
+//            let size: CGSize = proxy.size
+//            ZStack {
+//                Image("Appicon")
+//                VStack {
+//                    Spacer()
+//                    CameraBottomBar(cvm: mvm.cvm)
+//                        .frame(width: size.width, height: 80)
+//                }
+//                .frame(width: size.width, height: size.height)
+//            }
+//            .frame(width: size.width, height: size.height)
+//        }
+//        .edgesIgnoringSafeArea(.all)
+        ContentView()
     }
 }

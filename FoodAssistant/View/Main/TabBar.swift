@@ -17,12 +17,9 @@ struct TabBar: View {
         GeometryReader { (proxy: GeometryProxy) in
             let size: CGSize = proxy.size
             HStack {
-                Group {
-                    LeadingButton(mvm: mvm, size: size)
-                    CenterButton(mvm: mvm, cvm: cvm, size: size)
-                    TrailingButton(mvm: mvm, size: size)
-                }
-                .frame(maxWidth: .infinity, alignment: .center)
+                LeadingButton(mvm: mvm)
+                CenterButton(mvm: mvm, cvm: cvm)
+                TrailingButton(mvm: mvm)
             }
             .padding(.bottom, safeArea.bottom)
             .frame(width: size.width, height: size.height)
@@ -31,90 +28,97 @@ struct TabBar: View {
     
     fileprivate struct LeadingButton: View {
         @ObservedObject var mvm: MainViewModel
-        let size: CGSize
+        @Environment(\.safeAreaInsets) var safeArea
         var body: some View {
-            ZStack {
-                Color.blue
-                Color.primary
-                    .opacity(min(1, mvm.bottomBarVM.normalizedTabOffset))
-            }
-            .mask {
-                SFButton("list.dash")
-                    .scaledToFit()
-                    .frame(width: size.height - 72, height: size.height - 72)
-            }
-            .onTapGesture {
-                withAnimation {
-                    mvm.bottomBarVM.tabSV?.setContentOffset(
-                        .init(x: 0, y: 0),
-                        animated: false
-                    )
-                    mvm.bottomBarVM.tabOffset = 0
+            GeometryReader { (proxy: GeometryProxy) in
+                let height: CGFloat = proxy.size.height
+                let size: CGFloat = min(50, height)
+                ZStack {
+                    Color.blue
+                    Color.primary
+                        .opacity(min(1, mvm.bottomBarVM.normalizedCurrentTabOffset))
                 }
+                .mask {
+                    SFButton("list.dash")
+                        .scaledToFit()
+                        .frame(width: size, height: size)
+                }
+                .frame(width: size, height: size - (mvm.isPortrait ? 0 : 10))
+                .padding(.top, mvm.isPortrait ? 0 : 10)
+                .onTapGesture {
+                    withAnimation {
+                        mvm.bottomBarVM.scrollTo(page: .one, animated: false)
+                    }
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }
     }
-
+    
     fileprivate struct CenterButton: View {
         @ObservedObject var mvm: MainViewModel
         @ObservedObject var cvm: CameraViewModel
-        let size: CGSize
+        @Environment(\.safeAreaInsets) var safeArea
         var body: some View {
-            ZStack {
-                Color.blue
-                Color.primary
-                    .opacity(
-                        mvm.bottomBarVM.normalizedTabOffset <= 1 ?
-                        1 - mvm.bottomBarVM.normalizedTabOffset :
-                            mvm.bottomBarVM.normalizedTabOffset - 1
-                    )
-            }
-            .mask {
-                MorphingView(isTapped: Binding<Bool>(
-                    get: { cvm.captureSource != nil },
-                    set: { _ in }
-                ))
-            }
-            .frame(width: size.height - 72, height: size.height - 72)
-            .scaleEffect(
-                1 + mvm.bottomBarVM.tabScrollProgress,
-                anchor: .bottom)
-            .onTapGesture {
-                if mvm.bottomBarVM.tabOffset != screenWidth {
-                    mvm.bottomBarVM.tabSV?.setContentOffset(
-                        .init(x: screenWidth, y: 0),
-                        animated: true
-                    )
-                    mvm.bottomBarVM.tabOffset = screenWidth
-                } else {
-                    cvm.onSnapButtonTapped()
+            GeometryReader { (proxy: GeometryProxy) in
+                let height: CGFloat = proxy.size.height
+                let size: CGFloat = min(50, height)
+                ZStack {
+                    Color.blue
+                    Color.primary
+                        .opacity(
+                            mvm.bottomBarVM.normalizedCurrentTabOffset <= 1 ?
+                            1 - mvm.bottomBarVM.normalizedCurrentTabOffset :
+                                mvm.bottomBarVM.normalizedCurrentTabOffset - 1
+                        )
                 }
+                .mask {
+                    MorphingView(isTapped: Binding<Bool>(
+                        get: { cvm.captureSource != nil },
+                        set: { _ in }
+                    ))
+                }
+                .frame(width: size, height: size - (mvm.isPortrait ? 0 : 10))
+                .padding(.top, mvm.isPortrait ? 0 : 10)
+                .scaleEffect(
+                    1 + mvm.bottomBarVM.tabScrollProgress,
+                    anchor: .bottom)
+                .onTapGesture {
+                    if mvm.bottomBarVM.normalizedCurrentTabOffset != 1 {
+                        mvm.bottomBarVM.scrollTo(page: .two, animated: true)
+                    } else {
+                        cvm.onSnapButtonTapped()
+                    }
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }
     }
-
+    
     fileprivate struct TrailingButton: View {
         @ObservedObject var mvm: MainViewModel
-        let size: CGSize
+        @Environment(\.safeAreaInsets) var safeArea
         var body: some View {
-            ZStack {
-                Color.blue
-                Color.primary
-                    .opacity(2 - mvm.bottomBarVM.normalizedTabOffset)
-            }
-            .mask {
-                SFButton("gear.circle")
-                    .scaledToFit()
-                    .frame(width: size.height - 72, height: size.height - 72)
-            }
-            .onTapGesture {
-                withAnimation {
-                    mvm.bottomBarVM.tabSV?.setContentOffset(
-                        .init(x: screenWidth*2, y: 0),
-                        animated: false
-                    )
-                    mvm.bottomBarVM.tabOffset = screenWidth*2
+            GeometryReader { (proxy: GeometryProxy) in
+                let height: CGFloat = proxy.size.height
+                let size: CGFloat = min(50, height)
+                ZStack {
+                    Color.blue
+                    Color.primary
+                        .opacity(2 - mvm.bottomBarVM.normalizedCurrentTabOffset)
                 }
+                .mask {
+                    SFButton("gear.circle")
+                        .scaledToFit()
+                }
+                .frame(width: size, height: size - (mvm.isPortrait ? 0 : 10))
+                .padding(.top, mvm.isPortrait ? 0 : 10)
+                .onTapGesture {
+                    withAnimation {
+                        mvm.bottomBarVM.scrollTo(page: .three, animated: false)
+                    }
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }
     }
@@ -122,21 +126,22 @@ struct TabBar: View {
 
 
 struct TabBar_Previews: PreviewProvider {
-    @StateObject static var mvm = MainViewModel()
+//    @StateObject static var mvm = MainViewModel()
     static var previews: some View {
-        GeometryReader { (proxy: GeometryProxy) in
-            let size: CGSize = proxy.size
-            ZStack {
-                Image("Appicon")
-                VStack {
-                    Spacer()
-                    TabBar(mvm: mvm, cvm: mvm.cvm)
-                        .frame(width: size.width, height: size.height/8)
-                }
-                .frame(width: size.width, height: size.height)
-            }
-            .frame(width: size.width, height: size.height)
-        }
-        .edgesIgnoringSafeArea(.all)
+//        GeometryReader { (proxy: GeometryProxy) in
+//            let size: CGSize = proxy.size
+//            ZStack {
+//                Image("Appicon")
+//                VStack {
+//                    Spacer()
+//                    TabBar(mvm: mvm, cvm: mvm.cvm)
+//                        .frame(width: size.width, height: min(size.height/8, 80))
+//                }
+//                .frame(width: size.width, height: size.height)
+//            }
+//            .frame(width: size.width, height: size.height)
+//        }
+//        .edgesIgnoringSafeArea(.all)
+        ContentView()
     }
 }

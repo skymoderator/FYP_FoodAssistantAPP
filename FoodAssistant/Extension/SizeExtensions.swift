@@ -20,10 +20,6 @@ extension View {
         .onPreferenceChange(CGSizePreferenceKey.self, perform: onChange)
     }
     
-    func fullScreen() -> some View {
-        frame(screenRect)
-    }
-    
     func readGeometry(onChange: @escaping (CGRect) -> Void) -> some View {
         overlay(
             GeometryReader { (proxy: GeometryProxy) in

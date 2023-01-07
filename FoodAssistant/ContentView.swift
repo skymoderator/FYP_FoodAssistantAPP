@@ -32,7 +32,7 @@ struct ContentView: View {
                 s.setContentOffset(
                     .init(x: screenWidth, y: 0),
                     animated: false)
-                mvm.bottomBarVM.tabOffset = screenWidth
+                mvm.bottomBarVM.normalizedCurrentTabOffset = 1
             }
         }
         .introspectScrollView { (s: UIScrollView) in
@@ -40,15 +40,29 @@ struct ContentView: View {
         }
         .overlay(alignment: .bottom) {
             BottomBar()
-                .frame(
-                    width: screenWidth,
-                    height: screenHeight/8 + 80 * mvm.bottomBarVM.tabScrollProgress
-                )
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
-                .offset(y: mvm.bottomBarVM.showBar ? 0 : screenHeight/8 + 80)
+                .frame(width: screenWidth, height: bottomBarHeight, alignment: .bottom)
+                .offset(y: mvm.bottomBarVM.showBar ? 0 : bottomBarMaxHeight)
         }
         .edgesIgnoringSafeArea(.all)
         .environmentObject(mvm)
+        .onRotate { (d: UIDeviceOrientation) in
+            if d == .portrait || d == .landscapeLeft || d == .landscapeRight {
+                mvm.isPortrait = d.isPortrait
+                mvm.handleDeviceOrientationChanges()
+            }
+        }
+    }
+    
+    var bottomBarHeight: CGFloat {
+        min(160, screenHeight/8) + tabBarMaxHeight * mvm.bottomBarVM.tabScrollProgress
+    }
+    
+    var bottomBarMaxHeight: CGFloat {
+        min(160, screenHeight/8) + tabBarMaxHeight
+    }
+    
+    var tabBarMaxHeight: CGFloat {
+        80
     }
 }
 

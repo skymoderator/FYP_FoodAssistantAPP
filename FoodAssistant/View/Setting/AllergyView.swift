@@ -97,7 +97,6 @@ fileprivate struct AllAllergiesSession: View {
             Text("Included Allergies")
                 .productFont(.regular, relativeTo: .callout)
         }
-        .environment(\.editMode, .constant(.active))
     }
 }
 

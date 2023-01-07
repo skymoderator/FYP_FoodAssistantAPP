@@ -30,7 +30,7 @@ struct CatagoryView: View {
             }
         }
         .productLargeNavigationBar()
-        .frame(width: screenWidth)
+        .frame(width: mvm.screenWidth, height: mvm.screenHeight)
     }
 }
 
@@ -63,6 +63,7 @@ fileprivate struct ListView: View {
             text: cvm.searchedCatagory,
             placeHolder: "Search Catagory"
         )
+        .background(.systemRed )
 
     }
 }

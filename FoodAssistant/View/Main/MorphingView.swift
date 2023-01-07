@@ -18,8 +18,8 @@ struct MorphingView: View {
     var body: some View {
         // MARK: Image Morph is Simple
         // Simply Mask the Canvas Shape as Image Mask
-        GeometryReader { proxy in
-            let size = proxy.size
+        GeometryReader { (proxy: GeometryProxy) in
+            let size: CGSize = proxy.size
             Color.primary
                 .frame(width: size.width, height: size.height)
                 .clipped()
@@ -54,8 +54,12 @@ struct MorphingView: View {
                     // The Timer Value is Animation Speed
                     // You can Change this for your Own
                     // EG: For Optimal Speed Use = 0.007
-                    .onReceive(Timer.publish(every: 0.01, on: .main, in: .common).autoconnect()) { _ in
-                        if animateMorph{
+                    .onReceive(
+                        Timer
+                            .publish(every: 0.01, on: .main, in: .common)
+                            .autoconnect()
+                    ) { _ in
+                        if animateMorph {
                             if blurRadius <= 40{
                                 blurRadius += 0.5
                                 

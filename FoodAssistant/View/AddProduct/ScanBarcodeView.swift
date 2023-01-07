@@ -21,18 +21,25 @@ struct ScanBarcodeView: View {
     var body: some View {
         GeometryReader { (p: GeometryProxy) in
             let size: CGSize = p.size
-            ScrollView {
-                VStack(spacing: 0) {
-                    UpperView(vm: vm)
-                    LowerView(vm: vm, size: size)
+            let width: CGFloat = size.width
+            ZStack {
+                if mvm.isPortrait {
+                    VStack(spacing: 0) {
+                        UpperView(vm: vm)
+                        LowerView(vm: vm, width: width)
+                    }
+                } else {
+                    HStack(spacing: 0) {
+                        UpperView(vm: vm)
+                        LowerView(vm: vm, width: width/2)
+                    }
                 }
-                .padding(.bottom, safeArea.bottom)
-                .padding(32)
-                .frame(width: size.width, height: size.height, alignment: .bottom)
             }
+            .padding(.bottom, safeArea.bottom)
+            .padding(32)
         }
         .background(.systemGroupedBackground)
-        .edgesIgnoringSafeArea(.all)
+        .edgesIgnoringSafeArea(.top)
         .onAppear(perform: vm.scanBarcode.onAppear)
         .onDisappear(perform: vm.scanBarcode.onDisappear)
         .onTapGesture(perform: hideKeyboard)
@@ -43,6 +50,7 @@ struct ScanBarcodeView: View {
                 }
             }
         }
+        .frame(width: mvm.screenWidth, height: mvm.screenHeight)
     }
 }
 
@@ -74,8 +82,9 @@ fileprivate struct UpperView: View {
 }
 
 fileprivate struct LowerView: View {
+    @EnvironmentObject var mvm: MainViewModel
     @ObservedObject var vm: AddProductViewModel
-    let size: CGSize
+    let width: CGFloat
     var body: some View {
         VStack {
             Text("Point the camera to the product barcode")
@@ -89,7 +98,7 @@ fileprivate struct LowerView: View {
                         barcode: vm.scanBarcode.barcode,
                         height: 100)
                 }
-                .frame(width: size.width - 64, height: size.width - 64)
+                .frame(width: width - 64, height: width - 64)
                 .cornerRadius(30)
         }
     }

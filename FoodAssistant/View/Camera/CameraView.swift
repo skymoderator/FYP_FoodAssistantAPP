@@ -29,7 +29,7 @@ struct CameraView: View {
             }
             .frame(width: size.width, height: size.height)
         }
-        .fullScreen()
+        .frame(width: mvm.screenWidth, height: mvm.screenHeight)
         .clipped()
         .edgesIgnoringSafeArea(.all)
         .sheet(

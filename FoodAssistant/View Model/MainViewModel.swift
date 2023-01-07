@@ -14,6 +14,8 @@ class MainViewModel: ObservableObject {
     @Published var cameraService: CameraService
     @Published var cvm: CameraViewModel
     
+    @Published var isPortrait: Bool = UIScreen.main.bounds.width < UIScreen.main.bounds.height
+    
     var anyCancellables = Set<AnyCancellable>()
     
     init() {
@@ -22,10 +24,13 @@ class MainViewModel: ObservableObject {
         self._cameraService = Published(wrappedValue: cm)
         self._cvm = Published(wrappedValue: CameraViewModel(cameraService: cm))
         
+        bottomBarVM.parent = self
         cameraService.configure()
         
         bottomBarVM.objectWillChange.sink { [weak self] _ in
-            self?.objectWillChange.send()
+            DispatchQueue.main.async { [weak self] in
+                self?.objectWillChange.send()
+            }
         }
         .store(in: &anyCancellables)
         
@@ -40,6 +45,34 @@ class MainViewModel: ObservableObject {
         .store(in: &anyCancellables)
         
         AppState.shared.authService.getUserProfile()
+    }
+    
+    func handleDeviceOrientationChanges() {
+        let offset: CGFloat = self.bottomBarVM.normalizedCurrentTabOffset.rounded()
+        let pageNum: BottomBarViewModel.PageNumber = (offset == 0) ? .one : (offset == 1 ? .two : .three)
+        self.bottomBarVM.scrollTo(page: pageNum, animated: true)
+    }
+    
+    var screenWidth: CGFloat {
+        let bound: CGRect = UIScreen.main.bounds
+        let width: CGFloat = bound.width
+        let height: CGFloat = bound.height
+        if isPortrait {
+            return min(width, height)
+        } else {
+            return max(width, height)
+        }
+    }
+    
+    var screenHeight: CGFloat {
+        let bound: CGRect = UIScreen.main.bounds
+        let width: CGFloat = bound.width
+        let height: CGFloat = bound.height
+        if isPortrait {
+            return max(width, height)
+        } else {
+            return min(width, height)
+        }
     }
     
 }

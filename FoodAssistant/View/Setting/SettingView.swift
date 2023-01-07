@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct SettingView: View {
+    @EnvironmentObject var mvm: MainViewModel
     @StateObject var vm = SettingViewModel()
     var body: some View {
         NavigationStack {
@@ -35,7 +36,7 @@ struct SettingView: View {
                     )
                 } footer: {
                     Rectangle()
-                        .frame(height: screenHeight/8)
+                        .frame(height: mvm.screenHeight/8)
                         .opacity(0)
                 }
             }
@@ -44,7 +45,7 @@ struct SettingView: View {
             .nativeSearchBar(text: $vm.searchedSetting, placeHolder: "Search Setting")
         }
         .productLargeNavigationBar()
-        .frame(width: screenWidth)
+        .frame(width: mvm.screenWidth, height: mvm.screenHeight)
     }
 }
 
@@ -74,7 +75,9 @@ fileprivate struct Row<V: View>: View {
 }
 
 struct SettingView_Previews: PreviewProvider {
+    @StateObject static var mvm = MainViewModel()
     static var previews: some View {
         SettingView()
+            .environmentObject(mvm)
     }
 }
