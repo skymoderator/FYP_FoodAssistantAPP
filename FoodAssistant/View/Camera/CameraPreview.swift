@@ -14,17 +14,61 @@ struct CameraPreview: UIViewRepresentable {
     let session: AVCaptureSession
     
     func makeUIView(context: Context) -> VideoPreviewView {
-        let view = VideoPreviewView()
+        let view: VideoPreviewView = context.coordinator.view
         view.videoPreviewLayer.cornerRadius = 0
         view.videoPreviewLayer.session = session
-        view.videoPreviewLayer.connection?.videoOrientation = .portrait
+        switch UIDevice.current.orientation {
+        case .landscapeLeft:
+            view.videoPreviewLayer.connection?.videoOrientation = .landscapeRight
+        case .landscapeRight:
+            view.videoPreviewLayer.connection?.videoOrientation = .landscapeLeft
+        default:
+            view.videoPreviewLayer.connection?.videoOrientation = .portrait
+        }
         view.videoPreviewLayer.videoGravity = .resizeAspectFill
 
         return view
     }
 
-    func updateUIView(_ uiView: VideoPreviewView, context: Context) {
-
+    func updateUIView(_ uiView: VideoPreviewView, context: Context) { }
+    
+    func makeCoordinator() -> Coordinator {
+        Coordinator()
+    }
+    
+    class Coordinator: NSObject {
+        let view = VideoPreviewView()
+        
+        override init() {
+            super.init()
+            NotificationCenter.default.addObserver(
+                self,
+                selector: #selector(viewDidOriented),
+                name: UIDevice.orientationDidChangeNotification,
+                object: nil
+            )
+        }
+        
+        deinit {
+            NotificationCenter.default.removeObserver(
+                self,
+                name: UIDevice.orientationDidChangeNotification,
+                object: nil
+            )
+        }
+        
+        @objc func viewDidOriented() {
+            let orientation: UIDeviceOrientation = UIDevice.current.orientation
+            if orientation == .portrait {
+                view.videoPreviewLayer.connection?.videoOrientation = .portrait
+            } else if orientation == .landscapeLeft {
+                view.videoPreviewLayer.connection?.videoOrientation = .landscapeRight
+            } else if orientation == .landscapeRight {
+                view.videoPreviewLayer.connection?.videoOrientation = .landscapeLeft
+            } else if orientation == .portraitUpsideDown {
+                view.videoPreviewLayer.connection?.videoOrientation = .portraitUpsideDown
+            }
+        }
     }
     
 //    func makeUIView(context: Context) -> UIView {
