@@ -55,6 +55,7 @@
 		889F29C42967C75500D10192 /* AllergyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889F29C32967C75500D10192 /* AllergyView.swift */; };
 		889F29C62967C7C400D10192 /* AllergyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889F29C52967C7C400D10192 /* AllergyViewModel.swift */; };
 		889F29C8296954B400D10192 /* DeviceRotationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889F29C7296954B400D10192 /* DeviceRotationExtension.swift */; };
+		889F29CA296D708800D10192 /* UIDeviceExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889F29C9296D708800D10192 /* UIDeviceExtension.swift */; };
 		88A7979129252728007AE689 /* ImagePickerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A7979029252728007AE689 /* ImagePickerService.swift */; };
 		88A7979329252AFC007AE689 /* CaptureSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A7979229252AFC007AE689 /* CaptureSource.swift */; };
 		88A7979529252C7F007AE689 /* BoundingBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A7979429252C7F007AE689 /* BoundingBoxView.swift */; };
@@ -159,6 +160,7 @@
 		889F29C32967C75500D10192 /* AllergyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllergyView.swift; sourceTree = "<group>"; };
 		889F29C52967C7C400D10192 /* AllergyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllergyViewModel.swift; sourceTree = "<group>"; };
 		889F29C7296954B400D10192 /* DeviceRotationExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceRotationExtension.swift; sourceTree = "<group>"; };
+		889F29C9296D708800D10192 /* UIDeviceExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIDeviceExtension.swift; sourceTree = "<group>"; };
 		88A7979029252728007AE689 /* ImagePickerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerService.swift; sourceTree = "<group>"; };
 		88A7979229252AFC007AE689 /* CaptureSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureSource.swift; sourceTree = "<group>"; };
 		88A7979429252C7F007AE689 /* BoundingBoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoundingBoxView.swift; sourceTree = "<group>"; };
@@ -439,6 +441,7 @@
 				88D053B82946D5F700277155 /* PreviewContextMenuExtension.swift */,
 				884099C329571FE900AFC290 /* UserDefaultExtension.swift */,
 				889F29C7296954B400D10192 /* DeviceRotationExtension.swift */,
+				889F29C9296D708800D10192 /* UIDeviceExtension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -627,6 +630,7 @@
 				FEF71174295C27E10051A586 /* APIService.swift in Sources */,
 				884E3155292A62C1009DF3CA /* ProductDetailView.swift in Sources */,
 				8894EBF729274FC400204185 /* NativeSearchBar.swift in Sources */,
+				889F29CA296D708800D10192 /* UIDeviceExtension.swift in Sources */,
 				88F213F929247B2B00940928 /* NMS.swift in Sources */,
 				88D053A9293E143600277155 /* ScanBarcodeView.swift in Sources */,
 				88C2293229541631005E5A27 /* GeneralView.swift in Sources */,

@@ -41,7 +41,6 @@ struct BarCodeIndicatorView: View {
             }
             .compositingGroup()
         }
-        .edgesIgnoringSafeArea(.all)
     }
 }
 

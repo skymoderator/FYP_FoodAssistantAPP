@@ -19,25 +19,21 @@ struct ScanBarcodeView: View {
     }
     
     var body: some View {
-        GeometryReader { (p: GeometryProxy) in
-            let size: CGSize = p.size
-            let width: CGFloat = size.width
-            ZStack {
-                if mvm.isPortrait {
-                    VStack(spacing: 0) {
-                        UpperView(vm: vm)
-                        LowerView(vm: vm, width: width)
-                    }
-                } else {
-                    HStack(spacing: 0) {
-                        UpperView(vm: vm)
-                        LowerView(vm: vm, width: width/2)
-                    }
+        ZStack {
+            if mvm.isPortrait {
+                VStack(spacing: 0) {
+                    UpperView(vm: vm)
+                    LowerView(vm: vm)
+                }
+            } else {
+                HStack(spacing: 32) {
+                    UpperView(vm: vm)
+                    LowerView(vm: vm)
                 }
             }
-            .padding(.bottom, safeArea.bottom)
-            .padding(32)
         }
+        .padding(32)
+        .frame(width: mvm.screenWidth, height: mvm.screenHeight)
         .background(.systemGroupedBackground)
         .edgesIgnoringSafeArea(.top)
         .onAppear(perform: vm.scanBarcode.onAppear)
@@ -50,7 +46,6 @@ struct ScanBarcodeView: View {
                 }
             }
         }
-        .frame(width: mvm.screenWidth, height: mvm.screenHeight)
     }
 }
 
@@ -84,7 +79,6 @@ fileprivate struct UpperView: View {
 fileprivate struct LowerView: View {
     @EnvironmentObject var mvm: MainViewModel
     @ObservedObject var vm: AddProductViewModel
-    let width: CGFloat
     var body: some View {
         VStack {
             Text("Point the camera to the product barcode")
@@ -98,9 +92,9 @@ fileprivate struct LowerView: View {
                         barcode: vm.scanBarcode.barcode,
                         height: 100)
                 }
-                .frame(width: width - 64, height: width - 64)
                 .cornerRadius(30)
         }
+//        .padding(.bottom)
     }
 }
 
@@ -120,8 +114,10 @@ fileprivate struct NavBut: View {
 struct AddProductView_Previews: PreviewProvider {
     @StateObject static var mvm = MainViewModel()
     static var previews: some View {
-        NavigationStack {
-            ScanBarcodeView(mvm: mvm)
-        }
+//        NavigationStack {
+//            ScanBarcodeView(mvm: mvm)
+//        }
+        ContentView()
+            .environmentObject(mvm)
     }
 }
