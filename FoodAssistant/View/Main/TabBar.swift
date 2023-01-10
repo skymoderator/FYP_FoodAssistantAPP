@@ -48,6 +48,7 @@ struct TabBar: View {
                 .onTapGesture {
                     withAnimation {
                         mvm.bottomBarVM.scrollTo(page: .one, animated: false)
+                        mvm.handlePageChange()
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -86,6 +87,7 @@ struct TabBar: View {
                 .onTapGesture {
                     if mvm.bottomBarVM.normalizedCurrentTabOffset != 1 {
                         mvm.bottomBarVM.scrollTo(page: .two, animated: true)
+                        mvm.handlePageChange()
                     } else {
                         cvm.onSnapButtonTapped()
                     }
@@ -116,6 +118,7 @@ struct TabBar: View {
                 .onTapGesture {
                     withAnimation {
                         mvm.bottomBarVM.scrollTo(page: .three, animated: false)
+                        mvm.handlePageChange()
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)

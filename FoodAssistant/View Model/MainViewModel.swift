@@ -34,6 +34,11 @@ class MainViewModel: ObservableObject {
         }
         .store(in: &anyCancellables)
         
+        bottomBarVM.$pageChange.sink { [weak self] _ in
+            self?.handlePageChange()
+        }
+        .store(in: &anyCancellables)
+        
         cvm.objectWillChange.sink { [weak self] _ in
             self?.objectWillChange.send()
         }
@@ -45,6 +50,14 @@ class MainViewModel: ObservableObject {
         .store(in: &anyCancellables)
         
         AppState.shared.authService.getUserProfile()
+    }
+    
+    func handlePageChange() {
+        if bottomBarVM.currentPageNumber == .two {
+            cameraService.start()
+        } else {
+            cameraService.stop()
+        }
     }
     
     func handleDeviceOrientationChanges() {

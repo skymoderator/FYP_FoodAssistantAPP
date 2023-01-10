@@ -18,6 +18,7 @@ class BottomBarViewModel: NSObject, ObservableObject {
     @Published var normalizedCurrentTabOffset: CGFloat = 0
     @Published var showBar = true
     @Published var scrollable = true
+    @Published var pageChange = true // just a dummy publisher
     
     weak var parent: MainViewModel?
     
@@ -26,6 +27,16 @@ class BottomBarViewModel: NSObject, ObservableObject {
     var tabScrollProgress: CGFloat {
         let progress: CGFloat = normalizedCurrentTabOffset <= 1 ? normalizedCurrentTabOffset : 2 - normalizedCurrentTabOffset
         return max(0, min(2, progress))
+    }
+    
+    var currentPageNumber: PageNumber {
+        if normalizedCurrentTabOffset == 0 {
+            return .one
+        } else if normalizedCurrentTabOffset == 1 {
+            return .two
+        } else {
+            return .three
+        }
     }
     
     func scrollTo(page: PageNumber, animated: Bool) {
@@ -40,6 +51,10 @@ class BottomBarViewModel: NSObject, ObservableObject {
             self.normalizedCurrentTabOffset = page.rawValue
         }
     }
+    
+    func onPageChange() {
+        pageChange.toggle()
+    }
 }
 
 extension BottomBarViewModel: UIScrollViewDelegate {
@@ -49,6 +64,16 @@ extension BottomBarViewModel: UIScrollViewDelegate {
         
         let screenWidth: CGFloat = parent?.screenWidth ?? .zero
         normalizedCurrentTabOffset = tabOffset/screenWidth
+    }
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        onPageChange()
+    }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if (!decelerate) {
+            onPageChange()
+        }
     }
 }
 
