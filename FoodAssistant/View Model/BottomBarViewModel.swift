@@ -17,7 +17,6 @@ class BottomBarViewModel: NSObject, ObservableObject {
     @Published private var tabOffset: CGFloat = 0
     @Published var normalizedCurrentTabOffset: CGFloat = 0
     @Published var showBar = true
-    @Published var scrollable = true
     @Published var pageChange = true // just a dummy publisher
     
     weak var parent: MainViewModel?
@@ -54,6 +53,10 @@ class BottomBarViewModel: NSObject, ObservableObject {
     
     func onPageChange() {
         pageChange.toggle()
+    }
+    
+    func setSrollable(to scrollable: Bool) {
+        self.tabSV?.isScrollEnabled = scrollable
     }
 }
 

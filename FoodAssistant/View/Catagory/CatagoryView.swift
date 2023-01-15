@@ -13,9 +13,10 @@ struct CatagoryView: View {
     @EnvironmentObject var mvm: MainViewModel
     @StateObject var cvm = CatagoryViewModel()
     @Namespace var ns
+    let screenSize: CGSize
     
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $cvm.navigationPath) {
             ZStack {
                 if cvm.foodsService.isLoading {
                     LoadingView()
@@ -26,7 +27,7 @@ struct CatagoryView: View {
                             products: cvm.catProductsDict,
                             colors: cvm.colors,
                             ns: ns,
-                            screenHeight: mvm.screenHeight
+                            screenHeight: screenSize.height
                         )
                     } else {
                         GalleryView(
@@ -34,7 +35,7 @@ struct CatagoryView: View {
                             filteredCats: cvm.filteredCats,
                             products: cvm.catProductsDict,
                             colors: cvm.colors,
-                            screenHeight: mvm.screenHeight
+                            screenHeight: screenSize.height
                         )
                     }
                 }
@@ -42,7 +43,7 @@ struct CatagoryView: View {
             .navigationTitle("Catagory")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    NavTrailingButton(cvm: cvm)
+                    MenuView(menuItem: cvm.toolBarItem)
                 }
             }
             .nativeSearchBar(
@@ -50,12 +51,21 @@ struct CatagoryView: View {
                 placeHolder: "Search Catagory",
                 backgroundColor: .systemGroupedBackground
             )
-            .navigationDestination(for: CatagoryDetailView.CategoryDetail.self) { (detail: CatagoryDetailView.CategoryDetail) in
-                CatagoryDetailView(detail: detail, screenHeight: mvm.screenHeight)
+            .navigationDestination(for: CatagoryViewModel.NavigationRoute.self) {
+                (detail: CatagoryViewModel.NavigationRoute) in
+                switch detail {
+                case .scanBarCodeView:
+                    ScanBarcodeView(mvm: mvm, path: $cvm.navigationPath)
+                case .categoryDetailView(let categoryDetail):
+                    CatagoryDetailView(detail: categoryDetail, screenHeight: screenSize.height)
+                case .inputProductDetailView(let product):
+                    InputProductDetailView(product: product)
+                }
+                
             }
         }
         .productLargeNavigationBar()
-        .frame(width: mvm.screenWidth, height: mvm.screenHeight)
+        .frame(width: screenSize.width, height: screenSize.height)
     }
 }
 
@@ -172,12 +182,16 @@ fileprivate struct ListView: View {
             .previewContextMenu(
                 destination: destination(isPreview: false),
                 preview: destination(isPreview: true),
-                navigationValue: CatagoryDetailView.CategoryDetail(
-                    category: category,
-                    products: products,
-                    color: color,
-                    isPreview: false
-                )
+                navigationValue: CatagoryViewModel
+                    .NavigationRoute
+                    .categoryDetailView(
+                        CatagoryDetailView.CategoryDetail(
+                            category: category,
+                            products: products,
+                            color: color,
+                            isPreview: false
+                        )
+                    )
             )
         }
     }
@@ -250,12 +264,16 @@ fileprivate struct GalleryView: View {
             .previewContextMenu(
                 destination: destination(isPreview: false),
                 preview: destination(isPreview: true),
-                navigationValue: CatagoryDetailView.CategoryDetail(
-                    category: category,
-                    products: products,
-                    color: color,
-                    isPreview: false
-                )
+                navigationValue: CatagoryViewModel
+                    .NavigationRoute
+                    .categoryDetailView(
+                        CatagoryDetailView.CategoryDetail(
+                            category: category,
+                            products: products,
+                            color: color,
+                            isPreview: false
+                        )
+                    )
             )
         }
     }
@@ -270,36 +288,13 @@ fileprivate struct LoadingView: View {
     }
 }
 
-fileprivate struct NavTrailingButton: View {
-    @EnvironmentObject var mvm: MainViewModel
-    @ObservedObject var cvm: CatagoryViewModel
-    var body: some View {
-        Menu {
-            Button {
-                withAnimation(.spring()) {
-                    cvm.toggleViewType()
-                }
-            } label: {
-                Label("View as \(cvm.viewType.label)", systemImage: cvm.viewType.systemName)
-            }
-            NavigationLink {
-                ScanBarcodeView(mvm: mvm)
-            } label: {
-                Label("Add Product", systemImage: "plus")
-            }
-        } label: {
-            Image(systemName: "ellipsis.circle")
-        }
-    }
-}
-
 struct ProductView_Previews: PreviewProvider {
     @StateObject static var mvm = MainViewModel()
     static var previews: some View {
 //        ErrorView(message: """
 //dataCorrupted(Swift.DecodingError.Context(codingPath: [], debugDescription: "The given data was not valid JSON.", underlyingError: Optional(Error Domain=NSCocoaErrorDomain Code=3840 "Invalid value around line 1, column 0." UserInfo={NSDebugDescription=Invalid value around line 1, column 0., NSJSONSerializationErrorIndex=0})))
 //""")
-        CatagoryView()
+        CatagoryView(screenSize: mvm.screenSize)
 //        ContentView()
             .environmentObject(mvm)
     }

@@ -6,16 +6,19 @@
 //
 
 import SwiftUI
+import AVFoundation
 
 struct ScanBarcodeView: View {
     
     @ObservedObject var mvm: MainViewModel
     @Environment(\.safeAreaInsets) var safeArea
     @StateObject var vm: AddProductViewModel
+    @Binding var path: NavigationPath
     
-    init(mvm: MainViewModel) {
+    init(mvm: MainViewModel, path: Binding<NavigationPath>) {
         self._mvm = ObservedObject(wrappedValue: mvm)
         self._vm = StateObject(wrappedValue: AddProductViewModel(mvm: mvm))
+        self._path = path
     }
     
     var body: some View {
@@ -23,13 +26,19 @@ struct ScanBarcodeView: View {
             VStack {
                 if mvm.isPortrait {
                     VStack(spacing: 0) {
-                        UpperView(vm: vm)
-                        LowerView(vm: vm)
+                        UpperView(barcode: $vm.scanBarcode.barcode)
+                        LowerView(
+                            session: vm.scanBarcode.cameraService.session,
+                            barcode: vm.scanBarcode.barcode
+                        )
                     }
                 } else {
                     HStack(spacing: 32) {
-                        UpperView(vm: vm)
-                        LowerView(vm: vm)
+                        UpperView(barcode: $vm.scanBarcode.barcode)
+                        LowerView(
+                            session: vm.scanBarcode.cameraService.session,
+                            barcode: vm.scanBarcode.barcode
+                        )
                     }
                 }
             }
@@ -38,13 +47,13 @@ struct ScanBarcodeView: View {
         }
         .background(.systemGroupedBackground)
         .edgesIgnoringSafeArea(.top)
-        .onAppear(perform: vm.scanBarcode.onAppear)
+        .onAppear(perform: vm.onAppear)
         .onDisappear(perform: vm.scanBarcode.onDisappear)
         .onTapGesture(perform: hideKeyboard)
         .toolbar {
             if !vm.product.barcode.isEmpty {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    NavBut(vm: vm)
+                    NavBut(path: $path, product: vm.product)
                 }
             }
         }
@@ -52,9 +61,7 @@ struct ScanBarcodeView: View {
 }
 
 fileprivate struct UpperView: View {
- 
-    @ObservedObject var vm: AddProductViewModel
-    
+    @Binding var barcode: String
     var body: some View {
         VStack {
             Image(systemName: "barcode.viewfinder")
@@ -66,7 +73,7 @@ fileprivate struct UpperView: View {
                 .productFont(.bold, relativeTo: .largeTitle)
                 .foregroundColor(.primary)
             ProductFontPlaceholderTextField(
-                text: $vm.product.barcode,
+                text: $barcode,
                 placeholder: "Product Barcode (e.g 4891028714842)",
                 keyboardType: .numberPad
             )
@@ -79,8 +86,8 @@ fileprivate struct UpperView: View {
 }
 
 fileprivate struct LowerView: View {
-    @EnvironmentObject var mvm: MainViewModel
-    @ObservedObject var vm: AddProductViewModel
+    let session: AVCaptureSession
+    let barcode: String
     var body: some View {
         VStack {
             Text("Point the camera to the product barcode")
@@ -88,10 +95,10 @@ fileprivate struct LowerView: View {
                 .productFont(.bold, relativeTo: .title3)
                 .foregroundColor(.primary)
                 .fixedSize(horizontal: false, vertical: true)
-            CameraPreview(session: vm.cameraService.session)
+            CameraPreview(session: session)
                 .overlay {
                     BarCodeIndicatorView(
-                        barcode: vm.scanBarcode.barcode,
+                        barcode: barcode,
                         height: 100)
                 }
                 .cornerRadius(30)
@@ -100,11 +107,13 @@ fileprivate struct LowerView: View {
 }
 
 fileprivate struct NavBut: View {
-    @EnvironmentObject var mvm: MainViewModel
-    @ObservedObject var vm: AddProductViewModel
+    @Binding var path: NavigationPath
+    let product: Product
     var body: some View {
-        NavigationLink {
-            InputProductDetailView(product: vm.product, screenHeight: mvm.screenHeight)
+        Button {
+            path.append(
+                CatagoryViewModel.NavigationRoute.inputProductDetailView(product)
+            )
         } label: {
             Text("Next")
                 .productFont(.bold, relativeTo: .body)
@@ -115,11 +124,19 @@ fileprivate struct NavBut: View {
 
 struct AddProductView_Previews: PreviewProvider {
     @StateObject static var mvm = MainViewModel()
+    @State static var path = NavigationPath()
     static var previews: some View {
-        NavigationStack {
-            ScanBarcodeView(mvm: mvm)
+        NavigationStack(path: $path) {
+            ScanBarcodeView(mvm: mvm, path: $path)
+                .navigationDestination(
+                    for: CatagoryViewModel.NavigationRoute.self
+                ) { (route: CatagoryViewModel.NavigationRoute) in
+                    if case .inputProductDetailView(let product) = route {
+                        InputProductDetailView(product: product)
+                    }
+                }
         }
-//        ContentView()
-            .environmentObject(mvm)
+        //        ContentView()
+        .environmentObject(mvm)
     }
 }

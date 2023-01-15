@@ -11,6 +11,12 @@ import Combine
 
 class CatagoryViewModel: ObservableObject {
     
+    enum NavigationRoute: Hashable {
+        case scanBarCodeView
+        case categoryDetailView(CatagoryDetailView.CategoryDetail)
+        case inputProductDetailView(Product)
+    }
+    
     enum ViewType: CaseIterable {
         case gallery, list
         
@@ -33,6 +39,7 @@ class CatagoryViewModel: ObservableObject {
     @Published var foodsService = FoodProductDataService()
     @Published var viewType: ViewType = .list
     @Published var colors: [String : Color] = [:]
+    @Published var navigationPath = NavigationPath()
     
     var searchedCatagory: Binding<String> {
         Binding<String>(get: {
@@ -61,6 +68,19 @@ class CatagoryViewModel: ObservableObject {
             (cat: String) -> (String, [Product]) in
             (cat, self.foodsService.productWhoweCategory(number: 1, is: cat))
         })
+    }
+    
+    var toolBarItem: MenuItem {
+        MenuItem(systemName: "ellipsis.circle") {
+            ButtonItem(label: "View as \(viewType.label)", systemName: viewType.systemName) {
+                withAnimation(.spring()) {
+                    self.toggleViewType()
+                }
+            }
+            ButtonItem(label: "Add Product", systemName: "plus") {
+                self.navigationPath.append(NavigationRoute.scanBarCodeView)
+            }
+        }
     }
     
     init() {

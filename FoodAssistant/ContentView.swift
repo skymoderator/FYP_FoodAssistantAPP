@@ -17,12 +17,11 @@ struct ContentView: View {
         ScrollView(.vertical) {
             ScrollView(.horizontal) {
                 HStack(spacing: 0) {
-                    CatagoryView()
+                    CatagoryView(screenSize: mvm.screenSize)
                     CameraView()
                     SettingView()
                 }
             }
-            .scrollDisabled(!mvm.bottomBarVM.scrollable)
             .introspectScrollView { (s: UIScrollView) in
                 if mvm.bottomBarVM.tabSV == nil {
                     mvm.bottomBarVM.tabSV = s

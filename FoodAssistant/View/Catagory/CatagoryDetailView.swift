@@ -34,7 +34,6 @@ struct CatagoryDetailView: View {
     var body: some View {
         GeometryReader { (proxy: GeometryProxy) in
             let size: CGSize = proxy.size
-//            let _ = print(size)
             ScrollView(.vertical, showsIndicators: false) {
                 AlphabetSessions(
                     characters: cdvm.characters,
@@ -176,8 +175,7 @@ fileprivate struct AlphabetSessions: View, Equatable {
                     products: filteredProducts[pc] ?? [],
                     color: color,
                     label: pc.value,
-                    ns: ns,
-                    screenHeight: screenHeight
+                    ns: ns
                 )
                 .equatable()
             }
@@ -197,8 +195,7 @@ fileprivate struct AlphabetSessions: View, Equatable {
 fileprivate struct AlphabetSession: View, Equatable {
     static func ==(lhs: AlphabetSession, rhs: AlphabetSession) -> Bool {
         lhs.isExpanded == rhs.isExpanded &&
-        lhs.products == rhs.products &&
-        lhs.screenHeight == rhs.screenHeight
+        lhs.products == rhs.products
     }
     let isExpanded: Bool
     let toggleExpanded: () -> ()
@@ -207,7 +204,6 @@ fileprivate struct AlphabetSession: View, Equatable {
     let color: Color
     let label: String
     let ns: Namespace.ID
-    let screenHeight: CGFloat
     var body: some View {
         VStack(alignment: .leading) {
             Button {
@@ -233,8 +229,7 @@ fileprivate struct AlphabetSession: View, Equatable {
                     Row(
                         ns: ns,
                         product: p,
-                        color: color,
-                        screenHeight: screenHeight
+                        color: color
                     )
                     .padding(.horizontal)
                 }
@@ -255,10 +250,9 @@ fileprivate struct Row: View {
     let ns: Namespace.ID
     let product: Product
     let color: Color
-    let screenHeight: CGFloat
     
     var destination: some View {
-        InputProductDetailView(product: product, screenHeight: screenHeight)
+        InputProductDetailView(product: product)
     }
     
     var body: some View {

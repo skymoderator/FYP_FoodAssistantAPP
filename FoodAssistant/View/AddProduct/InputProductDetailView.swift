@@ -13,21 +13,16 @@ import SwiftDate
 
 struct InputProductDetailView: View {
     @State var product: Product
-    let screenHeight: CGFloat
     
-    init(product: Product, screenHeight: CGFloat) {
+    init(product: Product) {
         self._product = State(wrappedValue: product)
-        self.screenHeight = screenHeight
     }
     
     var body: some View {
         List {
             NameSession(product: $product)
             InfoSession(product: product)
-            NutTableSession(
-                nut: product.nutrition ?? NutritionInformation(),
-                screenHeight: screenHeight
-            )
+            NutTableSession(nut: product.nutrition ?? NutritionInformation())
         }
         .navigationTitle("Product Detail")
         .productLargeNavigationBar()
@@ -242,7 +237,6 @@ fileprivate struct PricePopover: View {
 
 fileprivate struct NutTableSession: View {
     let nut: NutritionInformation
-    let screenHeight: CGFloat
     var body: some View {
         Section {
             VStack {
@@ -307,10 +301,6 @@ fileprivate struct NutTableSession: View {
         } header: {
             Text("Nutrition Table")
                 .productFont(.regular, relativeTo: .footnote)
-        } footer: {
-            Rectangle()
-                .opacity(0)
-                .frame(height: screenHeight/8)
         }
     }
 }
@@ -371,14 +361,10 @@ fileprivate struct NutBarChart: View {
 
 
 struct InputProductDetailView_Previews: PreviewProvider {
-    @StateObject static var mvm = MainViewModel()
     static var product = Product()
     static var previews: some View {
         NavigationStack {
-            InputProductDetailView(
-                product: product,
-                screenHeight: mvm.screenHeight
-            )
+            InputProductDetailView(product: product)
         }
     }
 }

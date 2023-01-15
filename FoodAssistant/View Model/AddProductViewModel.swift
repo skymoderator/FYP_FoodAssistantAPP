@@ -50,12 +50,13 @@ class AddProductViewModel: ObservableObject {
             self?.product.barcode = $0
         }
         .store(in: &anyCancellables)
+    }
     
-        DispatchQueue.main.async {
-            withAnimation {
-                mvm?.bottomBarVM.showBar = false
-                mvm?.bottomBarVM.scrollable = false
-            }
+    func onAppear() {
+        scanBarcode.onAppear()
+        withAnimation {
+            mvm?.bottomBarVM.showBar = false
+            mvm?.bottomBarVM.setSrollable(to: false)
         }
     }
     
@@ -66,7 +67,7 @@ class AddProductViewModel: ObservableObject {
          */
         withAnimation {
             self.mvm?.bottomBarVM.showBar = true
-            self.mvm?.bottomBarVM.scrollable = true
+            mvm?.bottomBarVM.setSrollable(to: true)
         }
         print("deinited AddProductViewModel and its view")
     }

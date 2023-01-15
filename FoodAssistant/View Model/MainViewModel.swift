@@ -88,4 +88,8 @@ class MainViewModel: ObservableObject {
         }
     }
     
+    var screenSize: CGSize {
+        .init(width: screenWidth, height: screenHeight)
+    }
+    
 }
