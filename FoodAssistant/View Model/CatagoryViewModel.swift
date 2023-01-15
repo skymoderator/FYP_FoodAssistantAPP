@@ -56,6 +56,13 @@ class CatagoryViewModel: ObservableObject {
         }
     }
     
+    var catProductsDict: [String : [Product]] {
+        Dictionary(uniqueKeysWithValues: self.filteredCats.map {
+            (cat: String) -> (String, [Product]) in
+            (cat, self.foodsService.productWhoweCategory(number: 1, is: cat))
+        })
+    }
+    
     init() {
         foodsService.objectWillChange.sink { [weak self] _ in
             self?.objectWillChange.send()

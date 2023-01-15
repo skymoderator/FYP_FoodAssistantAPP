@@ -21,9 +21,21 @@ struct CatagoryView: View {
                     LoadingView()
                 } else {
                     if cvm.viewType == .list {
-                        ListView(cvm: cvm, ns: ns)
+                        ListView(
+                            filteredCats: cvm.filteredCats,
+                            products: cvm.catProductsDict,
+                            colors: cvm.colors,
+                            ns: ns,
+                            screenHeight: mvm.screenHeight
+                        )
                     } else {
-                        GalleryView(cvm: cvm, ns: ns)
+                        GalleryView(
+                            ns: ns,
+                            filteredCats: cvm.filteredCats,
+                            products: cvm.catProductsDict,
+                            colors: cvm.colors,
+                            screenHeight: mvm.screenHeight
+                        )
                     }
                 }
             }
@@ -95,27 +107,27 @@ fileprivate struct ErrorView: View {
 }
 
 fileprivate struct ListView: View {
-    @EnvironmentObject var mvm: MainViewModel
-    @ObservedObject var cvm: CatagoryViewModel
-    var ns: Namespace.ID
+    let filteredCats: [String]
+    let products: [String : [Product]]
+    let colors: [String : Color]
+    let ns: Namespace.ID
+    let screenHeight: CGFloat
     
     var body: some View {
         List {
             Section {
-                ForEach(cvm.filteredCats, id: \.self) { (cat: String) in
+                ForEach(filteredCats, id: \.self) { (cat: String) in
                     CatagoryListRow(
-                        cvm: cvm,
                         category: cat,
                         ns: ns,
-                        products:
-                            cvm
-                            .foodsService
-                            .productWhoweCategory(number: 1, is: cat)
+                        products: products[cat] ?? [],
+                        color: colors[cat] ?? .black,
+                        screenHeight: screenHeight
                     )
                 }
             } footer: {
                 Rectangle()
-                    .frame(height: mvm.screenHeight/8)
+                    .frame(height: screenHeight/8)
                     .opacity(0)
             }
         }
@@ -123,15 +135,11 @@ fileprivate struct ListView: View {
     }
     
     fileprivate struct CatagoryListRow: View {
-        @EnvironmentObject var mvm: MainViewModel
-        @ObservedObject var cvm: CatagoryViewModel
         let category: String
         let ns: Namespace.ID
         let products: [Product]
-        
-        private var color: Color {
-            cvm.colors[category] ?? .black
-        }
+        let color: Color
+        let screenHeight: CGFloat
         
         @ViewBuilder
         func destination(isPreview: Bool) -> some View {
@@ -142,7 +150,7 @@ fileprivate struct ListView: View {
                     color: color,
                     isPreview: isPreview
                 ),
-                screenHeight: mvm.screenHeight
+                screenHeight: screenHeight
             )
         }
         
@@ -176,42 +184,38 @@ fileprivate struct ListView: View {
 }
 
 fileprivate struct GalleryView: View {
-    @EnvironmentObject var mvm: MainViewModel
-    @ObservedObject var cvm: CatagoryViewModel
     var ns: Namespace.ID
+    let filteredCats: [String]
+    let products: [String : [Product]]
+    let colors: [String : Color]
+    let screenHeight: CGFloat
     
     var body: some View {
         ScrollView {
             LazyVGrid(
                 columns: [GridItem(.adaptive(100))],
                 spacing: 16) {
-                    ForEach(cvm.filteredCats, id: \.self) { (cat: String) in
+                    ForEach(filteredCats, id: \.self) { (cat: String) in
                         CatagoryGalleryBlock(
-                            cvm: cvm,
                             category: cat,
                             ns: ns,
-                            products:
-                                cvm
-                                .foodsService
-                                .productWhoweCategory(number: 1, is: cat)
+                            products: products[cat] ?? [],
+                            color: colors[cat] ?? .black,
+                            screenHeight: screenHeight
                         )
                     }
                 }
-                .padding(.bottom, mvm.screenHeight/8)
+                .padding(.bottom, screenHeight/8)
         }
         .edgesIgnoringSafeArea(.bottom)
     }
     
     fileprivate struct CatagoryGalleryBlock: View {
-        @EnvironmentObject var mvm: MainViewModel
-        @ObservedObject var cvm: CatagoryViewModel
         let category: String
         let ns: Namespace.ID
         let products: [Product]
-        
-        private var color: Color {
-            cvm.colors[category] ?? .black
-        }
+        let color: Color
+        let screenHeight: CGFloat
         
         @ViewBuilder
         func destination(isPreview: Bool) -> some View {
@@ -222,7 +226,7 @@ fileprivate struct GalleryView: View {
                     color: color,
                     isPreview: isPreview
                 ),
-                screenHeight: mvm.screenHeight
+                screenHeight: screenHeight
             )
         }
         
