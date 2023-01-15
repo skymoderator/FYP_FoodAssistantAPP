@@ -38,6 +38,7 @@ struct ContentView: View {
             BottomBar()
                 .frame(width: mvm.screenWidth, height: bottomBarHeight, alignment: .bottom)
                 .offset(y: mvm.bottomBarVM.showBar ? 0 : bottomBarMaxHeight)
+                .animation(.spring(), value: mvm.bottomBarVM.showBar)
         }
         .edgesIgnoringSafeArea(.all)
         .environmentObject(mvm)

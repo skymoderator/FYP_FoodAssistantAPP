@@ -44,6 +44,7 @@ struct CatagoryDetailView: View {
                     toggleExpanded: cdvm.toggleExpand(of:),
                     onRectUpdate: { (size: CGSize, rect: CGRect) in
                         guard !detail.isPreview, size != .zero else { return }
+                        let size: CGSize = .init(width: size.width, height: size.height - screenHeight/8)
                         // MARK: Whenever Scrolling Does
                         // Resetting Timeout
                         if cdvm.hideIndicatorLabel && rect.minY < 0 {
@@ -80,7 +81,6 @@ struct CatagoryDetailView: View {
                         }
                     },
                     filteredProducts: cdvm.filteredProductsDict,
-                    screenHeight: screenHeight,
                     parentSize: size,
                     onEnterInputView: {
                         cdvm.onNavigateToInputView(mvm: mvm, isEntering: true)
@@ -91,7 +91,6 @@ struct CatagoryDetailView: View {
                 )
                 .equatable()
             }
-            .coordinateSpace(name: "scroller")
             .overlay(alignment: .topTrailing) {
                 if !detail.isPreview {
                     ScrollerView(
@@ -104,6 +103,8 @@ struct CatagoryDetailView: View {
                     )
                 }
             }
+            .padding(.bottom, screenHeight/8)
+            .coordinateSpace(name: "scroller")
         }
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
@@ -154,7 +155,6 @@ fileprivate struct AlphabetSessions: View, Equatable {
     static func == (lhs: AlphabetSessions, rhs: AlphabetSessions) -> Bool {
         lhs.isExpanded == rhs.isExpanded &&
         lhs.filteredProducts == rhs.filteredProducts &&
-        lhs.screenHeight == rhs.screenHeight &&
         lhs.parentSize == rhs.parentSize
     }
     typealias PC = CatagoryDetailViewModel.ProductCharacter
@@ -166,7 +166,6 @@ fileprivate struct AlphabetSessions: View, Equatable {
     let onRectUpdate: (CGSize, CGRect) -> Void
     let onRectsUpdate: (PC, CGFloat) -> Void
     let filteredProducts: [PC : [Product]]
-    let screenHeight: CGFloat
     let parentSize: CGSize
     let onEnterInputView: () -> Void
     let onBackFromInputView: () -> Void
@@ -186,13 +185,11 @@ fileprivate struct AlphabetSessions: View, Equatable {
                     label: pc.value,
                     ns: ns,
                     onEnterInputView: onEnterInputView,
-                    onBackFromInputView: onBackFromInputView
+                    onBackFromInputView: onBackFromInputView,
+                    oldMinY: pc.minY
                 )
                 .equatable()
             }
-            Rectangle()
-                .frame(height: screenHeight/8)
-                .opacity(0)
         }
         .background {
             GeometryReader {
@@ -206,7 +203,8 @@ fileprivate struct AlphabetSessions: View, Equatable {
 fileprivate struct AlphabetSession: View, Equatable {
     static func ==(lhs: AlphabetSession, rhs: AlphabetSession) -> Bool {
         lhs.isExpanded == rhs.isExpanded &&
-        lhs.products == rhs.products
+        lhs.products == rhs.products &&
+        lhs.oldMinY == rhs.oldMinY
     }
     let isExpanded: Bool
     let toggleExpanded: () -> ()
@@ -217,6 +215,7 @@ fileprivate struct AlphabetSession: View, Equatable {
     let ns: Namespace.ID
     let onEnterInputView: () -> Void
     let onBackFromInputView: () -> Void
+    let oldMinY: CGFloat
     var body: some View {
         VStack(alignment: .leading) {
             Button {
@@ -254,7 +253,7 @@ fileprivate struct AlphabetSession: View, Equatable {
         .background {
             GeometryReader { (proxy: GeometryProxy) in
                 let minY: CGFloat = proxy.frame(in: .named("scroller")).minY
-                Color.clear.task(id: minY) { onRectUpdate(minY) }
+                Color.clear.task(id: minY.isLess(than: .zero)) { onRectUpdate(minY) }
             }
         }
     }
@@ -311,7 +310,10 @@ fileprivate struct Row: View {
         }
         .matchedGeometryEffect(id: "\(product.barcode)-\(product.name)", in: ns)
         .previewContextMenu(
-            preview: InputProductDetailView(detail: detail),
+            destination: InputProductDetailView(detail: detail),
+            preview: InputProductDetailView(
+                detail: InputProductDetailView.Detail(product: product)
+            ),
             navigationValue: CatagoryViewModel
                 .NavigationRoute
                 .inputProductDetailView(detail),
