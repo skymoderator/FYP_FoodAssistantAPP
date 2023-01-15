@@ -65,7 +65,7 @@ class MainViewModel: ObservableObject {
         let pageNum: BottomBarViewModel.PageNumber = (offset == 0) ? .one : (offset == 1 ? .two : .three)
         self.bottomBarVM.scrollTo(page: pageNum, animated: true)
     }
-    
+        
     var screenWidth: CGFloat {
         let bound: CGRect = UIScreen.main.bounds
         let width: CGFloat = bound.width

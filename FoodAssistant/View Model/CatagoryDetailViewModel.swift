@@ -62,7 +62,8 @@ class CatagoryDetailViewModel: ObservableObject {
 
     }
     
-    @Published private var _searchedProduct = ""
+    @Published var searchedProduct = ""
+    @Published var characters: [ProductCharacter]
     @Published var scrollerHeight: CGFloat = 0
     @Published var startOffset: CGFloat = 0
     @Published var hideIndicatorLabel: Bool = false
@@ -73,7 +74,6 @@ class CatagoryDetailViewModel: ObservableObject {
     @Published var orderBy: OrderBy = .ascending
     @Published var expandedCharacters: [Int] = []
     let products: [Product]
-    let characters: [ProductCharacter]
     
     init(products: [Product]) {
         self.products = products
@@ -91,16 +91,6 @@ class CatagoryDetailViewModel: ObservableObject {
             }
         }
         expandedCharacters = Array(0..<characters.count)
-    }
-    
-    var searchedProduct: Binding<String> {
-        Binding<String>(get: {
-            self._searchedProduct
-        }, set: { (s: String) in
-//            withAnimation(.spring()) {
-                self._searchedProduct = s
-//            }
-        })
     }
     
     var scrollerTitle: String {
@@ -161,11 +151,11 @@ class CatagoryDetailViewModel: ObservableObject {
     }
     
     func filteredProducts(in pc: ProductCharacter) -> [Product] {
-        if self._searchedProduct.isEmpty {
+        if self.searchedProduct.isEmpty {
             return pc.products
         } else {
             return pc.products.filter { (p: Product) in
-                p.name.lowercased().contains(self._searchedProduct.lowercased())
+                p.name.lowercased().contains(self.searchedProduct.lowercased())
             }
         }
     }
@@ -173,8 +163,8 @@ class CatagoryDetailViewModel: ObservableObject {
     func sortList(by sorting: SortBy) {
         switch sorting {
         case .name:
-            self.characters.forEach { (pc: ProductCharacter) in
-                pc.products = pc.products.sorted { (p1: Product, p2: Product) in
+            self.characters = self.characters.map { (pc: ProductCharacter) in
+                pc.products.sort { (p1: Product, p2: Product) in
                     switch self.orderBy {
                     case .ascending:
                         return p1.name < p2.name
@@ -182,10 +172,11 @@ class CatagoryDetailViewModel: ObservableObject {
                         return p1.name > p2.name
                     }
                 }
+                return pc
             }
         case .price:
-            self.characters.forEach { (pc: ProductCharacter) in
-                pc.products = pc.products.sorted { (p1: Product, p2: Product) in
+            self.characters = self.characters.map { (pc: ProductCharacter) in
+                pc.products.sort { (p1: Product, p2: Product) in
                     switch self.orderBy {
                     case .ascending:
                         return (p1.product_price[safe: 0]?.price ?? 0) < (p2.product_price[safe: 0]?.price ?? 0)
@@ -193,6 +184,7 @@ class CatagoryDetailViewModel: ObservableObject {
                         return (p1.product_price[safe: 0]?.price ?? 0) > (p2.product_price[safe: 0]?.price ?? 0)
                     }
                 }
+                return pc
             }
         }
     }
@@ -200,8 +192,8 @@ class CatagoryDetailViewModel: ObservableObject {
     func orderList(by ordering: OrderBy) {
         switch ordering {
         case .ascending:
-            self.characters.forEach { (c: ProductCharacter) in
-                c.products = c.products.sorted { (p1: Product, p2: Product) in
+            self.characters = self.characters.map { (pc: ProductCharacter) in
+                pc.products.sort { (p1: Product, p2: Product) in
                     switch self.sortBy {
                     case .name:
                         return p1.name < p2.name
@@ -209,10 +201,11 @@ class CatagoryDetailViewModel: ObservableObject {
                         return (p1.product_price[safe: 0]?.price ?? 0) < (p2.product_price[safe: 0]?.price ?? 0)
                     }
                 }
+                return pc
             }
         case .descending:
-            self.characters.forEach { (c: ProductCharacter) in
-                c.products = c.products.sorted { (p1: Product, p2: Product) in
+            self.characters = self.characters.map { (pc: ProductCharacter) in
+                pc.products.sort { (p1: Product, p2: Product) in
                     switch self.sortBy {
                     case .name:
                         return p1.name > p2.name
@@ -220,6 +213,7 @@ class CatagoryDetailViewModel: ObservableObject {
                         return (p1.product_price[safe: 0]?.price ?? 0) > (p2.product_price[safe: 0]?.price ?? 0)
                     }
                 }
+                return pc
             }
         }
     }

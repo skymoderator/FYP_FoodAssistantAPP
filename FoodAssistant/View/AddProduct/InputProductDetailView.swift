@@ -39,9 +39,7 @@ struct InputProductDetailView: View {
     let onAppear: (() -> Void)?
     let onDisappear: (() -> Void)?
     
-    init(
-        detail: Detail
-    ) {
+    init(detail: Detail) {
         self._product = State(wrappedValue: detail.product)
         self.onAppear = detail.onAppear
         self.onDisappear = detail.onDisappear
@@ -182,11 +180,17 @@ fileprivate struct InfoSession: View {
 fileprivate struct PricePopover: View {
     let product: Product
     let datas: [(Date, Double)]
+    let minPrice: Double
+    let maxPrice: Double
+    let avgPrice: Double
     init(product: Product) {
         self.product = product
         let dates: [Date] = product.product_price.map { $0.date }
         let prices: [Double] = product.product_price.map { $0.price }
         datas = zip(dates, prices).map { ($0, $1) }
+        minPrice = product.product_price.map(\.price).min() ?? 0
+        maxPrice = product.product_price.map(\.price).max() ?? 0
+        avgPrice = product.product_price.map(\.price).reduce(0.0, +)/Double(product.product_price.count)
     }
     var body: some View {
         Templates.Container(
@@ -212,6 +216,16 @@ fileprivate struct PricePopover: View {
                     .chartYAxis {
                         AxisMarks(position: .leading)
                     }
+                    .chartYAxisLabel(position: .leading, alignment: .center) {
+                        Text("Price ($)")
+                            .productFont(.bold, relativeTo: .caption)
+                            .foregroundColor(.secondary)
+                    }
+                    .chartXAxisLabel(position: .bottom, alignment: .center) {
+                        Text("Date (DD/MM)")
+                            .productFont(.bold, relativeTo: .caption)
+                            .foregroundColor(.secondary)
+                    }
                     .frame(height: 200)
                     .padding(.vertical, 8)
                     VStack(spacing: 0) {
@@ -219,21 +233,21 @@ fileprivate struct PricePopover: View {
                             image: "distribute.vertical.top",
                             color: .systemRed,
                             leading: "Lowest:",
-                            trailing: "HKD $10"
+                            trailing: "HKD $\(minPrice)"
                         )
                         Divider()
                         Row(
                             image: "distribute.vertical.bottom",
                             color: .systemOrange,
                             leading: "Highest:",
-                            trailing: "HKD $20"
+                            trailing: "HKD $\(maxPrice)"
                         )
                         Divider()
                         Row(
                             image: "distribute.vertical.center",
                             color: .systemBlue,
-                            leading: "Medium:",
-                            trailing: "HKD $15"
+                            leading: "Average:",
+                            trailing: "HKD $\(avgPrice.formatted())"
                         )
                     }
                     .background(.adaptable(light: .white, dark: .systemGray6))
@@ -242,6 +256,7 @@ fileprivate struct PricePopover: View {
                 .padding()
             }
             .frame(height: 400)
+            .frame(maxWidth: 400)
         }
     }
     

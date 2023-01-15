@@ -112,7 +112,7 @@ struct CatagoryDetailView: View {
             }
         }
         .nativeSearchBar(
-            text: cdvm.searchedProduct,
+            text: $cdvm.searchedProduct,
             placeHolder: "Search Product"
         )
         .navigationTitle(detail.category)
@@ -135,7 +135,7 @@ struct CatagoryDetailView: View {
                 )
                 .autoconnect()
         ) { _ in
-            if cdvm.scrollerTimeOut < 0.3 {
+            if cdvm.scrollerTimeOut < 2 {
                 cdvm.scrollerTimeOut += 0.01
             } else {
                 // MARK: Scrolling is Finished
@@ -245,7 +245,6 @@ fileprivate struct AlphabetSession: View, Equatable {
                         onEnterInputView: onEnterInputView,
                         onBackFromInputView: onBackFromInputView
                     )
-                    .padding(.horizontal)
                 }
             }
             TinyDivider()
@@ -319,6 +318,7 @@ fileprivate struct Row: View {
                 .inputProductDetailView(detail),
             presentAsSheet: false
         )
+        .padding(.horizontal)
     }
 }
 
