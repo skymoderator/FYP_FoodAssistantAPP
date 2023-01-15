@@ -249,5 +249,11 @@ class CatagoryDetailViewModel: ObservableObject {
             expandedCharacters = []
         }
     }
-
+    
+    func onNavigateToInputView(mvm: MainViewModel, isEntering: Bool) {
+        withAnimation(.spring()) {
+            mvm.bottomBarVM.setSrollable(to: !isEntering)
+            mvm.bottomBarVM.showBar = !isEntering
+        }
+    }
 }

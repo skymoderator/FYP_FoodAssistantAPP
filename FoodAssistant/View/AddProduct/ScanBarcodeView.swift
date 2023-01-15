@@ -112,7 +112,13 @@ fileprivate struct NavBut: View {
     var body: some View {
         Button {
             path.append(
-                CatagoryViewModel.NavigationRoute.inputProductDetailView(product)
+                CatagoryViewModel
+                    .NavigationRoute
+                    .inputProductDetailView(
+                        InputProductDetailView.Detail(
+                            product: product
+                        )
+                    )
             )
         } label: {
             Text("Next")
@@ -128,13 +134,6 @@ struct AddProductView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack(path: $path) {
             ScanBarcodeView(mvm: mvm, path: $path)
-                .navigationDestination(
-                    for: CatagoryViewModel.NavigationRoute.self
-                ) { (route: CatagoryViewModel.NavigationRoute) in
-                    if case .inputProductDetailView(let product) = route {
-                        InputProductDetailView(product: product)
-                    }
-                }
         }
         //        ContentView()
         .environmentObject(mvm)

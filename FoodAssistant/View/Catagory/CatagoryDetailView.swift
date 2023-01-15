@@ -16,6 +16,7 @@ struct CatagoryDetailView: View {
         let isPreview: Bool
     }
     
+    @EnvironmentObject var mvm: MainViewModel
     @StateObject var cdvm: CatagoryDetailViewModel
     @Namespace var ns
     
@@ -80,7 +81,13 @@ struct CatagoryDetailView: View {
                     },
                     filteredProducts: cdvm.filteredProductsDict,
                     screenHeight: screenHeight,
-                    parentSize: size
+                    parentSize: size,
+                    onEnterInputView: {
+                        cdvm.onNavigateToInputView(mvm: mvm, isEntering: true)
+                    },
+                    onBackFromInputView: {
+                        cdvm.onNavigateToInputView(mvm: mvm, isEntering: false)
+                    }
                 )
                 .equatable()
             }
@@ -161,6 +168,8 @@ fileprivate struct AlphabetSessions: View, Equatable {
     let filteredProducts: [PC : [Product]]
     let screenHeight: CGFloat
     let parentSize: CGSize
+    let onEnterInputView: () -> Void
+    let onBackFromInputView: () -> Void
     var body: some View {
         LazyVStack(spacing: 0) {
             ForEach(characters) { (pc: PC) in
@@ -175,7 +184,9 @@ fileprivate struct AlphabetSessions: View, Equatable {
                     products: filteredProducts[pc] ?? [],
                     color: color,
                     label: pc.value,
-                    ns: ns
+                    ns: ns,
+                    onEnterInputView: onEnterInputView,
+                    onBackFromInputView: onBackFromInputView
                 )
                 .equatable()
             }
@@ -204,6 +215,8 @@ fileprivate struct AlphabetSession: View, Equatable {
     let color: Color
     let label: String
     let ns: Namespace.ID
+    let onEnterInputView: () -> Void
+    let onBackFromInputView: () -> Void
     var body: some View {
         VStack(alignment: .leading) {
             Button {
@@ -229,7 +242,9 @@ fileprivate struct AlphabetSession: View, Equatable {
                     Row(
                         ns: ns,
                         product: p,
-                        color: color
+                        color: color,
+                        onEnterInputView: onEnterInputView,
+                        onBackFromInputView: onBackFromInputView
                     )
                     .padding(.horizontal)
                 }
@@ -250,9 +265,15 @@ fileprivate struct Row: View {
     let ns: Namespace.ID
     let product: Product
     let color: Color
+    let onEnterInputView: () -> Void
+    let onBackFromInputView: () -> Void
     
-    var destination: some View {
-        InputProductDetailView(product: product)
+    var detail: InputProductDetailView.Detail {
+        InputProductDetailView.Detail(
+            product: product,
+            onAppear: onEnterInputView,
+            onDisappear: onBackFromInputView
+        )
     }
     
     var body: some View {
@@ -290,7 +311,10 @@ fileprivate struct Row: View {
         }
         .matchedGeometryEffect(id: "\(product.barcode)-\(product.name)", in: ns)
         .previewContextMenu(
-            destination: destination,
+            preview: InputProductDetailView(detail: detail),
+            navigationValue: CatagoryViewModel
+                .NavigationRoute
+                .inputProductDetailView(detail),
             presentAsSheet: false
         )
     }

@@ -12,10 +12,39 @@ import Charts
 import SwiftDate
 
 struct InputProductDetailView: View {
-    @State var product: Product
     
-    init(product: Product) {
-        self._product = State(wrappedValue: product)
+    struct Detail: Hashable {
+        static func == (lhs: InputProductDetailView.Detail, rhs: InputProductDetailView.Detail) -> Bool {
+            lhs.product == rhs.product
+        }
+        func hash(into hasher: inout Hasher) {
+            hasher.combine(product)
+        }
+        let product: Product
+        let onAppear: (() -> Void)?
+        let onDisappear: (() -> Void)?
+        
+        init(
+            product: Product,
+            onAppear: (() -> Void)? = nil,
+            onDisappear: (() -> Void)? = nil
+        ) {
+            self.product = product
+            self.onAppear = onAppear
+            self.onDisappear = onDisappear
+        }
+    }
+    
+    @State var product: Product
+    let onAppear: (() -> Void)?
+    let onDisappear: (() -> Void)?
+    
+    init(
+        detail: Detail
+    ) {
+        self._product = State(wrappedValue: detail.product)
+        self.onAppear = detail.onAppear
+        self.onDisappear = detail.onDisappear
     }
     
     var body: some View {
@@ -29,6 +58,8 @@ struct InputProductDetailView: View {
         .onTapGesture {
             hideKeyboard()
         }
+        .onAppear(perform: onAppear)
+        .onDisappear(perform: onDisappear)
     }
 }
 
@@ -364,7 +395,9 @@ struct InputProductDetailView_Previews: PreviewProvider {
     static var product = Product()
     static var previews: some View {
         NavigationStack {
-            InputProductDetailView(product: product)
+            InputProductDetailView(
+                detail: InputProductDetailView.Detail(product: product)
+            )
         }
     }
 }

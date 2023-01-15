@@ -58,8 +58,8 @@ struct CatagoryView: View {
                     ScanBarcodeView(mvm: mvm, path: $cvm.navigationPath)
                 case .categoryDetailView(let categoryDetail):
                     CatagoryDetailView(detail: categoryDetail, screenHeight: screenSize.height)
-                case .inputProductDetailView(let product):
-                    InputProductDetailView(product: product)
+                case .inputProductDetailView(let detail):
+                    InputProductDetailView(detail: detail)
                 }
                 
             }

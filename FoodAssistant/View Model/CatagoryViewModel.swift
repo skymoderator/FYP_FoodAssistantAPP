@@ -14,7 +14,7 @@ class CatagoryViewModel: ObservableObject {
     enum NavigationRoute: Hashable {
         case scanBarCodeView
         case categoryDetailView(CatagoryDetailView.CategoryDetail)
-        case inputProductDetailView(Product)
+        case inputProductDetailView(InputProductDetailView.Detail)
     }
     
     enum ViewType: CaseIterable {
