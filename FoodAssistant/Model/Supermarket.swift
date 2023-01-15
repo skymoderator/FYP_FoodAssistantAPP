@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum Supermarket: String, CaseIterable, Codable {
+enum Supermarket: String, CaseIterable, Codable, Hashable {
     
     case wellcome = "Wellcome"
     case parknshop = "Parknshop"

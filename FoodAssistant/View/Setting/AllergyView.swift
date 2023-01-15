@@ -10,11 +10,12 @@ import SwiftUI
 struct AllergyView: View {
     @StateObject var vm = AllergyViewModel()
     @Namespace var ns
+    let screenHeight: CGFloat
     var body: some View {
         List {
             SelectedAllergiesSession(vm: vm, ns: ns)
             AllAllergiesSession(vm: vm, ns: ns)
-            Footer()
+            Footer(screenHeight: screenHeight)
         }
             .productLargeNavigationBar()
             .navigationTitle("Allergy")
@@ -22,6 +23,7 @@ struct AllergyView: View {
 }
 
 fileprivate struct Footer: View {
+    let screenHeight: CGFloat
     var body: some View {
         Section {
             
@@ -101,9 +103,10 @@ fileprivate struct AllAllergiesSession: View {
 }
 
 struct AllergyView_Previews: PreviewProvider {
+    @StateObject static var mvm = MainViewModel()
     static var previews: some View {
         NavigationStack {
-            AllergyView()
+            AllergyView(screenHeight: mvm.screenHeight)
         }
     }
 }

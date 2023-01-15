@@ -19,21 +19,23 @@ struct ScanBarcodeView: View {
     }
     
     var body: some View {
-        ZStack {
-            if mvm.isPortrait {
-                VStack(spacing: 0) {
-                    UpperView(vm: vm)
-                    LowerView(vm: vm)
-                }
-            } else {
-                HStack(spacing: 32) {
-                    UpperView(vm: vm)
-                    LowerView(vm: vm)
+        ScrollView(.vertical) {
+            VStack {
+                if mvm.isPortrait {
+                    VStack(spacing: 0) {
+                        UpperView(vm: vm)
+                        LowerView(vm: vm)
+                    }
+                } else {
+                    HStack(spacing: 32) {
+                        UpperView(vm: vm)
+                        LowerView(vm: vm)
+                    }
                 }
             }
+            .padding(32)
+            .frame(width: mvm.screenWidth, height: mvm.screenHeight)
         }
-        .padding(32)
-        .frame(width: mvm.screenWidth, height: mvm.screenHeight)
         .background(.systemGroupedBackground)
         .edgesIgnoringSafeArea(.top)
         .onAppear(perform: vm.scanBarcode.onAppear)
@@ -94,15 +96,15 @@ fileprivate struct LowerView: View {
                 }
                 .cornerRadius(30)
         }
-//        .padding(.bottom)
     }
 }
 
 fileprivate struct NavBut: View {
+    @EnvironmentObject var mvm: MainViewModel
     @ObservedObject var vm: AddProductViewModel
     var body: some View {
         NavigationLink {
-            InputProductDetailView(product: vm.product)
+            InputProductDetailView(product: vm.product, screenHeight: mvm.screenHeight)
         } label: {
             Text("Next")
                 .productFont(.bold, relativeTo: .body)
@@ -114,10 +116,10 @@ fileprivate struct NavBut: View {
 struct AddProductView_Previews: PreviewProvider {
     @StateObject static var mvm = MainViewModel()
     static var previews: some View {
-//        NavigationStack {
-//            ScanBarcodeView(mvm: mvm)
-//        }
-        ContentView()
+        NavigationStack {
+            ScanBarcodeView(mvm: mvm)
+        }
+//        ContentView()
             .environmentObject(mvm)
     }
 }

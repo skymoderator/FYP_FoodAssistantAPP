@@ -8,20 +8,20 @@
 import SwiftUI
 
 extension View {
-    func nativeSearchBar(text: Binding<String>, placeHolder: String) -> some View {
-        self.modifier(NativeSearchBarModifier(text: text, placeHolder: placeHolder))
+    func nativeSearchBar(text: Binding<String>, placeHolder: String, backgroundColor: Color? = nil) -> some View {
+        self.modifier(NativeSearchBarModifier(text: text, placeHolder: placeHolder, backgroundColor: backgroundColor))
     }
 }
 
 struct NativeSearchBarModifier: ViewModifier {
     
     @Binding var text: String
-    
-    var placeHolder: String
+    let placeHolder: String
+    let backgroundColor: Color?
     
     func body(content: Content) -> some View {
         content.overlay(
-            NativeSearchBarControllerRepresentable(text: $text, placeHolder: placeHolder)
+            NativeSearchBarControllerRepresentable(text: $text, placeHolder: placeHolder, backgroundColor: backgroundColor)
                 .frame(width: 0, height: 0)
         )
     }
@@ -30,12 +30,13 @@ struct NativeSearchBarModifier: ViewModifier {
 struct NativeSearchBarControllerRepresentable: UIViewControllerRepresentable {
     
     @Binding var text: String
+    let placeHolder: String
+    let backgroundColor: Color?
     
-    var placeHolder: String
-    
-    init(text: Binding<String>, placeHolder: String) {
+    init(text: Binding<String>, placeHolder: String, backgroundColor: Color?) {
         self._text = text
         self.placeHolder = placeHolder
+        self.backgroundColor = backgroundColor
     }
     
     func makeUIViewController(context: Context) -> NativeSearchBarController {
@@ -48,6 +49,7 @@ struct NativeSearchBarControllerRepresentable: UIViewControllerRepresentable {
             searchController?.searchBar.searchTextField.font = ProductSans.regular.uiFont(relativeTo: .body)
             if searchController != nil { return }
             vc.navigationItem.searchController = context.coordinator.searchController
+            vc.view.backgroundColor = backgroundColor?.toUIColor()
         }
         context.coordinator.searchController.searchResultsUpdater = context.coordinator
         

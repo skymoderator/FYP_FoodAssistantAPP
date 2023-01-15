@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct NutritionInformation: Identifiable, Equatable, Codable {
+struct NutritionInformation: Identifiable, Equatable, Codable, Hashable {
     
     /*
      All units are per 100ml, not per serving

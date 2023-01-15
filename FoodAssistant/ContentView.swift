@@ -29,10 +29,7 @@ struct ContentView: View {
                 }
                 s.delegate = mvm.bottomBarVM
                 s.isPagingEnabled = true
-                s.setContentOffset(
-                    .init(x: screenWidth, y: 0),
-                    animated: false)
-                mvm.bottomBarVM.normalizedCurrentTabOffset = 1
+                mvm.bottomBarVM.scrollTo(page: .one, animated: false)
             }
         }
         .introspectScrollView { (s: UIScrollView) in
@@ -40,7 +37,7 @@ struct ContentView: View {
         }
         .overlay(alignment: .bottom) {
             BottomBar()
-                .frame(width: screenWidth, height: bottomBarHeight, alignment: .bottom)
+                .frame(width: mvm.screenWidth, height: bottomBarHeight, alignment: .bottom)
                 .offset(y: mvm.bottomBarVM.showBar ? 0 : bottomBarMaxHeight)
         }
         .edgesIgnoringSafeArea(.all)
@@ -54,11 +51,11 @@ struct ContentView: View {
     }
     
     var bottomBarHeight: CGFloat {
-        min(160, screenHeight/8) + tabBarMaxHeight * mvm.bottomBarVM.tabScrollProgress
+        min(160, mvm.screenHeight/8) + tabBarMaxHeight * mvm.bottomBarVM.tabScrollProgress
     }
     
     var bottomBarMaxHeight: CGFloat {
-        min(160, screenHeight/8) + tabBarMaxHeight
+        min(160, mvm.screenHeight/8) + tabBarMaxHeight
     }
     
     var tabBarMaxHeight: CGFloat {

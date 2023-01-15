@@ -9,9 +9,10 @@ import Foundation
 import SwiftUI
 
 extension View {
-    func previewContextMenu<Preview: View, Destination: View>(
+    func previewContextMenu<Preview: View, Destination: View, NavigationValue: Hashable>(
             destination: Destination,
             preview: Preview,
+            navigationValue: NavigationValue? = nil,
             preferredContentSize: CGSize? = nil,
             presentAsSheet: Bool = false,
             didTapView: (() -> Void)? = nil,
@@ -22,6 +23,7 @@ extension View {
                 PreviewContextViewModifier(
                     destination: destination,
                     preview: preview,
+                    navigationValue: navigationValue,
                     preferredContentSize: preferredContentSize,
                     presentAsSheet: presentAsSheet,
                     didCommitView: didCommitView,
@@ -30,8 +32,9 @@ extension View {
             )
         }
         
-    func previewContextMenu<Preview: View>(
+    func previewContextMenu<Preview: View, NavigationValue: Hashable>(
         preview: Preview,
+        navigationValue: NavigationValue? = nil,
         preferredContentSize: CGSize? = nil,
         presentAsSheet: Bool = false,
         didTapView: (() -> Void)? = nil,
@@ -39,8 +42,9 @@ extension View {
         @ButtonBuilder actions: () -> [PreviewContextAction] = { [] }
     ) -> some View {
         modifier(
-            PreviewContextViewModifier<Preview, EmptyView>(
+            PreviewContextViewModifier<Preview, EmptyView, NavigationValue>(
                 preview: preview,
+                navigationValue: navigationValue,
                 preferredContentSize: preferredContentSize,
                 presentAsSheet: presentAsSheet,
                 didCommitView: didCommitView,
@@ -58,7 +62,7 @@ extension View {
         @ButtonBuilder actions: () -> [PreviewContextAction] = { [] }
     ) -> some View {
         modifier(
-            PreviewContextViewModifier<EmptyView, Destination>(
+            PreviewContextViewModifier<EmptyView, Destination, Int>(
                 destination: destination,
                 preferredContentSize: preferredContentSize,
                 presentAsSheet: presentAsSheet,

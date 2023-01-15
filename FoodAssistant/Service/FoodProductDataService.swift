@@ -16,6 +16,7 @@ class FoodProductDataService: ObservableObject {
     @Published var categories1: [String] = []
     @Published var categories2: [String] = []
     @Published var categories3: [String] = []
+    @Published var errorMessage: String? = nil
     private var subscriptions = Set<AnyCancellable>()
     
     init() {
@@ -44,6 +45,7 @@ class FoodProductDataService: ObservableObject {
                 switch completion {
                 case let .failure(error):
                     print("Couldn't load food products: \(error)")
+                    self?.errorMessage = error.localizedDescription
                 case .finished:
                     self?.postProcessing()
                     self?.isLoading = false
@@ -68,10 +70,11 @@ class FoodProductDataService: ObservableObject {
                 path: "/api/foodproducts/"
             )
             .receive(on: DispatchQueue.main)
-            .sink { (completion: Subscribers.Completion<Error>) in
+            .sink { [weak self] (completion: Subscribers.Completion<Error>) in
                 switch completion {
                 case let .failure(error):
                     print("Couldn't add food product: \(error)")
+                    self?.errorMessage = error.localizedDescription
                 case .finished: break
                 }
             } receiveValue: { [weak self] (product: Product) in

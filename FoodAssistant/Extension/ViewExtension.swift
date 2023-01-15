@@ -25,19 +25,4 @@ extension View {
                 }
         }
     }
-    
-    func offset(space: String, completion: @escaping (CGRect)->()) -> some View {
-        self
-            .overlay {
-                GeometryReader {
-                    let rect = $0.frame(in: .named(space))
-                    Color
-                        .clear
-                        .preference(key: CGRectPreferenceKey.self, value: rect)
-                        .onPreferenceChange(CGRectPreferenceKey.self) { value in
-                            completion(value)
-                        }
-                }
-            }
-    }
 }

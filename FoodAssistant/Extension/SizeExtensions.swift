@@ -20,14 +20,24 @@ extension View {
         .onPreferenceChange(CGSizePreferenceKey.self, perform: onChange)
     }
     
-    func readGeometry(onChange: @escaping (CGRect) -> Void) -> some View {
+    func readGeometry(
+        id: String,
+        space: String,
+        onChange: @escaping (String, [String : CGRect]) -> Void
+    ) -> some View {
         overlay(
             GeometryReader { (proxy: GeometryProxy) in
-                Color.clear
-                    .preference(key: CGRectPreferenceKey.self, value: proxy.frame(in: .global))
+                Color
+                    .clear
+                    .preference(
+                        key: CGRectPreferenceKey.self,
+                        value: [id : proxy.frame(in: .named(space))]
+                    )
             }
         )
-        .onPreferenceChange(CGRectPreferenceKey.self, perform: onChange)
+        .onPreferenceChange(CGRectPreferenceKey.self) { (cache: [String : CGRect]) in
+            onChange(id, cache)
+        }
     }
     
 }

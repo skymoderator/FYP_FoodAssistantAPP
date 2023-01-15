@@ -26,7 +26,7 @@ struct SettingView: View {
                         icon: "fork.knife.circle",
                         text: "Food Allergy",
                         color: .systemRed,
-                        destination: AllergyView()
+                        destination: AllergyView(screenHeight: mvm.screenHeight)
                     )
                     Row(
                         icon: "star.circle",

@@ -11,8 +11,28 @@ import Combine
 
 class CatagoryViewModel: ObservableObject {
     
+    enum ViewType: CaseIterable {
+        case gallery, list
+        
+        var label: String {
+            switch self {
+            case .gallery: return "List"
+            case .list: return "Gallery"
+            }
+        }
+        
+        var systemName: String {
+            switch self {
+            case .gallery: return "list.bullet"
+            case .list: return "square.grid.2x2"
+            }
+        }
+    }
+    
     @Published private var _searchedCatagory = ""
     @Published var foodsService = FoodProductDataService()
+    @Published var viewType: ViewType = .list
+    @Published var colors: [String : Color] = [:]
     
     var searchedCatagory: Binding<String> {
         Binding<String>(get: {
@@ -41,6 +61,21 @@ class CatagoryViewModel: ObservableObject {
             self?.objectWillChange.send()
         }
         .store(in: &anyCancellables)
+        
+        foodsService.$categories1.sink { [weak self] (cats: [String]) in
+            self?.colors = Dictionary(uniqueKeysWithValues: cats.map { (cat: String) in
+                (cat, Color.random)
+            })
+        }
+        .store(in: &anyCancellables)
+    }
+    
+    func toggleViewType() {
+        if viewType == .list {
+            viewType = .gallery
+        } else {
+            viewType = .list
+        }
     }
     
 }

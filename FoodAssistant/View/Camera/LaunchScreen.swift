@@ -8,18 +8,21 @@
 import SwiftUI
 
 struct LaunchScreen: View {
+    @EnvironmentObject var mvm: MainViewModel
     var body: some View {
         Image("Appicon")
             .resizable()
             .scaledToFit()
-            .frame(width: screenWidth/3, height: screenWidth/3)
-            .frame(width: screenWidth, height: screenHeight)
+            .frame(width: mvm.screenWidth/3, height: mvm.screenWidth/3)
+            .frame(width: mvm.screenWidth, height: mvm.screenHeight)
             .background(.white)
     }
 }
 
 struct LaunchScreen_Previews: PreviewProvider {
+    @StateObject static var mvm = MainViewModel()
     static var previews: some View {
         LaunchScreen()
+            .environmentObject(mvm)
     }
 }

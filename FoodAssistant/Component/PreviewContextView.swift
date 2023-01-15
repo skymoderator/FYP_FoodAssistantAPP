@@ -9,19 +9,22 @@ import SwiftUI
 import SwiftUIX
 import UIKit
 
-struct PreviewContextViewModifier<Preview: View, Destination: View>: ViewModifier {
+struct PreviewContextViewModifier<Preview: View, Destination: View, NavigationValue: Hashable>: ViewModifier {
     
     @State private var isActive: Bool = false
     private let previewContent: Preview?
     private let destination: Destination?
+    private let navigationValue: NavigationValue?
     private let preferredContentSize: CGSize?
     private let actions: [UIAction]
     private let presentAsSheet: Bool
     private let didCommitView: (() -> Void)?
     
+    // Both `preview` and `destination` are different
     init(
         destination: Destination,
         preview: Preview,
+        navigationValue: NavigationValue? = nil,
         preferredContentSize: CGSize? = nil,
         presentAsSheet: Bool = false,
         didCommitView: (() -> Void)? = nil,
@@ -29,14 +32,17 @@ struct PreviewContextViewModifier<Preview: View, Destination: View>: ViewModifie
     ) {
         self.destination = destination
         self.previewContent = preview
+        self.navigationValue = navigationValue
         self.preferredContentSize = preferredContentSize
         self.presentAsSheet = presentAsSheet
         self.didCommitView = didCommitView
         self.actions = actions().map(\.uiAction)
     }
     
+    // Both `preview` and `destination` are the same
     init(
         destination: Destination,
+        navigationValue: NavigationValue? = nil,
         preferredContentSize: CGSize? = nil,
         presentAsSheet: Bool = false,
         didCommitView: (() -> Void)? = nil,
@@ -44,14 +50,17 @@ struct PreviewContextViewModifier<Preview: View, Destination: View>: ViewModifie
     ) {
         self.destination = destination
         self.previewContent = nil
+        self.navigationValue = navigationValue
         self.preferredContentSize = preferredContentSize
         self.presentAsSheet = presentAsSheet
         self.didCommitView = didCommitView
         self.actions = actions().map(\.uiAction)
     }
     
+    // Only `preivew`, no destination
     init(
         preview: Preview,
+        navigationValue: NavigationValue? = nil,
         preferredContentSize: CGSize? = nil,
         presentAsSheet: Bool = false,
         didCommitView: (() -> Void)? = nil,
@@ -59,6 +68,7 @@ struct PreviewContextViewModifier<Preview: View, Destination: View>: ViewModifie
     ) {
         self.destination = nil
         self.previewContent = preview
+        self.navigationValue = navigationValue
         self.preferredContentSize = preferredContentSize
         self.presentAsSheet = presentAsSheet
         self.didCommitView = didCommitView
@@ -68,32 +78,30 @@ struct PreviewContextViewModifier<Preview: View, Destination: View>: ViewModifie
     @ViewBuilder
     public func body(content: Content) -> some View {
         ZStack {
-            if !presentAsSheet, destination != nil {
-                NavigationLink(
-                    destination: destination,
-                    isActive: $isActive,
-                    label: { EmptyView() }
-                )
-//                .hidden()
-//                .frame(width: 0, height: 0)
-            }
-            content
-                .overlay(
-                    PreviewContextView(
-                        preview: preview,
-                        preferredContentSize: preferredContentSize,
-                        actions: actions,
-                        isPreviewOnly: destination == nil,
-                        didCommitView: didCommitView,
-                        isActive: $isActive
-                    )
-                    .opacity(0.05)
-                    .if(presentAsSheet) {
-                        $0.sheet(isPresented: $isActive) {
-                            destination
-                        }
+            if presentAsSheet {
+                content
+                    .sheet(isPresented: $isActive) {
+                        destination
                     }
-                )
+            } else {
+                NavigationLink(value: navigationValue) {
+                    content
+                }
+                .navigationDestination(isPresented: $isActive) {
+                    destination
+                }
+            }
+        }
+        .overlay {
+            PreviewContextView(
+                preview: preview,
+                preferredContentSize: preferredContentSize,
+                actions: actions,
+                isPreviewOnly: destination == nil,
+                didCommitView: didCommitView,
+                isActive: $isActive
+            )
+            .opacity(0.05)
         }
     }
     

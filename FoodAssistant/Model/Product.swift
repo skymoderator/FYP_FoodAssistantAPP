@@ -7,13 +7,9 @@
 
 import Foundation
 
-class Product: Identifiable, Equatable, Codable {
+struct Product: IdentifyEquateCodeHashable {
     
-    static func ==(lhs: Product, rhs: Product) -> Bool {
-        lhs.id == rhs.id
-    }
-    
-    var id: UUID = UUID()
+    var id = UUID()
     var name: String = ""
     var barcode: String = ""
     var nutrition: NutritionInformation? = NutritionInformation()
@@ -28,7 +24,7 @@ class Product: Identifiable, Equatable, Codable {
     //var supermarket: Supermarket?
 }
 
-class ProductPrice: Codable {
+struct ProductPrice: Hashable, Codable {
     var price: Double
     var supermarket: Supermarket
     var date: Date

@@ -13,7 +13,6 @@
 		884099C429571FE900AFC290 /* UserDefaultExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 884099C329571FE900AFC290 /* UserDefaultExtension.swift */; };
 		8845AB11293CBFB000BF6C5E /* RoundedRectangleCorners.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8845AB10293CBFB000BF6C5E /* RoundedRectangleCorners.swift */; };
 		8845AB13293CC29000BF6C5E /* NutritionTableDetectionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8845AB12293CC29000BF6C5E /* NutritionTableDetectionService.swift */; };
-		884E3155292A62C1009DF3CA /* ProductDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 884E3154292A62C1009DF3CA /* ProductDetailView.swift */; };
 		884E3157292A6311009DF3CA /* Product.swift in Sources */ = {isa = PBXBuildFile; fileRef = 884E3156292A6311009DF3CA /* Product.swift */; };
 		884F0B68291BEAE700B5FEC3 /* PhotoCaptureProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 884F0B67291BEAE700B5FEC3 /* PhotoCaptureProcessor.swift */; };
 		884F0B6A291BEC2700B5FEC3 /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 884F0B69291BEC2700B5FEC3 /* Photo.swift */; };
@@ -56,6 +55,12 @@
 		889F29C62967C7C400D10192 /* AllergyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889F29C52967C7C400D10192 /* AllergyViewModel.swift */; };
 		889F29C8296954B400D10192 /* DeviceRotationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889F29C7296954B400D10192 /* DeviceRotationExtension.swift */; };
 		889F29CA296D708800D10192 /* UIDeviceExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889F29C9296D708800D10192 /* UIDeviceExtension.swift */; };
+		889F29CC297000B300D10192 /* IdentifyEquateCodeHashable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889F29CB297000B300D10192 /* IdentifyEquateCodeHashable.swift */; };
+		889F29CE2970F8C800D10192 /* ArrayExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889F29CD2970F8C800D10192 /* ArrayExtension.swift */; };
+		889F29D02971845B00D10192 /* ScrollerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889F29CF2971845B00D10192 /* ScrollerView.swift */; };
+		889F29D22971850300D10192 /* MenuItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889F29D12971850300D10192 /* MenuItem.swift */; };
+		889F29D42971C44D00D10192 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889F29D32971C44D00D10192 /* MenuView.swift */; };
+		889F29D82972CC1E00D10192 /* SequenceExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889F29D72972CC1E00D10192 /* SequenceExtension.swift */; };
 		88A7979129252728007AE689 /* ImagePickerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A7979029252728007AE689 /* ImagePickerService.swift */; };
 		88A7979329252AFC007AE689 /* CaptureSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A7979229252AFC007AE689 /* CaptureSource.swift */; };
 		88A7979529252C7F007AE689 /* BoundingBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A7979429252C7F007AE689 /* BoundingBoxView.swift */; };
@@ -80,7 +85,6 @@
 		88F213F929247B2B00940928 /* NMS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F213F829247B2B00940928 /* NMS.swift */; };
 		88F213FB29247C2100940928 /* IOU.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F213FA29247C2100940928 /* IOU.swift */; };
 		88F213FD292499F700940928 /* CameraViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F213FC292499F700940928 /* CameraViewModel.swift */; };
-		88F214002924B4FF00940928 /* ScreenDimensionExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F213FF2924B4FF00940928 /* ScreenDimensionExtension.swift */; };
 		88F214022924B50F00940928 /* LaunchScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F214012924B50F00940928 /* LaunchScreen.swift */; };
 		88F214042924CD3200940928 /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F214032924CD3200940928 /* ColorExtension.swift */; };
 		88F214062925117100940928 /* CameraBottomBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F214052925117100940928 /* CameraBottomBar.swift */; };
@@ -115,7 +119,6 @@
 		884099C329571FE900AFC290 /* UserDefaultExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultExtension.swift; sourceTree = "<group>"; };
 		8845AB10293CBFB000BF6C5E /* RoundedRectangleCorners.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedRectangleCorners.swift; sourceTree = "<group>"; };
 		8845AB12293CC29000BF6C5E /* NutritionTableDetectionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NutritionTableDetectionService.swift; sourceTree = "<group>"; };
-		884E3154292A62C1009DF3CA /* ProductDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDetailView.swift; sourceTree = "<group>"; };
 		884E3156292A6311009DF3CA /* Product.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Product.swift; sourceTree = "<group>"; };
 		884F0B67291BEAE700B5FEC3 /* PhotoCaptureProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoCaptureProcessor.swift; sourceTree = "<group>"; };
 		884F0B69291BEC2700B5FEC3 /* Photo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
@@ -161,6 +164,12 @@
 		889F29C52967C7C400D10192 /* AllergyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllergyViewModel.swift; sourceTree = "<group>"; };
 		889F29C7296954B400D10192 /* DeviceRotationExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceRotationExtension.swift; sourceTree = "<group>"; };
 		889F29C9296D708800D10192 /* UIDeviceExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIDeviceExtension.swift; sourceTree = "<group>"; };
+		889F29CB297000B300D10192 /* IdentifyEquateCodeHashable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentifyEquateCodeHashable.swift; sourceTree = "<group>"; };
+		889F29CD2970F8C800D10192 /* ArrayExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayExtension.swift; sourceTree = "<group>"; };
+		889F29CF2971845B00D10192 /* ScrollerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollerView.swift; sourceTree = "<group>"; };
+		889F29D12971850300D10192 /* MenuItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuItem.swift; sourceTree = "<group>"; };
+		889F29D32971C44D00D10192 /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
+		889F29D72972CC1E00D10192 /* SequenceExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SequenceExtension.swift; sourceTree = "<group>"; };
 		88A7979029252728007AE689 /* ImagePickerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerService.swift; sourceTree = "<group>"; };
 		88A7979229252AFC007AE689 /* CaptureSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureSource.swift; sourceTree = "<group>"; };
 		88A7979429252C7F007AE689 /* BoundingBoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoundingBoxView.swift; sourceTree = "<group>"; };
@@ -184,7 +193,6 @@
 		88F213F829247B2B00940928 /* NMS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NMS.swift; sourceTree = "<group>"; };
 		88F213FA29247C2100940928 /* IOU.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IOU.swift; sourceTree = "<group>"; };
 		88F213FC292499F700940928 /* CameraViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewModel.swift; sourceTree = "<group>"; };
-		88F213FF2924B4FF00940928 /* ScreenDimensionExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScreenDimensionExtension.swift; sourceTree = "<group>"; };
 		88F214012924B50F00940928 /* LaunchScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchScreen.swift; sourceTree = "<group>"; };
 		88F214032924CD3200940928 /* ColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtension.swift; sourceTree = "<group>"; };
 		88F214052925117100940928 /* CameraBottomBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraBottomBar.swift; sourceTree = "<group>"; };
@@ -229,7 +237,6 @@
 			isa = PBXGroup;
 			children = (
 				8894EBD229264AE700204185 /* CatagoryView.swift */,
-				884E3154292A62C1009DF3CA /* ProductDetailView.swift */,
 				889F29BC2964788400D10192 /* CatagoryDetailView.swift */,
 			);
 			path = Catagory;
@@ -311,6 +318,7 @@
 				88D053AE293EE54E00277155 /* Ingredient.swift */,
 				88C229282952C6F6005E5A27 /* Supermarket.swift */,
 				FEF71177295C28850051A586 /* User.swift */,
+				889F29D12971850300D10192 /* MenuItem.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -434,7 +442,6 @@
 				8894EBDE2926544200204185 /* SafeAreaInset.swift */,
 				8894EBD829264CD900204185 /* SizeExtensions.swift */,
 				8894EBC229262C9800204185 /* ProductFontExtension.swift */,
-				88F213FF2924B4FF00940928 /* ScreenDimensionExtension.swift */,
 				88F214032924CD3200940928 /* ColorExtension.swift */,
 				88A7979629253D4E007AE689 /* UIImageExtension.swift */,
 				88D053B62946BA4700277155 /* ViewExtension.swift */,
@@ -442,6 +449,9 @@
 				884099C329571FE900AFC290 /* UserDefaultExtension.swift */,
 				889F29C7296954B400D10192 /* DeviceRotationExtension.swift */,
 				889F29C9296D708800D10192 /* UIDeviceExtension.swift */,
+				889F29CB297000B300D10192 /* IdentifyEquateCodeHashable.swift */,
+				889F29CD2970F8C800D10192 /* ArrayExtension.swift */,
+				889F29D72972CC1E00D10192 /* SequenceExtension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -455,6 +465,8 @@
 				88D053B0293EF42C00277155 /* BarCodeIndicatorView.swift */,
 				88D053BA2946D62D00277155 /* PreviewContextView.swift */,
 				882631D1294C31D7003080DF /* ProductFontPlaceholderTextField.swift */,
+				889F29CF2971845B00D10192 /* ScrollerView.swift */,
+				889F29D32971C44D00D10192 /* MenuView.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -607,13 +619,14 @@
 			files = (
 				88F213F629247A7600940928 /* ImagePicker.swift in Sources */,
 				88A7979929254A08007AE689 /* MorphingView.swift in Sources */,
-				88F214002924B4FF00940928 /* ScreenDimensionExtension.swift in Sources */,
+				889F29CE2970F8C800D10192 /* ArrayExtension.swift in Sources */,
 				8894EBD029264A5D00204185 /* CameraView.swift in Sources */,
 				8868E683291A93BD00545D7C /* CameraService.swift in Sources */,
 				884E3157292A6311009DF3CA /* Product.swift in Sources */,
 				8894EBF529274CA100204185 /* CatagoryViewModel.swift in Sources */,
 				8894EBD529264B3400204185 /* SettingView.swift in Sources */,
 				889F29C42967C75500D10192 /* AllergyView.swift in Sources */,
+				889F29D42971C44D00D10192 /* MenuView.swift in Sources */,
 				88A7979329252AFC007AE689 /* CaptureSource.swift in Sources */,
 				8868E688291A972F00545D7C /* SessionSetupResult.swift in Sources */,
 				8845AB13293CC29000BF6C5E /* NutritionTableDetectionService.swift in Sources */,
@@ -626,9 +639,9 @@
 				88A7979729253D4E007AE689 /* UIImageExtension.swift in Sources */,
 				88F213F4292478D700940928 /* ImageRescaler.swift in Sources */,
 				88F214022924B50F00940928 /* LaunchScreen.swift in Sources */,
+				889F29D02971845B00D10192 /* ScrollerView.swift in Sources */,
 				8894EBC329262C9800204185 /* ProductFontExtension.swift in Sources */,
 				FEF71174295C27E10051A586 /* APIService.swift in Sources */,
-				884E3155292A62C1009DF3CA /* ProductDetailView.swift in Sources */,
 				8894EBF729274FC400204185 /* NativeSearchBar.swift in Sources */,
 				889F29CA296D708800D10192 /* UIDeviceExtension.swift in Sources */,
 				88F213F929247B2B00940928 /* NMS.swift in Sources */,
@@ -646,6 +659,7 @@
 				8894EBD329264AE700204185 /* CatagoryView.swift in Sources */,
 				8894EBDB29264D0900204185 /* CGSizePreferenceKey.swift in Sources */,
 				88D053B72946BA4700277155 /* ViewExtension.swift in Sources */,
+				889F29D22971850300D10192 /* MenuItem.swift in Sources */,
 				882631D0294C2EF6003080DF /* InputProductDetailView.swift in Sources */,
 				889F29C22964A63E00D10192 /* YOLOv4.mlpackage in Sources */,
 				884F0B6A291BEC2700B5FEC3 /* Photo.swift in Sources */,
@@ -653,6 +667,7 @@
 				8894EBDD29264E9000204185 /* TabBar.swift in Sources */,
 				889F29C62967C7C400D10192 /* AllergyViewModel.swift in Sources */,
 				886C76E629055D7000B1026D /* ContentView.swift in Sources */,
+				889F29D82972CC1E00D10192 /* SequenceExtension.swift in Sources */,
 				8845AB11293CBFB000BF6C5E /* RoundedRectangleCorners.swift in Sources */,
 				88D053B92946D5F700277155 /* PreviewContextMenuExtension.swift in Sources */,
 				889F29BF29647CFC00D10192 /* CatagoryDetailViewModel.swift in Sources */,
@@ -664,6 +679,7 @@
 				88A7979529252C7F007AE689 /* BoundingBoxView.swift in Sources */,
 				886C76E429055D7000B1026D /* FoodAssistantApp.swift in Sources */,
 				882631D2294C31D7003080DF /* ProductFontPlaceholderTextField.swift in Sources */,
+				889F29CC297000B300D10192 /* IdentifyEquateCodeHashable.swift in Sources */,
 				88F214042924CD3200940928 /* ColorExtension.swift in Sources */,
 				88D053B5293EFF8800277155 /* ScanBarcodeService.swift in Sources */,
 				88D053AD293EE3E200277155 /* NutritionInformation.swift in Sources */,

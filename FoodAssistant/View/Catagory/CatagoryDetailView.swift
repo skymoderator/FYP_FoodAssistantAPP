@@ -8,38 +8,42 @@
 import SwiftUI
 
 struct CatagoryDetailView: View {
-    @ObservedObject var cvm: CatagoryViewModel
+    
+    struct CategoryDetail: Hashable {
+        let category: String
+        let products: [Product]
+        let color: Color
+        let isPreview: Bool
+    }
+    
     @StateObject var cdvm: CatagoryDetailViewModel
-    @Namespace var namespace
-    let catagory: String
-    let products: [Product]
-    let color: Color
+    @Namespace var ns
+    
+    let detail: CategoryDetail
+    let screenHeight: CGFloat
     
     init(
-        cvm: CatagoryViewModel,
-        catagory: String,
-        products: [Product],
-        color: Color
+        detail: CategoryDetail,
+        screenHeight: CGFloat
     ) {
-        self._cvm = ObservedObject(wrappedValue: cvm)
-        self._cdvm = StateObject(wrappedValue: CatagoryDetailViewModel(products: products))
-        self.catagory = catagory
-        self.products = products
-        self.color = color
+        self._cdvm = StateObject(wrappedValue: CatagoryDetailViewModel(products: detail.products))
+        self.detail = detail
+        self.screenHeight = screenHeight
     }
     
     var body: some View {
-        VStack(spacing: 0) {
-            GeometryReader { (proxy: GeometryProxy) in
-                let size: CGSize = proxy.size
-                ScrollView(.vertical, showsIndicators: false) {
-                    LazyVStack {
-                        ForEach(cdvm.characters) {
-                            (pc: CatagoryDetailViewModel.ProductCharacter) in
-                            AlphabetSession(cdvm: cdvm, ns: namespace, pc: pc, color: color)
-                        }
-                    }
-                    .offset(space: "scroller") { (rect: CGRect) in
+        GeometryReader { (proxy: GeometryProxy) in
+            let size: CGSize = proxy.size
+//            let _ = print(size)
+            ScrollView(.vertical, showsIndicators: false) {
+                AlphabetSessions(
+                    characters: cdvm.characters,
+                    ns: ns,
+                    color: detail.color,
+                    isExpanded: cdvm.expandedDict,
+                    toggleExpanded: cdvm.toggleExpand(of:),
+                    onRectUpdate: { (size: CGSize, rect: CGRect) in
+                        guard !detail.isPreview, size != .zero else { return }
                         // MARK: Whenever Scrolling Does
                         // Resetting Timeout
                         if cdvm.hideIndicatorLabel && rect.minY < 0 {
@@ -57,123 +61,244 @@ struct CatagoryDetailView: View {
                         // MARK: Simply Multiply With View Height
                         // Eliminating Scroller Height
                         cdvm.indicatorOffset = -progress * (size.height - cdvm.scrollerHeight)
-                    }
-                }
-                .overlay(alignment: .topTrailing) {
-                    Scroller(cdvm: cdvm, color: color)
-                }
-                .coordinateSpace(name: "scroller")
+                    },
+                    onRectsUpdate: { (pc: CatagoryDetailViewModel.ProductCharacter, minY: CGFloat) in
+                        // MARK: Verifying Which section is at the Top (Near NavBar)
+                        // Updating Character Rect When ever it's Updated
+                        if cdvm.characters.indices.contains(pc.index) {
+                            cdvm.characters[pc.index].minY = minY
+                        }
+                        
+                        // Since Every Character moves up and goes beyond Zero (It will be like A,B,C,D)
+                        // So We're taking the last character
+                        if let last: CatagoryDetailViewModel.ProductCharacter =
+                            cdvm.characters.last(where: {
+                                (char: CatagoryDetailViewModel.ProductCharacter) in
+                                char.minY < 0
+                            }), last != cdvm.currentCharacter {
+                            cdvm.currentCharacter = last
+                        }
+                    },
+                    filteredProducts: cdvm.filteredProductsDict,
+                    screenHeight: screenHeight,
+                    parentSize: size
+                )
+                .equatable()
             }
-            .navigationTitle(catagory)
-            .productLargeNavigationBar()
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    NavTrailingButton()
-                }
-            }
-            .nativeSearchBar(text: cdvm.searchedProduct, placeHolder: "Search Product")
-            .offset(space: "scroller") { (rect: CGRect) in
-                if cdvm.startOffset != rect.minY {
-                    cdvm.startOffset = rect.minY
-                }
-            }
-            .onReceive(
-                Timer
-                    .publish(
-                        every: 0.01,
-                        on: .main,
-                        in: .default
+            .coordinateSpace(name: "scroller")
+            .overlay(alignment: .topTrailing) {
+                if !detail.isPreview {
+                    ScrollerView(
+                        title: cdvm.scrollerTitle,
+                        subtitle: cdvm.scrollSubtitle,
+                        color: detail.color,
+                        shouldDisappear: cdvm.scrollerShouldDisappear,
+                        height: cdvm.scrollerHeight,
+                        yOffset: cdvm.indicatorOffset
                     )
-                    .autoconnect()
-            ) { _ in
-                if cdvm.scrollerTimeOut < 0.3 {
-                    cdvm.scrollerTimeOut += 0.01
-                } else {
-                    // MARK: Scrolling is Finished
-                    // It Will Fire Many Times So Use Some Conditions Here
-                    if !cdvm.hideIndicatorLabel {
-                        // Scrolling is Finished
-                        cdvm.hideIndicatorLabel = true
-                    }
                 }
+            }
+        }
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                MenuView(menuItem: cdvm.toolBarItem)
+            }
+        }
+        .nativeSearchBar(
+            text: cdvm.searchedProduct,
+            placeHolder: "Search Product"
+        )
+        .navigationTitle(detail.category)
+        .productLargeNavigationBar()
+        .readGeometry(
+            id: "CategoryDetailView.GeometryReader",
+            space: "scroller"
+        ) { (id: String, cache: [String : CGRect]) in
+            guard let rect: CGRect = cache[id] else { return }
+            if cdvm.startOffset != rect.minY {
+                cdvm.startOffset = rect.minY
+            }
+        }
+        .onReceive(
+            Timer
+                .publish(
+                    every: 0.01,
+                    on: .main,
+                    in: .default
+                )
+                .autoconnect()
+        ) { _ in
+            if cdvm.scrollerTimeOut < 0.3 {
+                cdvm.scrollerTimeOut += 0.01
+            } else {
+                // MARK: Scrolling is Finished
+                // It Will Fire Many Times So Use Some Conditions Here
+                if !cdvm.hideIndicatorLabel {
+                    // Scrolling is Finished
+                    cdvm.hideIndicatorLabel = true
+                }
+            }
+        }
+        .edgesIgnoringSafeArea(.bottom)
+        .background(.adaptable(light: .white, dark: .black))
+    }
+}
+
+fileprivate struct AlphabetSessions: View, Equatable {
+    static func == (lhs: AlphabetSessions, rhs: AlphabetSessions) -> Bool {
+        lhs.isExpanded == rhs.isExpanded &&
+        lhs.filteredProducts == rhs.filteredProducts &&
+        lhs.screenHeight == rhs.screenHeight &&
+        lhs.parentSize == rhs.parentSize
+    }
+    typealias PC = CatagoryDetailViewModel.ProductCharacter
+    let characters: [PC]
+    let ns: Namespace.ID
+    let color: Color
+    let isExpanded: [PC : Bool]
+    let toggleExpanded: (PC) -> Void
+    let onRectUpdate: (CGSize, CGRect) -> Void
+    let onRectsUpdate: (PC, CGFloat) -> Void
+    let filteredProducts: [PC : [Product]]
+    let screenHeight: CGFloat
+    let parentSize: CGSize
+    var body: some View {
+        LazyVStack(spacing: 0) {
+            ForEach(characters) { (pc: PC) in
+                AlphabetSession(
+                    isExpanded: isExpanded[pc] ?? false,
+                    toggleExpanded: {
+                        toggleExpanded(pc)
+                    },
+                    onRectUpdate: { (minY: CGFloat) in
+                        onRectsUpdate(pc, minY)
+                    },
+                    products: filteredProducts[pc] ?? [],
+                    color: color,
+                    label: pc.value,
+                    ns: ns,
+                    screenHeight: screenHeight
+                )
+                .equatable()
             }
             Rectangle()
                 .frame(height: screenHeight/8)
                 .opacity(0)
         }
-        .edgesIgnoringSafeArea(.bottom)
+        .background {
+            GeometryReader {
+                let rect: CGRect = $0.frame(in: .named("scroller"))
+                Color.clear.task(id: rect) { onRectUpdate(parentSize, rect) }
+            }
+        }
     }
 }
 
-fileprivate struct Scroller: View {
-    @ObservedObject var cdvm: CatagoryDetailViewModel
+fileprivate struct AlphabetSession: View, Equatable {
+    static func ==(lhs: AlphabetSession, rhs: AlphabetSession) -> Bool {
+        lhs.isExpanded == rhs.isExpanded &&
+        lhs.products == rhs.products &&
+        lhs.screenHeight == rhs.screenHeight
+    }
+    let isExpanded: Bool
+    let toggleExpanded: () -> ()
+    let onRectUpdate: (CGFloat) -> ()
+    let products: [Product]
     let color: Color
-    
-    var currentC: CatagoryDetailViewModel.ProductCharacter? {
-        cdvm.currentCharacter
-    }
-    
-    var shouldDisappear: Bool {
-        cdvm.hideIndicatorLabel || currentC == nil
-    }
-    
+    let label: String
+    let ns: Namespace.ID
+    let screenHeight: CGFloat
     var body: some View {
-        HStack {
-            HStack {
-                Text(currentC?.value ?? "")
-                    .productFont(.bold, relativeTo: .body)
+        VStack(alignment: .leading) {
+            Button {
+               toggleExpanded()
+            } label: {
+                Text(label)
                     .foregroundColor(.primary)
-                Text("\(currentC?.products.count ?? 0) items")
-                    .productFont(.regular, relativeTo: .body)
-                    .foregroundColor(.secondary)
+                    .productFont(.bold, relativeTo: .title2)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .overlay(alignment: .trailing) {
+                        Image(systemName: "chevron.up")
+                            .resizable()
+                            .scaledToFit()
+                            .rotationEffect(.degrees(isExpanded ? 0 : 180))
+                            .foregroundColor(.systemBlue)
+                            .padding(8)
+                    }
+                    .padding(.horizontal, 24)
             }
-            .padding()
-            .padding(.trailing, 4)
-            .background(.ultraThinMaterial)
-            .clipShape(
-                RoundedRectangle(cornerRadius: 10, style: .continuous)
-            )
-            .padding(.trailing)
-            .offset(x: shouldDisappear ? 200 : 0)
-            .environment(\.colorScheme, .dark)
-            
-            RoundedRectangle(cornerRadius: 10, style: .continuous)
-                .fill(color)
-                .frame(width: 2, height: cdvm.scrollerHeight)
+            .padding(.top)
+            if isExpanded {
+                ForEach(products) { (p: Product) in
+                    Row(
+                        ns: ns,
+                        product: p,
+                        color: color,
+                        screenHeight: screenHeight
+                    )
+                    .padding(.horizontal)
+                }
+            }
+            TinyDivider()
         }
-        .padding(.trailing, 5)
-        .offset(y: cdvm.indicatorOffset)
-        .animation(
-            .interactiveSpring(
-                response: 0.5,
-                dampingFraction: 0.6,
-                blendDuration: 0.6),
-            value: shouldDisappear
-        )
+        .background {
+            GeometryReader { (proxy: GeometryProxy) in
+                let minY: CGFloat = proxy.frame(in: .named("scroller")).minY
+                Color.clear.task(id: minY) { onRectUpdate(minY) }
+            }
+        }
     }
 }
 
-fileprivate struct NavTrailingButton: View {
-    @EnvironmentObject var mvm: MainViewModel
+fileprivate struct Row: View {
+    @Environment(\.colorScheme) var scheme
+    let ns: Namespace.ID
+    let product: Product
+    let color: Color
+    let screenHeight: CGFloat
+    
+    var destination: some View {
+        InputProductDetailView(product: product, screenHeight: screenHeight)
+    }
+    
     var body: some View {
-        Menu {
-            Menu {
-                Button {
-                    
-                } label: {
-                    Label("Name", systemImage: "abc")
+        HStack(spacing: 16) {
+            Image(systemName: "fork.knife.circle")
+                .foregroundColor(.white)
+                .padding(6)
+                .background(color)
+                .clipShape(Circle())
+            VStack(alignment: .leading) {
+                Text(product.name)
+                    .multilineTextAlignment(.leading)
+                    .foregroundColor(.primary)
+                    .productFont(.bold, relativeTo: .title3)
+                HStack(alignment: .top) {
+                    Image(systemName: "barcode")
+                        .foregroundColor(.secondary)
+                    Text("Barcode: \(product.barcode)")
+                        .foregroundColor(.secondary)
+                        .productFont(.regular, relativeTo: .body)
+                        .lineLimit(2)
+                        .multilineTextAlignment(.leading)
                 }
-                Button {
-                    
-                } label: {
-                    Label("Price", systemImage: "dollarsign")
-                }
-            } label: {
-                Label("Sort By", systemImage: "arrow.up.arrow.down")
             }
-        } label: {
-            Image(systemName: "ellipsis.circle")
+            .frame(maxWidth: .infinity, alignment: .leading)
+            Text(
+                product.product_price.first?.price == nil ?
+                "NA" : "$\(product.product_price.first!.price.formatted())"
+            )
+            .foregroundColor(.primary)
+            .productFont(.bold, relativeTo: .body)
+            .padding(8)
+            .background(.secondary.opacity(scheme == .dark ? 0.4 : 0.2))
+            .clipShape(Capsule())
         }
+        .matchedGeometryEffect(id: "\(product.barcode)-\(product.name)", in: ns)
+        .previewContextMenu(
+            destination: destination,
+            presentAsSheet: false
+        )
     }
 }
 
@@ -185,110 +310,19 @@ fileprivate struct TinyDivider: View {
     }
 }
 
-fileprivate struct AlphabetSession: View {
-    @ObservedObject var cdvm: CatagoryDetailViewModel
-    let ns: Namespace.ID
-    let pc: CatagoryDetailViewModel.ProductCharacter
-    let color: Color
-    var body: some View {
-        VStack(alignment: .leading) {
-            Text(pc.value)
-                .foregroundColor(.primary)
-                .productFont(.bold, relativeTo: .title2)
-                .padding(.leading, 24)
-            TinyDivider()
-            ForEach(
-                cdvm.searchedProduct.wrappedValue.isEmpty ? pc.products : pc.products.filter { $0.name.contains(cdvm.searchedProduct.wrappedValue) }
-            ) { (p: Product) in
-                Row(ns: ns, product: p, color: color)
-                    .padding(.horizontal)
-            }
-            TinyDivider()
-        }
-        .offset(space: "scroller") { (rect: CGRect) in
-            // MARK: Verifying Which section is at the Top (Near NavBar)
-            // Updating Character Rect When ever it's Updated
-            if cdvm.characters.indices.contains(pc.index){
-                cdvm.characters[pc.index].rect = rect
-            }
-            
-            // Since Every Character moves up and goes beyond Zero (It will be like A,B,C,D)
-            // So We're taking the last character
-            if let last: CatagoryDetailViewModel.ProductCharacter =
-                cdvm.characters.last(where: {
-                    (char: CatagoryDetailViewModel.ProductCharacter) in
-                    char.rect.minY < 0
-                }), last.uuid != (cdvm.currentCharacter?.uuid ?? "") {
-                cdvm.currentCharacter = last
-            }
-        }
-    }
-}
-
-fileprivate struct Row: View {
-    @Environment(\.colorScheme) var scheme
-    let ns: Namespace.ID
-    let product: Product
-    let color: Color
-    
-    var destination: some View {
-        InputProductDetailView(product: product)
-    }
-    
-    var body: some View {
-        NavigationLink {
-            destination
-        } label: {
-            HStack(spacing: 16) {
-                Image(systemName: "fork.knife.circle")
-                    .foregroundColor(.white)
-                    .padding(6)
-                    .background(color)
-                    .clipShape(Circle())
-                VStack(alignment: .leading) {
-                    Text(product.name)
-                        .multilineTextAlignment(.leading)
-                        .foregroundColor(.primary)
-                        .productFont(.bold, relativeTo: .title3)
-                    HStack {
-                        Image(systemName: "barcode")
-                            .foregroundColor(.secondary)
-                        Text("Barcode: \(product.barcode)")
-                            .foregroundColor(.secondary)
-                            .productFont(.regular, relativeTo: .body)
-                    }
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                Text(
-                    product.product_price.first?.price == nil ?
-                    "NA" : "$\(product.product_price.first!.price.formatted())"
-                )
-                .foregroundColor(.primary)
-                .productFont(.bold, relativeTo: .body)
-                .padding(8)
-                .background(.secondary.opacity(scheme == .dark ? 0.4 : 0.2))
-                .clipShape(Capsule())
-            }
-        }
-        .matchedGeometryEffect(id: "\(product.barcode)\(product.name)", in: ns)
-        .previewContextMenu(
-            destination: destination,
-            presentAsSheet: false
-        )
-    }
-}
-
 struct CatagoryDetailView_Previews: PreviewProvider {
+    @StateObject static var mvm = MainViewModel()
     @StateObject static var cvm = CatagoryViewModel()
-    static let catagory: String = "Beer / Wines / Spirits"
+    static let category: String = "Beer / Wines / Spirits"
+    static let detail = CatagoryDetailView.CategoryDetail(
+        category: category,
+        products: cvm.foodsService.productWhoweCategory(number: 1, is: category),
+        color: .random,
+        isPreview: false
+    )
     static var previews: some View {
         NavigationStack {
-            CatagoryDetailView(
-                cvm: cvm,
-                catagory: catagory,
-                products: cvm.foodsService.productWhoweCategory(number: 1, is: catagory),
-                color: .random
-            )
+            CatagoryDetailView(detail: detail, screenHeight: mvm.screenHeight)
         }
     }
 }
