@@ -8,13 +8,13 @@
 import SwiftUI
 
 struct LaunchScreen: View {
-    @EnvironmentObject var mvm: MainViewModel
+    let screenSize: CGSize
     var body: some View {
         Image("Appicon")
             .resizable()
             .scaledToFit()
-            .frame(width: mvm.screenWidth/3, height: mvm.screenWidth/3)
-            .frame(width: mvm.screenWidth, height: mvm.screenHeight)
+            .frame(width: screenSize.width/3, height: screenSize.height/3)
+            .frame(width: screenSize.width, height: screenSize.height)
             .background(.white)
     }
 }
@@ -22,7 +22,10 @@ struct LaunchScreen: View {
 struct LaunchScreen_Previews: PreviewProvider {
     @StateObject static var mvm = MainViewModel()
     static var previews: some View {
-        LaunchScreen()
+        GeometryReader { (proxy: GeometryProxy) in
+            let size: CGSize = proxy.size
+            LaunchScreen(screenSize: size)
+        }
             .environmentObject(mvm)
     }
 }

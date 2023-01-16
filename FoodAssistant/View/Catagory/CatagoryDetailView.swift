@@ -341,8 +341,11 @@ struct CatagoryDetailView_Previews: PreviewProvider {
         isPreview: false
     )
     static var previews: some View {
-        NavigationStack {
-            CatagoryDetailView(detail: detail, screenHeight: mvm.screenHeight)
+        GeometryReader { (proxy: GeometryProxy) in
+            let height: CGFloat = proxy.size.height
+            NavigationStack {
+                CatagoryDetailView(detail: detail, screenHeight: height)
+            }
         }
     }
 }

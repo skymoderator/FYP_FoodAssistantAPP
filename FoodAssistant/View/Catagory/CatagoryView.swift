@@ -55,7 +55,7 @@ struct CatagoryView: View {
                 (detail: CatagoryViewModel.NavigationRoute) in
                 switch detail {
                 case .scanBarCodeView:
-                    ScanBarcodeView(mvm: mvm, path: $cvm.navigationPath)
+                    ScanBarcodeView(mvm: mvm, path: $cvm.navigationPath, screenSize: screenSize)
                 case .categoryDetailView(let categoryDetail):
                     CatagoryDetailView(detail: categoryDetail, screenHeight: screenSize.height)
                 case .inputProductDetailView(let detail):
@@ -291,11 +291,10 @@ fileprivate struct LoadingView: View {
 struct ProductView_Previews: PreviewProvider {
     @StateObject static var mvm = MainViewModel()
     static var previews: some View {
-//        ErrorView(message: """
-//dataCorrupted(Swift.DecodingError.Context(codingPath: [], debugDescription: "The given data was not valid JSON.", underlyingError: Optional(Error Domain=NSCocoaErrorDomain Code=3840 "Invalid value around line 1, column 0." UserInfo={NSDebugDescription=Invalid value around line 1, column 0., NSJSONSerializationErrorIndex=0})))
-//""")
-        CatagoryView(screenSize: mvm.screenSize)
-//        ContentView()
+        GeometryReader { (proxy: GeometryProxy) in
+            let size: CGSize = proxy.size
+            CatagoryView(screenSize: size)
+        }
             .environmentObject(mvm)
     }
 }

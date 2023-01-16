@@ -14,17 +14,20 @@ struct ScanBarcodeView: View {
     @Environment(\.safeAreaInsets) var safeArea
     @StateObject var vm: AddProductViewModel
     @Binding var path: NavigationPath
+    let screenSize: CGSize
     
-    init(mvm: MainViewModel, path: Binding<NavigationPath>) {
+    init(mvm: MainViewModel, path: Binding<NavigationPath>, screenSize: CGSize) {
         self._mvm = ObservedObject(wrappedValue: mvm)
         self._vm = StateObject(wrappedValue: AddProductViewModel(mvm: mvm))
         self._path = path
+        self.screenSize = screenSize
     }
     
     var body: some View {
         ScrollView(.vertical) {
             VStack {
-                if mvm.isPortrait {
+                let isPortrait: Bool = screenSize.width < screenSize.height
+                if isPortrait {
                     VStack(spacing: 0) {
                         UpperView(barcode: $vm.scanBarcode.barcode)
                         LowerView(
@@ -43,7 +46,7 @@ struct ScanBarcodeView: View {
                 }
             }
             .padding(32)
-            .frame(width: mvm.screenWidth, height: mvm.screenHeight)
+            .frame(width: screenSize.width, height: screenSize.height)
         }
         .background(.systemGroupedBackground)
         .edgesIgnoringSafeArea(.top)
@@ -132,10 +135,12 @@ struct AddProductView_Previews: PreviewProvider {
     @StateObject static var mvm = MainViewModel()
     @State static var path = NavigationPath()
     static var previews: some View {
-        NavigationStack(path: $path) {
-            ScanBarcodeView(mvm: mvm, path: $path)
+        GeometryReader { (proxy: GeometryProxy) in
+            let size: CGSize = proxy.size
+            NavigationStack(path: $path) {
+                ScanBarcodeView(mvm: mvm, path: $path, screenSize: size)
+            }
         }
-        //        ContentView()
         .environmentObject(mvm)
     }
 }

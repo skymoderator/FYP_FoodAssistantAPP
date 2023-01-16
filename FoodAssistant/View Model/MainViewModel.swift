@@ -14,8 +14,6 @@ class MainViewModel: ObservableObject {
     @Published var cameraService: CameraService
     @Published var cvm: CameraViewModel
     
-    @Published var isPortrait: Bool = UIScreen.main.bounds.width < UIScreen.main.bounds.height
-    
     var anyCancellables = Set<AnyCancellable>()
     
     init() {
@@ -58,38 +56,6 @@ class MainViewModel: ObservableObject {
         } else {
             cameraService.stop()
         }
-    }
-    
-    func handleDeviceOrientationChanges() {
-        let offset: CGFloat = self.bottomBarVM.normalizedCurrentTabOffset.rounded()
-        let pageNum: BottomBarViewModel.PageNumber = (offset == 0) ? .one : (offset == 1 ? .two : .three)
-        self.bottomBarVM.scrollTo(page: pageNum, animated: true)
-    }
-        
-    var screenWidth: CGFloat {
-        let bound: CGRect = UIScreen.main.bounds
-        let width: CGFloat = bound.width
-        let height: CGFloat = bound.height
-        if isPortrait {
-            return min(width, height)
-        } else {
-            return max(width, height)
-        }
-    }
-    
-    var screenHeight: CGFloat {
-        let bound: CGRect = UIScreen.main.bounds
-        let width: CGFloat = bound.width
-        let height: CGFloat = bound.height
-        if isPortrait {
-            return max(width, height)
-        } else {
-            return min(width, height)
-        }
-    }
-    
-    var screenSize: CGSize {
-        .init(width: screenWidth, height: screenHeight)
     }
     
 }

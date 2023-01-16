@@ -247,7 +247,6 @@
 			children = (
 				88F214012924B50F00940928 /* LaunchScreen.swift */,
 				88A7979429252C7F007AE689 /* BoundingBoxView.swift */,
-				8868E67F291A886600545D7C /* CameraPreview.swift */,
 				8894EBCF29264A5D00204185 /* CameraView.swift */,
 				8868E67D291A87FF00545D7C /* VideoPreviewView.swift */,
 				88F213F529247A7600940928 /* ImagePicker.swift */,
@@ -467,6 +466,7 @@
 				882631D1294C31D7003080DF /* ProductFontPlaceholderTextField.swift */,
 				889F29CF2971845B00D10192 /* ScrollerView.swift */,
 				889F29D32971C44D00D10192 /* MenuView.swift */,
+				8868E67F291A886600545D7C /* CameraPreview.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";

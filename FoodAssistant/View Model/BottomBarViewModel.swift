@@ -38,8 +38,8 @@ class BottomBarViewModel: NSObject, ObservableObject {
         }
     }
     
-    func scrollTo(page: PageNumber, animated: Bool) {
-        let decodedOffset: CGFloat = page.rawValue * (parent?.screenWidth ?? .zero)
+    func scrollTo(screenWidth: CGFloat, page: PageNumber, animated: Bool) {
+        let decodedOffset: CGFloat = page.rawValue * screenWidth
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             self.tabSV?.setContentOffset(
@@ -65,7 +65,8 @@ extension BottomBarViewModel: UIScrollViewDelegate {
         guard let tabSV else { return }
         tabOffset = tabSV.contentOffset.x
         
-        let screenWidth: CGFloat = parent?.screenWidth ?? .zero
+//        let screenWidth: CGFloat = parent?.screenWidth ?? .zero
+        let screenWidth: CGFloat = scrollView.frame.width
         normalizedCurrentTabOffset = tabOffset/screenWidth
     }
     

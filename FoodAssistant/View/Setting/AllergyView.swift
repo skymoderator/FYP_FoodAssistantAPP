@@ -105,8 +105,11 @@ fileprivate struct AllAllergiesSession: View {
 struct AllergyView_Previews: PreviewProvider {
     @StateObject static var mvm = MainViewModel()
     static var previews: some View {
-        NavigationStack {
-            AllergyView(screenHeight: mvm.screenHeight)
+        GeometryReader { (proxy: GeometryProxy) in
+            let height: CGFloat = proxy.size.height
+            NavigationStack {
+                AllergyView(screenHeight: height)
+            }
         }
     }
 }

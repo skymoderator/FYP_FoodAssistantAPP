@@ -10,6 +10,7 @@ import SwiftUI
 struct SettingView: View {
     @EnvironmentObject var mvm: MainViewModel
     @StateObject var vm = SettingViewModel()
+    let screenSize: CGSize
     var body: some View {
         NavigationStack {
             List {
@@ -26,7 +27,7 @@ struct SettingView: View {
                         icon: "fork.knife.circle",
                         text: "Food Allergy",
                         color: .systemRed,
-                        destination: AllergyView(screenHeight: mvm.screenHeight)
+                        destination: AllergyView(screenHeight: screenSize.height)
                     )
                     Row(
                         icon: "star.circle",
@@ -36,7 +37,7 @@ struct SettingView: View {
                     )
                 } footer: {
                     Rectangle()
-                        .frame(height: mvm.screenHeight/8)
+                        .frame(height: screenSize.height/8)
                         .opacity(0)
                 }
             }
@@ -45,7 +46,7 @@ struct SettingView: View {
             .nativeSearchBar(text: $vm.searchedSetting, placeHolder: "Search Setting")
         }
         .productLargeNavigationBar()
-        .frame(width: mvm.screenWidth, height: mvm.screenHeight)
+        .frame(width: screenSize.width, height: screenSize.height)
     }
 }
 
@@ -77,7 +78,10 @@ fileprivate struct Row<V: View>: View {
 struct SettingView_Previews: PreviewProvider {
     @StateObject static var mvm = MainViewModel()
     static var previews: some View {
-        SettingView()
-            .environmentObject(mvm)
+        GeometryReader { (proxy: GeometryProxy) in
+            let size: CGSize = proxy.size
+            SettingView(screenSize: size)
+        }
+        .environmentObject(mvm)
     }
 }

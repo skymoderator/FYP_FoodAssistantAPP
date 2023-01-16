@@ -11,6 +11,7 @@ struct CameraView: View {
     
     @EnvironmentObject var mvm: MainViewModel
     let view = VideoPreviewView()
+    let screenSize: CGSize
     
     var body: some View {
         GeometryReader { (proxy: GeometryProxy) in
@@ -29,7 +30,7 @@ struct CameraView: View {
             }
             .frame(width: size.width, height: size.height)
         }
-        .frame(width: mvm.screenWidth, height: mvm.screenHeight)
+        .frame(width: screenSize.width, height: screenSize.height)
         .clipped()
         .edgesIgnoringSafeArea(.all)
         .sheet(
@@ -61,7 +62,10 @@ fileprivate struct DisplayedImageView: View {
 struct CameraView_Previews: PreviewProvider {
     @StateObject static var mvm = MainViewModel()
     static var previews: some View {
-        CameraView()
-            .environmentObject(mvm)
+        GeometryReader { (proxy: GeometryProxy) in
+            let size: CGSize = proxy.size
+            CameraView(screenSize: size)
+        }
+        .environmentObject(mvm)
     }
 }

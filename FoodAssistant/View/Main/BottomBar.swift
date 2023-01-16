@@ -10,6 +10,7 @@ import SwiftUI
 struct BottomBar: View {
     
     @EnvironmentObject var mvm: MainViewModel
+    let screenSize: CGSize
     
     var body: some View {
         GeometryReader { (proxy: GeometryProxy) in
@@ -20,7 +21,7 @@ struct BottomBar: View {
                         width: size.width,
                         height: 80 * mvm.bottomBarVM.tabScrollProgress)
                     .opacity(mvm.bottomBarVM.tabScrollProgress)
-                TabBar(mvm: mvm, cvm: mvm.cvm)
+                TabBar(mvm: mvm, cvm: mvm.cvm, screenSize: screenSize)
             }
             .background {
                 Rectangle()
