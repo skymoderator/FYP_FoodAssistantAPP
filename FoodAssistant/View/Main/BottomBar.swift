@@ -11,6 +11,12 @@ struct BottomBar: View {
     
     @EnvironmentObject var mvm: MainViewModel
     let screenSize: CGSize
+    let onLeadingButtonTap: () -> Void
+    let onCenterButtonTap: () -> Void
+    let isCenterButtonMorphing: Bool
+    let onTrailingButtonTap: () -> Void
+    let normalizedCurrentTabOffset: CGFloat
+    let tabScrollProgress: CGFloat
     
     var body: some View {
         GeometryReader { (proxy: GeometryProxy) in
@@ -19,9 +25,18 @@ struct BottomBar: View {
                 CameraBottomBar(cvm: mvm.cvm)
                     .frame(
                         width: size.width,
-                        height: 80 * mvm.bottomBarVM.tabScrollProgress)
-                    .opacity(mvm.bottomBarVM.tabScrollProgress)
-                TabBar(mvm: mvm, cvm: mvm.cvm, screenSize: screenSize)
+                        height: 80 * tabScrollProgress
+                    )
+                    .opacity(tabScrollProgress)
+                TabBar(
+                    screenSize: screenSize,
+                    onLeadingButtonTap: onLeadingButtonTap,
+                    onCenterButtonTap: onCenterButtonTap,
+                    isCenterButtonMorphing: isCenterButtonMorphing,
+                    onTrailingButtonTap: onTrailingButtonTap,
+                    normalizedCurrentTabOffset: normalizedCurrentTabOffset,
+                    tabScrollProgress: tabScrollProgress
+                )
             }
             .background {
                 Rectangle()

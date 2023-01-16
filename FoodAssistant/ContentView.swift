@@ -30,27 +30,31 @@ struct ContentView: View {
                     }
                     s.delegate = mvm.bottomBarVM
                     s.isPagingEnabled = true
-                    mvm.bottomBarVM.scrollTo(
-                        screenWidth: screenSize.width,
-                        page: .one,
-                        animated: false
-                    )
+                    mvm.bottomBarVM.scrollTo(page: .one, animated: false)
                 }
             }
             .introspectScrollView { (s: UIScrollView) in
                 s.isScrollEnabled = false
             }
             .overlay(alignment: .bottom) {
-                BottomBar(screenSize: screenSize)
-                    .frame(
-                        width: screenSize.width,
-                        height: bottomBarHeight(screenHeight: screenSize.height),
-                        alignment: .bottom
-                    )
-                    .offset(
-                        y: mvm.bottomBarVM.showBar ? 0 : bottomBarMaxHeight(screenHeight: screenSize.height)
-                    )
-                    .animation(.spring(), value: mvm.bottomBarVM.showBar)
+                BottomBar(
+                    screenSize: screenSize,
+                    onLeadingButtonTap: mvm.bottomTabBarOnLeadingButTap,
+                    onCenterButtonTap: mvm.bottomTabBarOnCenterButTap,
+                    isCenterButtonMorphing: mvm.isCenterButMorphing,
+                    onTrailingButtonTap: mvm.bottomTabBarOnTrailingButTap,
+                    normalizedCurrentTabOffset: mvm.bottomBarVM.normalizedCurrentTabOffset,
+                    tabScrollProgress: mvm.bottomBarVM.tabScrollProgress
+                )
+                .frame(
+                    width: screenSize.width,
+                    height: bottomBarHeight(screenHeight: screenSize.height),
+                    alignment: .bottom
+                )
+                .offset(
+                    y: mvm.bottomBarVM.showBar ? 0 : bottomBarMaxHeight(screenHeight: screenSize.height)
+                )
+                .animation(.spring(), value: mvm.bottomBarVM.showBar)
             }
             .edgesIgnoringSafeArea(.all)
             .environmentObject(mvm)

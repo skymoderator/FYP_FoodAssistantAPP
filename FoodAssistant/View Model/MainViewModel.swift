@@ -50,12 +50,39 @@ class MainViewModel: ObservableObject {
         AppState.shared.authService.getUserProfile()
     }
     
+    var isCenterButMorphing: Bool {
+        cvm.captureSource != nil
+    }
+    
     func handlePageChange() {
         if bottomBarVM.currentPageNumber == .two {
             cameraService.start()
         } else {
             cameraService.stop()
         }
+    }
+    
+    func bottomTabBarOnLeadingButTap() {
+        withAnimation {
+            bottomBarVM.scrollTo(page: .one, animated: false)
+        }
+        handlePageChange()
+    }
+    
+    func bottomTabBarOnCenterButTap() {
+        if bottomBarVM.normalizedCurrentTabOffset != 1 {
+            bottomBarVM.scrollTo(page: .two, animated: true)
+            handlePageChange()
+        } else {
+            cvm.onSnapButtonTapped()
+        }
+    }
+    
+    func bottomTabBarOnTrailingButTap() {
+        withAnimation {
+            bottomBarVM.scrollTo(page: .three, animated: false)
+        }
+        handlePageChange()
     }
     
 }
