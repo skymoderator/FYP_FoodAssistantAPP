@@ -67,6 +67,9 @@ struct ContentView: View {
             .environmentObject(mvm)
         }
         .edgesIgnoringSafeArea(.all)
+        .onRotate { _ in
+            mvm.onDeviceRotate()
+        }
     }
     
     func bottomBarHeight(screenHeight: CGFloat) -> CGFloat {

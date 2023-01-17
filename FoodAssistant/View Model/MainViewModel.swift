@@ -119,4 +119,11 @@ class MainViewModel: ObservableObject {
         }
     }
     
+    func onDeviceRotate() {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.bottomBarVM.scrollTo(page: self.bottomBarVM.currentPageNumber, animated: false)
+        }
+    }
+    
 }
