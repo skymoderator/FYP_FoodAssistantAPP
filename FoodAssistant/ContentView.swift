@@ -39,12 +39,19 @@ struct ContentView: View {
             .overlay(alignment: .bottom) {
                 BottomBar(
                     screenSize: screenSize,
-                    onLeadingButtonTap: mvm.bottomTabBarOnLeadingButTap,
-                    onCenterButtonTap: mvm.bottomTabBarOnCenterButTap,
-                    isCenterButtonMorphing: mvm.isCenterButMorphing,
-                    onTrailingButtonTap: mvm.bottomTabBarOnTrailingButTap,
+                    onTabBarLeadingButtonTap: mvm.bottomTabBarOnLeadingButTap,
+                    onTabBarCenterButtonTap: mvm.bottomTabBarOnCenterButTap,
+                    isTabBarCenterButtonMorphing: mvm.isCenterButMorphing,
+                    onTabBarTrailingButtonTap: mvm.bottomTabBarOnTrailingButTap,
                     normalizedCurrentTabOffset: mvm.bottomBarVM.normalizedCurrentTabOffset,
-                    tabScrollProgress: mvm.bottomBarVM.tabScrollProgress
+                    tabScrollProgress: mvm.bottomBarVM.tabScrollProgress,
+                    onCameraBottonBarLeadingLeadingButTap: mvm.cameraBottomBarLeadingLeadingButTap,
+                    onCameraBottonBarLeadingButTap: mvm.cameraBottomBarLeadingButTap,
+                    onCameraBottonBarTrailingButTap: mvm.cameraBottomBarTrailingButTap,
+                    onCameraBottonBarTrailingTrailingButTap: mvm.cameraBottomBarTrailingTrailingButTap,
+                    isPhotoCaptured: mvm.isCameraViewPhotoCaptured,
+                    isScaleToFit: mvm.isCameraViewCapturedPhotoScaleToFit,
+                    isFlashLightOn: mvm.isCameraViewFlashLightOn
                 )
                 .frame(
                     width: screenSize.width,

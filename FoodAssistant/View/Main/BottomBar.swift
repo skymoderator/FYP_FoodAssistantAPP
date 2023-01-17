@@ -9,31 +9,45 @@ import SwiftUI
 
 struct BottomBar: View {
     
-    @EnvironmentObject var mvm: MainViewModel
     let screenSize: CGSize
-    let onLeadingButtonTap: () -> Void
-    let onCenterButtonTap: () -> Void
-    let isCenterButtonMorphing: Bool
-    let onTrailingButtonTap: () -> Void
+    let onTabBarLeadingButtonTap: () -> Void
+    let onTabBarCenterButtonTap: () -> Void
+    let isTabBarCenterButtonMorphing: Bool
+    let onTabBarTrailingButtonTap: () -> Void
     let normalizedCurrentTabOffset: CGFloat
     let tabScrollProgress: CGFloat
+    let onCameraBottonBarLeadingLeadingButTap: () -> Void
+    let onCameraBottonBarLeadingButTap: () -> Void
+    let onCameraBottonBarTrailingButTap: () -> Void
+    let onCameraBottonBarTrailingTrailingButTap: () -> Void
+    let isPhotoCaptured: Bool
+    let isScaleToFit: Bool
+    let isFlashLightOn: Bool
     
     var body: some View {
         GeometryReader { (proxy: GeometryProxy) in
             let size: CGSize = proxy.size
             VStack(spacing: 0) {
-                CameraBottomBar(cvm: mvm.cvm)
-                    .frame(
-                        width: size.width,
-                        height: 80 * tabScrollProgress
-                    )
-                    .opacity(tabScrollProgress)
+                CameraBottomBar(
+                    onLeadingLeadingButTap: onCameraBottonBarLeadingLeadingButTap,
+                    onLeadingButTap: onCameraBottonBarLeadingButTap,
+                    onTrailingButTap: onCameraBottonBarTrailingButTap,
+                    onTrailingTrailingButTap: onCameraBottonBarTrailingTrailingButTap,
+                    isPhotoCaptured: isPhotoCaptured,
+                    isScaleToFit: isScaleToFit,
+                    isFlashLightOn: isFlashLightOn
+                )
+                .frame(
+                    width: size.width,
+                    height: 80 * tabScrollProgress
+                )
+                .opacity(tabScrollProgress)
                 TabBar(
                     screenSize: screenSize,
-                    onLeadingButtonTap: onLeadingButtonTap,
-                    onCenterButtonTap: onCenterButtonTap,
-                    isCenterButtonMorphing: isCenterButtonMorphing,
-                    onTrailingButtonTap: onTrailingButtonTap,
+                    onLeadingButtonTap: onTabBarLeadingButtonTap,
+                    onCenterButtonTap: onTabBarCenterButtonTap,
+                    isCenterButtonMorphing: isTabBarCenterButtonMorphing,
+                    onTrailingButtonTap: onTabBarTrailingButtonTap,
                     normalizedCurrentTabOffset: normalizedCurrentTabOffset,
                     tabScrollProgress: tabScrollProgress
                 )

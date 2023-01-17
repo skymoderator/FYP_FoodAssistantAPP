@@ -54,6 +54,18 @@ class MainViewModel: ObservableObject {
         cvm.captureSource != nil
     }
     
+    var isCameraViewCapturedPhotoScaleToFit: Bool {
+        cvm.isScaleToFill
+    }
+    
+    var isCameraViewPhotoCaptured: Bool {
+        cvm.captureSource != nil
+    }
+    
+    var isCameraViewFlashLightOn: Bool {
+        cvm.cameraService.flashMode == .on
+    }
+    
     func handlePageChange() {
         if bottomBarVM.currentPageNumber == .two {
             cameraService.start()
@@ -83,6 +95,26 @@ class MainViewModel: ObservableObject {
             bottomBarVM.scrollTo(page: .three, animated: false)
         }
         handlePageChange()
+    }
+    
+    func cameraBottomBarLeadingLeadingButTap() {
+        cvm.pickerService.showImagePicker.toggle()
+    }
+    
+    func cameraBottomBarLeadingButTap() {
+        cvm.pickerService.showImagePicker.toggle()
+    }
+    
+    func cameraBottomBarTrailingButTap() {
+        cvm.onTrailingButtonTapped()
+    }
+    
+    func cameraBottomBarTrailingTrailingButTap() {
+        if cvm.cameraService.flashMode == .on {
+            cvm.cameraService.flashMode = .off
+        } else {
+            cvm.cameraService.flashMode = .on
+        }
     }
     
 }

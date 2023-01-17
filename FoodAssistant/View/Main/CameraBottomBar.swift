@@ -9,18 +9,39 @@ import SwiftUI
 
 struct CameraBottomBar: View {
     
-    @ObservedObject var cvm: CameraViewModel
+    let onLeadingLeadingButTap: () -> Void
+    let onLeadingButTap: () -> Void
+    let onTrailingButTap: () -> Void
+    let onTrailingTrailingButTap: () -> Void
+    let isPhotoCaptured: Bool
+    let isScaleToFit: Bool
+    let isFlashLightOn: Bool
     
     var body: some View {
         GeometryReader { (proxy: GeometryProxy) in
             let size: CGSize = proxy.size
             HStack {
                 Group {
-                    LeadingLeadingButton(cvm: cvm, size: size)
-                    LeadingButton(cvm: cvm, size: size)
+                    LeadingLeadingButton(
+                        size: size,
+                        onTap: onLeadingLeadingButTap
+                    )
+                    LeadingButton(
+                        size: size,
+                        onTap: onLeadingButTap
+                    )
                     CenterButton(size: size)
-                    TrailingButton(cvm: cvm, size: size)
-                    TrailingTrailingButton(cvm: cvm, size: size)
+                    TrailingButton(
+                        size: size,
+                        isPhotoCaptured: isPhotoCaptured,
+                        isScaleToFit: isScaleToFit,
+                        onTap: onTrailingButTap
+                    )
+                    TrailingTrailingButton(
+                        size: size,
+                        isFlashLightOn: isFlashLightOn,
+                        onTap: onTrailingTrailingButTap
+                    )
                 }
                 .foregroundColor(.primary)
                 .frame(maxWidth: .infinity, alignment: .center)
@@ -31,45 +52,41 @@ struct CameraBottomBar: View {
     }
     
     fileprivate struct LeadingLeadingButton: View {
-        @ObservedObject var cvm: CameraViewModel
         let size: CGSize
+        let onTap: () -> Void
         var body: some View {
-            SFButton("photo") {
-                cvm.pickerService.showImagePicker.toggle()
-            }
-            .scaledToFit()
-            .padding(12)
-            .frame(
-                width: max(0, size.height - 32),
-                height: max(0, size.height - 32)
-            )
-            .background {
-                Circle()
-                    .fill(.regularMaterial)
-            }
+            SFButton("photo", action: onTap)
+                .scaledToFit()
+                .padding(12)
+                .frame(
+                    width: max(0, size.height - 32),
+                    height: max(0, size.height - 32)
+                )
+                .background {
+                    Circle()
+                        .fill(.regularMaterial)
+                }
         }
     }
-
+    
     fileprivate struct LeadingButton: View {
-        @ObservedObject var cvm: CameraViewModel
         let size: CGSize
+        let onTap: () -> Void
         var body: some View {
-            SFButton("photo") {
-                cvm.pickerService.showImagePicker.toggle()
-            }
-            .scaledToFit()
-            .padding(12)
-            .frame(
-                width: max(0, size.height - 32),
-                height: max(0, size.height - 32)
-            )
-            .background {
-                Circle()
-                    .fill(.regularMaterial)
-            }
+            SFButton("photo", action: onTap)
+                .scaledToFit()
+                .padding(12)
+                .frame(
+                    width: max(0, size.height - 32),
+                    height: max(0, size.height - 32)
+                )
+                .background {
+                    Circle()
+                        .fill(.regularMaterial)
+                }
         }
     }
-
+    
     fileprivate struct CenterButton: View {
         let size: CGSize
         var body: some View {
@@ -82,40 +99,18 @@ struct CameraBottomBar: View {
                 .opacity(0)
         }
     }
-
+    
     fileprivate struct TrailingButton: View {
-        @ObservedObject var cvm: CameraViewModel
         let size: CGSize
+        let isPhotoCaptured: Bool
+        let isScaleToFit: Bool
+        let onTap: () -> Void
         var body: some View {
             SFButton(
-                cvm.captureSource == nil ? "arrow.triangle.2.circlepath.camera" :
-                    cvm.isScaleToFill ? "arrow.down.right.and.arrow.up.left.circle" : "arrow.up.backward.and.arrow.down.forward.circle") {
-                    cvm.onTrailingButtonTapped()
-                }
-                    .scaledToFit()
-                    .padding(12)
-                    .frame(
-                        width: max(0, size.height - 32),
-                        height: max(0, size.height - 32)
-                    )
-                    .background {
-                        Circle()
-                            .fill(.regularMaterial)
-                    }
-        }
-    }
-    
-    fileprivate struct TrailingTrailingButton: View {
-        @ObservedObject var cvm: CameraViewModel
-        let size: CGSize
-        var body: some View {
-            SFButton("flashlight.off.fill") {
-                if cvm.cameraService.flashMode == .on {
-                    cvm.cameraService.flashMode = .off
-                } else {
-                    cvm.cameraService.flashMode = .on
-                }
-            }
+                !isPhotoCaptured ? "arrow.triangle.2.circlepath.camera" :
+                    (isScaleToFit ?  "arrow.down.right.and.arrow.up.left.circle" : "arrow.up.backward.and.arrow.down.forward.circle"),
+                action: onTap
+            )
             .scaledToFit()
             .padding(12)
             .frame(
@@ -128,25 +123,29 @@ struct CameraBottomBar: View {
             }
         }
     }
+    
+    fileprivate struct TrailingTrailingButton: View {
+        let size: CGSize
+        let isFlashLightOn: Bool
+        let onTap: () -> Void
+        var body: some View {
+            SFButton(isFlashLightOn ? "bolt.slash.circle" : "bolt.circle", action: onTap)
+                .scaledToFit()
+                .padding(12)
+                .frame(
+                    width: max(0, size.height - 32),
+                    height: max(0, size.height - 32)
+                )
+                .background {
+                    Circle()
+                        .fill(.regularMaterial)
+                }
+        }
+    }
 }
 
 struct CameraBottomBar_Previews: PreviewProvider {
-//    @StateObject static var mvm = MainViewModel()
     static var previews: some View {
-//        GeometryReader { (proxy: GeometryProxy) in
-//            let size: CGSize = proxy.size
-//            ZStack {
-//                Image("Appicon")
-//                VStack {
-//                    Spacer()
-//                    CameraBottomBar(cvm: mvm.cvm)
-//                        .frame(width: size.width, height: 80)
-//                }
-//                .frame(width: size.width, height: size.height)
-//            }
-//            .frame(width: size.width, height: size.height)
-//        }
-//        .edgesIgnoringSafeArea(.all)
         ContentView()
     }
 }
