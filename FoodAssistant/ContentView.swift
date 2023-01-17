@@ -30,7 +30,7 @@ struct ContentView: View {
                     }
                     s.delegate = mvm.bottomBarVM
                     s.isPagingEnabled = true
-                    mvm.bottomBarVM.scrollTo(page: .one, animated: false)
+                    mvm.bottomBarVM.scrollTo(page: .two, animated: false)
                 }
             }
             .introspectScrollView { (s: UIScrollView) in

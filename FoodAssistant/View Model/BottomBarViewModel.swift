@@ -40,14 +40,14 @@ class BottomBarViewModel: NSObject, ObservableObject {
     
     func scrollTo(page: PageNumber, animated: Bool) {
         let decodedOffset: CGFloat = page.rawValue * (tabSV?.frame.width ?? .zero)
+        self.tabOffset = decodedOffset
+        self.normalizedCurrentTabOffset = page.rawValue
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             self.tabSV?.setContentOffset(
                 .init(x: decodedOffset, y: 0),
                 animated: animated
             )
-            self.tabOffset = decodedOffset
-            self.normalizedCurrentTabOffset = page.rawValue
         }
     }
     

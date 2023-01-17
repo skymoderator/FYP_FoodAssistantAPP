@@ -110,10 +110,12 @@ class MainViewModel: ObservableObject {
     }
     
     func cameraBottomBarTrailingTrailingButTap() {
-        if cvm.cameraService.flashMode == .on {
-            cvm.cameraService.flashMode = .off
-        } else {
-            cvm.cameraService.flashMode = .on
+        withAnimation(.spring()) {
+            if cvm.cameraService.flashMode == .on {
+                cvm.cameraService.flashMode = .off
+            } else {
+                cvm.cameraService.flashMode = .on
+            }
         }
     }
     

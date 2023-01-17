@@ -9,6 +9,8 @@ import SwiftUI
 
 struct CameraBottomBar: View {
     
+    @StateObject var vm = CameraBottomBarViewModel()
+    
     let onLeadingLeadingButTap: () -> Void
     let onLeadingButTap: () -> Void
     let onTrailingButTap: () -> Void
@@ -49,6 +51,32 @@ struct CameraBottomBar: View {
             }
             .frame(width: size.width, height: size.height)
         }
+        .onReceive(
+            Timer
+                .publish(
+                    every: 0.01,
+                    on: .main,
+                    in: .default
+                )
+                .autoconnect()
+        ) { _ in vm.onTimerUpdate() }
+        .overlay(alignment: .top) {
+            ZStack {
+                if vm.showFlashLightLabel {
+                    Text("Flash Light is \(isFlashLightOn ? "On" : "Off") now")
+                        .productFont(.bold, relativeTo: .body)
+                        .foregroundColor(.white)
+                        .padding()
+                        .padding(.horizontal)
+                        .background(.thickMaterial)
+                        .clipShape(Capsule())
+                        .shadow(radius: 20)
+                        .transition(.move(edge: .bottom).combined(with: .opacity))
+                }
+            }
+            .alignmentGuide(.top) { $0[.bottom] + 32 }
+        }
+        .onChange(of: isFlashLightOn) { _ in vm.onFlashLightModeToggle() }
     }
     
     fileprivate struct LeadingLeadingButton: View {

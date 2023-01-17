@@ -250,4 +250,17 @@ class CatagoryDetailViewModel: ObservableObject {
             mvm.bottomBarVM.showBar = !isEntering
         }
     }
+    
+    func onTimerUpdate() {
+        if scrollerTimeOut < 2 {
+            scrollerTimeOut += 0.01
+        } else {
+            // MARK: Scrolling is Finished
+            // It Will Fire Many Times So Use Some Conditions Here
+            if !hideIndicatorLabel {
+                // Scrolling is Finished
+                hideIndicatorLabel = true
+            }
+        }
+    }
 }

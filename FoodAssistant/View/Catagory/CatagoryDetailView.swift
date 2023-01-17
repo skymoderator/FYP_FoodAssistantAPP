@@ -134,18 +134,7 @@ struct CatagoryDetailView: View {
                     in: .default
                 )
                 .autoconnect()
-        ) { _ in
-            if cdvm.scrollerTimeOut < 2 {
-                cdvm.scrollerTimeOut += 0.01
-            } else {
-                // MARK: Scrolling is Finished
-                // It Will Fire Many Times So Use Some Conditions Here
-                if !cdvm.hideIndicatorLabel {
-                    // Scrolling is Finished
-                    cdvm.hideIndicatorLabel = true
-                }
-            }
-        }
+        ) { _ in cdvm.onTimerUpdate() }
         .edgesIgnoringSafeArea(.bottom)
         .background(.adaptable(light: .white, dark: .black))
     }
