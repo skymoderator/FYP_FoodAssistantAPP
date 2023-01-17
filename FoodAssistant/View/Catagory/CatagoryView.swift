@@ -10,10 +10,12 @@ import Introspect
 
 struct CatagoryView: View {
     
-    @EnvironmentObject var mvm: MainViewModel
+//    @EnvironmentObject var mvm: MainViewModel
     @StateObject var cvm = CatagoryViewModel()
     @Namespace var ns
     let screenSize: CGSize
+    let onScanBarcodeViewLoad: () -> Void
+    let onScanBarcodeViewUnload: () -> Void
     
     var body: some View {
         NavigationStack(path: $cvm.navigationPath) {
@@ -55,7 +57,13 @@ struct CatagoryView: View {
                 (detail: CatagoryViewModel.NavigationRoute) in
                 switch detail {
                 case .scanBarCodeView:
-                    ScanBarcodeView(mvm: mvm, path: $cvm.navigationPath, screenSize: screenSize)
+                    ScanBarcodeView(
+//                        mvm: mvm,
+                        path: $cvm.navigationPath,
+                        screenSize: screenSize,
+                        viewDidLoad: onScanBarcodeViewLoad,
+                        viewDidUnload: onScanBarcodeViewUnload
+                    )
                 case .categoryDetailView(let categoryDetail):
                     CatagoryDetailView(detail: categoryDetail, screenHeight: screenSize.height)
                 case .inputProductDetailView(let detail):
@@ -289,12 +297,14 @@ fileprivate struct LoadingView: View {
 }
 
 struct ProductView_Previews: PreviewProvider {
-    @StateObject static var mvm = MainViewModel()
     static var previews: some View {
         GeometryReader { (proxy: GeometryProxy) in
             let size: CGSize = proxy.size
-            CatagoryView(screenSize: size)
+            CatagoryView(
+                screenSize: size,
+                onScanBarcodeViewLoad: { },
+                onScanBarcodeViewUnload: { }
+            )
         }
-            .environmentObject(mvm)
     }
 }

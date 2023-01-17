@@ -126,4 +126,23 @@ class MainViewModel: ObservableObject {
         }
     }
     
+    func onScanBarcodeViewLoad() {
+        withAnimation {
+            bottomBarVM.showBar = false
+            bottomBarVM.setSrollable(to: false)
+        }
+
+    }
+    
+    func onScanBarcodeViewUnload() {
+        /*
+         suprisingly deinit perform on main thread so no need
+         to wrap the code in DispatchQueue.main.async
+         */
+        withAnimation {
+            bottomBarVM.showBar = true
+            bottomBarVM.setSrollable(to: true)
+        }
+    }
+    
 }

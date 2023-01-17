@@ -19,7 +19,11 @@ struct ContentView: View {
             ScrollView(.vertical) {
                 ScrollView(.horizontal) {
                     HStack(spacing: 0) {
-                        CatagoryView(screenSize: screenSize)
+                        CatagoryView(
+                            screenSize: screenSize,
+                            onScanBarcodeViewLoad: mvm.onScanBarcodeViewLoad,
+                            onScanBarcodeViewUnload: mvm.onScanBarcodeViewUnload
+                        )
                         CameraView(screenSize: screenSize)
                         SettingView(screenSize: screenSize)
                     }

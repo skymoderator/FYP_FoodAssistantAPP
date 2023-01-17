@@ -35,21 +35,30 @@ struct InputProductDetailView: View {
         }
     }
     
-    @State var product: Product
+    
+    @StateObject var vm: InputProductDetailViewModel
     let onAppear: (() -> Void)?
     let onDisappear: (() -> Void)?
     
     init(detail: Detail) {
-        self._product = State(wrappedValue: detail.product)
+        self._vm = StateObject(
+            wrappedValue: InputProductDetailViewModel(product: detail.product)
+        )
         self.onAppear = detail.onAppear
         self.onDisappear = detail.onDisappear
     }
     
     var body: some View {
         List {
-            NameSession(product: $product)
-            InfoSession(product: product)
-            NutTableSession(nut: product.nutrition ?? NutritionInformation())
+            NameSession(product: $vm.product)
+            InfoSession(product: vm.product)
+            if let nutInfo: NutritionInformation = vm.product.nutrition {
+                NutTableSession(nut: nutInfo)
+            } else {
+                MissingNutTabSession(
+                    onTap: vm.onScanNutTableButTap
+                )
+            }
         }
         .navigationTitle("Product Detail")
         .productLargeNavigationBar()
@@ -278,6 +287,57 @@ fileprivate struct PricePopover: View {
             .productFont(.regular, relativeTo: .body)
             .padding()
         }
+    }
+}
+
+fileprivate struct MissingNutTabSession: View {
+    private let title: String = "Missing Nutrition Information"
+    private let subtitle: String = "Help others get to know more about this product by scanning the nutrition table on the product package"
+    let onTap: () -> Void
+    var body: some View {
+        Section {
+            VStack(alignment: .center) {
+                Image(systemName: "tablecells.badge.ellipsis")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 100, height: 100)
+                Text(title)
+                    .productFont(.bold, relativeTo: .title3)
+                    .multilineTextAlignment(.center)
+                    .foregroundColor(.primary)
+                Text(subtitle)
+                    .productFont(.regular, relativeTo: .body)
+                    .multilineTextAlignment(.center)
+                    .foregroundColor(.secondary)
+                    .padding(.bottom)
+                Button(action: onTap) {
+                    HStack {
+                        Image(systemName: "plus.viewfinder")
+                            .foregroundColor(.white)
+                            .fontWeight(.bold)
+                        Text("Scan Nutrition Table")
+                            .productFont(.bold, relativeTo: .body)
+                            .foregroundColor(.white)
+                    }
+                    .padding()
+                    .padding(.horizontal)
+                    .background(.systemBlue)
+                    .clipShape(Capsule())
+                }
+            }
+            .padding(32)
+            .frame(maxWidth: .infinity)
+            .overlay {
+                GeometryReader { (proxy: GeometryProxy) in
+                    let size: CGSize = proxy.size
+                    Text("hu")
+                }
+            }
+        } header: {
+            Text("Input Nutrition Table")
+                .productFont(.regular, relativeTo: .footnote)
+        }
+        .listRowInsets(.zero)
     }
 }
 

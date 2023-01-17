@@ -21,9 +21,6 @@ struct CameraView: View {
                     DisplayedImageView(vm: mvm.cvm, image: image)
                 } else {
                     CameraPreview(session: mvm.cvm.cameraService.session)
-                        .onTapGesture {
-                            print(mvm.cvm.cameraService.isSessionRunning)
-                        }
                 }
                 Color.black
                     .opacity(mvm.cvm.cameraService.willCapturePhoto ? 1 : 0)

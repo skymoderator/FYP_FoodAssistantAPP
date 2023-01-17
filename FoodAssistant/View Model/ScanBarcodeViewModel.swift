@@ -1,5 +1,5 @@
 //
-//  AddProductViewModel.swift
+//  ScanBarcodeViewModel.swift
 //  FoodAssistant
 //
 //  Created by Choi Wai Lap on 5/12/2022.
@@ -9,32 +9,31 @@ import Foundation
 import SwiftUI
 import Combine
 
-class AddProductViewModel: ObservableObject {
+class ScanBarcodeViewModel: ObservableObject {
     
     @Published var product: Product
     @Published var cameraService: CameraService
     @Published var scanBarcode: ScanBarcodeService
-    @Published var mvm: MainViewModel?
 
     var anyCancellables = Set<AnyCancellable>()
     
-    @Published var showView = true
+    let viewDidLoad: () -> Void
+    let viewDidUnload: () -> Void
 
-    init(mvm: MainViewModel? = nil) {
+    init(
+        viewDidLoad: @escaping () -> Void,
+        viewDidUnload: @escaping () -> Void
+    ) {
+        self.viewDidLoad = viewDidLoad
+        self.viewDidUnload = viewDidUnload
         let product = Product()
         self._product = Published(wrappedValue: product)
         
         let cm = CameraService()
         let scanBarcode = ScanBarcodeService(cameraService: cm)
         
-        self._mvm = Published(wrappedValue: mvm)
         self._cameraService = Published(wrappedValue: cm)
         self._scanBarcode = Published(wrappedValue: scanBarcode)
-        
-        self.mvm?.objectWillChange.sink { [weak self] (_) in
-            self?.objectWillChange.send()
-        }
-        .store(in: &anyCancellables)
         
         self.cameraService.objectWillChange.sink { [weak self] (_) in
             self?.objectWillChange.send()
@@ -54,21 +53,11 @@ class AddProductViewModel: ObservableObject {
     
     func onAppear() {
         scanBarcode.onAppear()
-        withAnimation {
-            mvm?.bottomBarVM.showBar = false
-            mvm?.bottomBarVM.setSrollable(to: false)
-        }
+        viewDidLoad()
     }
     
     deinit {
-        /*
-         suprisingly deinit perform on main thread so no need
-         to wrap the code in DispatchQueue.main.async
-         */
-        withAnimation {
-            self.mvm?.bottomBarVM.showBar = true
-            mvm?.bottomBarVM.setSrollable(to: true)
-        }
+        viewDidUnload()
         print("deinited AddProductViewModel and its view")
     }
 }

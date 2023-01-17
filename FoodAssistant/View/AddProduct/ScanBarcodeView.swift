@@ -9,16 +9,23 @@ import SwiftUI
 import AVFoundation
 
 struct ScanBarcodeView: View {
-    
-    @ObservedObject var mvm: MainViewModel
     @Environment(\.safeAreaInsets) var safeArea
-    @StateObject var vm: AddProductViewModel
+    @StateObject var vm: ScanBarcodeViewModel
     @Binding var path: NavigationPath
     let screenSize: CGSize
     
-    init(mvm: MainViewModel, path: Binding<NavigationPath>, screenSize: CGSize) {
-        self._mvm = ObservedObject(wrappedValue: mvm)
-        self._vm = StateObject(wrappedValue: AddProductViewModel(mvm: mvm))
+    init(
+        path: Binding<NavigationPath>,
+        screenSize: CGSize,
+        viewDidLoad: @escaping (() -> Void) = { },
+        viewDidUnload: @escaping (() -> Void) = { }
+    ) {
+        self._vm = StateObject(
+            wrappedValue: ScanBarcodeViewModel(
+                viewDidLoad: viewDidLoad,
+                viewDidUnload: viewDidUnload
+            )
+        )
         self._path = path
         self.screenSize = screenSize
     }
@@ -132,15 +139,13 @@ fileprivate struct NavBut: View {
 }
 
 struct AddProductView_Previews: PreviewProvider {
-    @StateObject static var mvm = MainViewModel()
     @State static var path = NavigationPath()
     static var previews: some View {
         GeometryReader { (proxy: GeometryProxy) in
             let size: CGSize = proxy.size
             NavigationStack(path: $path) {
-                ScanBarcodeView(mvm: mvm, path: $path, screenSize: size)
+                ScanBarcodeView(path: $path, screenSize: size)
             }
         }
-        .environmentObject(mvm)
     }
 }

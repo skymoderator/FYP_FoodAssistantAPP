@@ -13,7 +13,7 @@ struct Product: IdentifyEquateCodeHashable {
     var id = UUID()
     var name: String = ""
     var barcode: String = ""
-    var nutrition: NutritionInformation? = NutritionInformation()
+    var nutrition: NutritionInformation?
     var manufacturer: String?
     var brand: String?
     var product_price: [ProductPrice] = []
