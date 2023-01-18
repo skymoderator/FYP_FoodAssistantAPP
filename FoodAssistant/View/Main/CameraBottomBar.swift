@@ -63,15 +63,24 @@ struct CameraBottomBar: View {
         .overlay(alignment: .top) {
             ZStack {
                 if vm.showFlashLightLabel {
-                    Text("Flash Light is \(isFlashLightOn ? "On" : "Off") now")
-                        .productFont(.bold, relativeTo: .body)
-                        .foregroundColor(.white)
-                        .padding()
-                        .padding(.horizontal)
-                        .background(.thickMaterial)
-                        .clipShape(Capsule())
-                        .shadow(radius: 20)
-                        .transition(.move(edge: .bottom).combined(with: .opacity))
+                    HStack {
+                        Image(
+                            systemName: isFlashLightOn ?
+                            "bolt.circle" : "bolt.slash.circle"
+                        )
+                        .font(.body)
+                        .rotationEffect(isFlashLightOn ? .pi : .zero)
+                        .transition(.opacity)
+                        Text("Flash Light is \(isFlashLightOn ? "On" : "Off") now")
+                            .productFont(.bold, relativeTo: .body)
+                    }
+                    .foregroundColor(.primary)
+                    .padding(12)
+                    .padding(.horizontal)
+                    .background(.thickMaterial)
+                    .clipShape(Capsule())
+                    .shadow(radius: 20)
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
                 }
             }
             .alignmentGuide(.top) { $0[.bottom] + 32 }

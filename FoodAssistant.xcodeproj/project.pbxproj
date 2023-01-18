@@ -50,7 +50,6 @@
 		8894EBF729274FC400204185 /* NativeSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8894EBF629274FC400204185 /* NativeSearchBar.swift */; };
 		889F29BD2964788400D10192 /* CatagoryDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889F29BC2964788400D10192 /* CatagoryDetailView.swift */; };
 		889F29BF29647CFC00D10192 /* CatagoryDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889F29BE29647CFC00D10192 /* CatagoryDetailViewModel.swift */; };
-		889F29C22964A63E00D10192 /* YOLOv4.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = 889F29C12964A63E00D10192 /* YOLOv4.mlpackage */; };
 		889F29C42967C75500D10192 /* AllergyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889F29C32967C75500D10192 /* AllergyView.swift */; };
 		889F29C62967C7C400D10192 /* AllergyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889F29C52967C7C400D10192 /* AllergyViewModel.swift */; };
 		889F29C8296954B400D10192 /* DeviceRotationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889F29C7296954B400D10192 /* DeviceRotationExtension.swift */; };
@@ -161,7 +160,6 @@
 		8894EBF629274FC400204185 /* NativeSearchBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NativeSearchBar.swift; sourceTree = "<group>"; };
 		889F29BC2964788400D10192 /* CatagoryDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatagoryDetailView.swift; sourceTree = "<group>"; };
 		889F29BE29647CFC00D10192 /* CatagoryDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatagoryDetailViewModel.swift; sourceTree = "<group>"; };
-		889F29C12964A63E00D10192 /* YOLOv4.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; name = YOLOv4.mlpackage; path = ../../FoodAssistant_backup/FoodAssistant/YOLOv4.mlpackage; sourceTree = "<group>"; };
 		889F29C32967C75500D10192 /* AllergyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllergyView.swift; sourceTree = "<group>"; };
 		889F29C52967C7C400D10192 /* AllergyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllergyViewModel.swift; sourceTree = "<group>"; };
 		889F29C7296954B400D10192 /* DeviceRotationExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceRotationExtension.swift; sourceTree = "<group>"; };
@@ -364,7 +362,6 @@
 				8868E67C291A87EE00545D7C /* View */,
 				886C76E329055D7000B1026D /* FoodAssistantApp.swift */,
 				886C76E529055D7000B1026D /* ContentView.swift */,
-				889F29C12964A63E00D10192 /* YOLOv4.mlpackage */,
 				886C76E729055D7200B1026D /* Assets.xcassets */,
 				886C76E929055D7200B1026D /* FoodAssistant.entitlements */,
 				886C76EA29055D7200B1026D /* Preview Content */,
@@ -669,7 +666,6 @@
 				889F29D22971850300D10192 /* MenuItem.swift in Sources */,
 				889F29DC2976C9AC00D10192 /* InputProductDetailViewModel.swift in Sources */,
 				882631D0294C2EF6003080DF /* InputProductDetailView.swift in Sources */,
-				889F29C22964A63E00D10192 /* YOLOv4.mlpackage in Sources */,
 				884F0B6A291BEC2700B5FEC3 /* Photo.swift in Sources */,
 				8868E68A291B9CE100545D7C /* AlertError.swift in Sources */,
 				8894EBDD29264E9000204185 /* TabBar.swift in Sources */,
