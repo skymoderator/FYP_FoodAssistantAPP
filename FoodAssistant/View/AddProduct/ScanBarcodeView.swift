@@ -56,7 +56,7 @@ struct ScanBarcodeView: View {
             .frame(width: screenSize.width, height: screenSize.height)
         }
         .background(.systemGroupedBackground)
-        .edgesIgnoringSafeArea(.top)
+        .edgesIgnoringSafeArea(.vertical)
         .onAppear(perform: vm.onAppear)
         .onDisappear(perform: vm.scanBarcode.onDisappear)
         .onTapGesture(perform: hideKeyboard)

@@ -54,6 +54,32 @@ class CameraViewModel: ObservableObject {
         .store(in: &anyCancellables)
     }
     
+    var resacledImageSize: CGSize {
+        switch captureSource {
+        case .none: return .zero
+        case .some(let wrapped):
+            switch wrapped {
+            case .byCamera:
+                return cameraService.photo?.rescaledImage?.size ?? .zero
+            case .byImagePicker:
+                return pickerService.photo?.rescaledImage?.size ?? .zero
+            }
+        }
+//    case .byImagePicker:
+//        self.rescaledSize = vm.pickerService.photo?.rescaledImage?.size ?? .zero
+//        self.offset = (416 - min(rescaledSize.width, rescaledSize.height))/2
+//        self.ratio = min(size.width, size.height)/min(rescaledSize.width, rescaledSize.height)
+//    case .byCamera:
+//        self.rescaledSize = vm.cameraService.photo?.rescaledImage?.size ?? .zero
+//        self.offset = (416 - min(rescaledSize.width, rescaledSize.height))/2
+//        self.ratio = min(size.width, size.height)/min(rescaledSize.width, rescaledSize.height)
+//    case nil:
+//        self.offset = .zero
+//        self.rescaledSize = .zero
+//        self.ratio = .zero
+//    }
+    }
+    
     func onSnapButtonTapped() {
         if let captureSource {
             self.captureSource = nil
