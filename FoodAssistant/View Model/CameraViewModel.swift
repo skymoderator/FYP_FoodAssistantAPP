@@ -19,6 +19,8 @@ class CameraViewModel: ObservableObject {
     @Published var captureSource: CaptureSource?
     
     @Published var isScaleToFill = true
+    @Published var barcode = ""
+    @Published var isEditing = false
     
     var anyCancellables = Set<AnyCancellable>()
     
@@ -65,19 +67,6 @@ class CameraViewModel: ObservableObject {
                 return pickerService.photo?.rescaledImage?.size ?? .zero
             }
         }
-//    case .byImagePicker:
-//        self.rescaledSize = vm.pickerService.photo?.rescaledImage?.size ?? .zero
-//        self.offset = (416 - min(rescaledSize.width, rescaledSize.height))/2
-//        self.ratio = min(size.width, size.height)/min(rescaledSize.width, rescaledSize.height)
-//    case .byCamera:
-//        self.rescaledSize = vm.cameraService.photo?.rescaledImage?.size ?? .zero
-//        self.offset = (416 - min(rescaledSize.width, rescaledSize.height))/2
-//        self.ratio = min(size.width, size.height)/min(rescaledSize.width, rescaledSize.height)
-//    case nil:
-//        self.offset = .zero
-//        self.rescaledSize = .zero
-//        self.ratio = .zero
-//    }
     }
     
     func onSnapButtonTapped() {
@@ -110,6 +99,10 @@ class CameraViewModel: ObservableObject {
         cameraService.stop()
         captureSource = .byImagePicker
         ntDetection.detectNuritionTable(image: resizedImage)
+    }
+    
+    func onCameraPreviewTap() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
     
     private func captureCameraPhoto() {
