@@ -9,37 +9,46 @@ import SwiftUI
 
 struct CameraView: View {
     
-    @EnvironmentObject var mvm: MainViewModel
+//    @EnvironmentObject var mvm: MainViewModel
+    @ObservedObject var cvm: CameraViewModel
     let view = VideoPreviewView()
     let screenSize: CGSize
     
+    init(
+        cameraViewModel: CameraViewModel,
+        screenSize: CGSize
+    ) {
+        self._cvm = ObservedObject(wrappedValue: cameraViewModel)
+        self.screenSize = screenSize
+    }
+    
     var body: some View {
         ZStack {
-            if let image: UIImage = mvm.cvm.displayedImage {
+            if let image: UIImage = cvm.displayedImage {
                 DisplayedImageView(
                     image: image,
-                    isScaleToFill: mvm.cvm.isScaleToFill,
-                    bboxes: mvm.cvm.ntDetection.boundingBoxes,
-                    rescaledImageSize: mvm.cvm.resacledImageSize
+                    isScaleToFill: cvm.isScaleToFill,
+                    bboxes: cvm.ntDetection.boundingBoxes,
+                    rescaledImageSize: cvm.resacledImageSize
                 )
             } else {
-                CameraPreview(session: mvm.cvm.cameraService.session)
-                    .onTapGesture(perform: mvm.cvm.onCameraPreviewTap)
+                CameraPreview(session: cvm.cameraService.session)
+                    .onTapGesture(perform: cvm.onCameraPreviewTap)
                     .overlay(alignment: .top) {
-                        Header(barcode: $mvm.cvm.barcode)
+                        Header(barcode: $cvm.barcode)
                     }
             }
             Color.black
-                .opacity(mvm.cvm.cameraService.willCapturePhoto ? 1 : 0)
+                .opacity(cvm.cameraService.willCapturePhoto ? 1 : 0)
         }
         .frame(width: screenSize.width, height: screenSize.height)
         .clipped()
         .edgesIgnoringSafeArea(.all)
         .sheet(
-            isPresented: $mvm.cvm.pickerService.showImagePicker,
-            onDismiss: mvm.cvm.captureGalleryImage
+            isPresented: $cvm.pickerService.showImagePicker,
+            onDismiss: cvm.captureGalleryImage
         ) {
-            ImagePicker(image: $mvm.cvm.pickerService.image, camera: false)
+            ImagePicker(image: $cvm.pickerService.image, camera: false)
         }
     }
 }
@@ -48,7 +57,7 @@ fileprivate struct Header: View {
     @Environment(\.safeAreaInsets) var safeArea
     @Binding var barcode: String
     var body: some View {
-        VStack(spacing: 24) {
+        VStack {
             HStack {
                 Image(systemName: "barcode.viewfinder")
                     .foregroundColor(.systemBlue)
@@ -102,7 +111,6 @@ fileprivate struct Header: View {
                         .background(.systemBlue)
                         .cornerRadius(20, style: .continuous)
                 }
-                .shadow(radius: 10)
                 .opacity(barcode.isEmpty ? 0 : 1)
                 .transition(
                     .asymmetric(

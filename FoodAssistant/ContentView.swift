@@ -24,7 +24,10 @@ struct ContentView: View {
                             onScanBarcodeViewLoad: mvm.onScanBarcodeViewLoad,
                             onScanBarcodeViewUnload: mvm.onScanBarcodeViewUnload
                         )
-                        CameraView(screenSize: screenSize)
+                        CameraView(
+                            cameraViewModel: mvm.cvm,
+                            screenSize: screenSize
+                        )
                         SettingView(screenSize: screenSize)
                     }
                 }
