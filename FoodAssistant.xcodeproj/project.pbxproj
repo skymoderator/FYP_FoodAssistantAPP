@@ -67,6 +67,7 @@
 		88A7979529252C7F007AE689 /* BoundingBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A7979429252C7F007AE689 /* BoundingBoxView.swift */; };
 		88A7979729253D4E007AE689 /* UIImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A7979629253D4E007AE689 /* UIImageExtension.swift */; };
 		88A7979929254A08007AE689 /* MorphingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A7979829254A08007AE689 /* MorphingView.swift */; };
+		88BADF8A297E8BD500E86C58 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BADF89297E8BD500E86C58 /* LoginView.swift */; };
 		88C229292952C6F6005E5A27 /* Supermarket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C229282952C6F6005E5A27 /* Supermarket.swift */; };
 		88C2292E29535BAC005E5A27 /* SwiftDate in Frameworks */ = {isa = PBXBuildFile; productRef = 88C2292D29535BAC005E5A27 /* SwiftDate */; };
 		88C22930295414BD005E5A27 /* SettingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C2292F295414BD005E5A27 /* SettingViewModel.swift */; };
@@ -177,6 +178,7 @@
 		88A7979429252C7F007AE689 /* BoundingBoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoundingBoxView.swift; sourceTree = "<group>"; };
 		88A7979629253D4E007AE689 /* UIImageExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageExtension.swift; sourceTree = "<group>"; };
 		88A7979829254A08007AE689 /* MorphingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MorphingView.swift; sourceTree = "<group>"; };
+		88BADF89297E8BD500E86C58 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		88C229282952C6F6005E5A27 /* Supermarket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Supermarket.swift; sourceTree = "<group>"; };
 		88C2292F295414BD005E5A27 /* SettingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewModel.swift; sourceTree = "<group>"; };
 		88C2293129541631005E5A27 /* GeneralView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralView.swift; sourceTree = "<group>"; };
@@ -280,6 +282,7 @@
 		8868E67C291A87EE00545D7C /* View */ = {
 			isa = PBXGroup;
 			children = (
+				88BADF88297E8BC800E86C58 /* Login */,
 				88D053A7293E142800277155 /* AddProduct */,
 				882D014B29277BC500609357 /* Main */,
 				882D014A29277B9600609357 /* Setting */,
@@ -418,6 +421,14 @@
 				889F29DB2976C9AC00D10192 /* InputProductDetailViewModel.swift */,
 			);
 			path = "View Model";
+			sourceTree = "<group>";
+		};
+		88BADF88297E8BC800E86C58 /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				88BADF89297E8BD500E86C58 /* LoginView.swift */,
+			);
+			path = Login;
 			sourceTree = "<group>";
 		};
 		88D053A7293E142800277155 /* AddProduct */ = {
@@ -674,6 +685,7 @@
 				889F29D82972CC1E00D10192 /* SequenceExtension.swift in Sources */,
 				8845AB11293CBFB000BF6C5E /* RoundedRectangleCorners.swift in Sources */,
 				88D053B92946D5F700277155 /* PreviewContextMenuExtension.swift in Sources */,
+				88BADF8A297E8BD500E86C58 /* LoginView.swift in Sources */,
 				889F29BF29647CFC00D10192 /* CatagoryDetailViewModel.swift in Sources */,
 				88D053B1293EF42C00277155 /* BarCodeIndicatorView.swift in Sources */,
 				88F2140B29251B9300940928 /* SFButton.swift in Sources */,
