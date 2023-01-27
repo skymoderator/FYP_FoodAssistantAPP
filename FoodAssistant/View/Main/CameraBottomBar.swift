@@ -63,95 +63,50 @@ struct CameraBottomBar: View {
         .overlay(alignment: .top) {
             ZStack {
                 if vm.showFlashLightLabel {
-                    HStack {
-                        Image(
-                            systemName: isFlashLightOn ?
-                            "bolt.circle" : "bolt.slash.circle"
-                        )
-                        .font(.body)
-                        .rotationEffect(isFlashLightOn ? .pi : .zero)
-                        .transition(.opacity)
-                        Text("Flash Light is \(isFlashLightOn ? "On" : "Off") now")
-                            .productFont(.bold, relativeTo: .body)
-                    }
-                    .foregroundColor(isFlashLightOn ? .black : .white)
-                    .padding(12)
-                    .padding(.horizontal)
-                    .background(
-                        BlurMaterialView(
-                            isFlashLightOn ? .systemThinMaterialLight : .systemThinMaterialDark
-                        )
+                    FlashLightLabel(
+                        isFlashLightOn: isFlashLightOn
                     )
-                    .clipShape(Capsule())
-                    .shadow(radius: 20)
-                    .transition(.move(edge: .bottom).combined(with: .opacity))
                 }
             }
             .alignmentGuide(.top) { $0[.bottom] + 32 }
         }
         .onChange(of: isFlashLightOn) { _ in vm.onFlashLightModeToggle() }
     }
-    
-    fileprivate struct LeadingLeadingButton: View {
-        let size: CGSize
-        let onTap: () -> Void
-        var body: some View {
-            SFButton("photo", action: onTap)
-                .scaledToFit()
-                .padding(12)
-                .frame(
-                    width: max(0, size.height - 32),
-                    height: max(0, size.height - 32)
-                )
-                .background {
-                    Circle()
-                        .fill(.regularMaterial)
-                }
-        }
-    }
-    
-    fileprivate struct LeadingButton: View {
-        let size: CGSize
-        let onTap: () -> Void
-        var body: some View {
-            SFButton("photo", action: onTap)
-                .scaledToFit()
-                .padding(12)
-                .frame(
-                    width: max(0, size.height - 32),
-                    height: max(0, size.height - 32)
-                )
-                .background {
-                    Circle()
-                        .fill(.regularMaterial)
-                }
-        }
-    }
-    
-    fileprivate struct CenterButton: View {
-        let size: CGSize
-        var body: some View {
-            SFButton("photo")
-                .scaledToFit()
-                .frame(
-                    width: max(0, size.height - 32),
-                    height: max(0, size.height - 32)
-                )
-                .opacity(0)
-        }
-    }
-    
-    fileprivate struct TrailingButton: View {
-        let size: CGSize
-        let isPhotoCaptured: Bool
-        let isScaleToFit: Bool
-        let onTap: () -> Void
-        var body: some View {
-            SFButton(
-                !isPhotoCaptured ? "arrow.triangle.2.circlepath.camera" :
-                    (isScaleToFit ?  "arrow.down.right.and.arrow.up.left.circle" : "arrow.up.backward.and.arrow.down.forward.circle"),
-                action: onTap
+}
+
+fileprivate struct FlashLightLabel: View {
+    let isFlashLightOn: Bool
+    var body: some View {
+        HStack {
+            Image(
+                systemName: isFlashLightOn ?
+                "bolt.circle" : "bolt.slash.circle"
             )
+            .font(.body)
+            .rotationEffect(isFlashLightOn ? .pi : .zero)
+            .transition(.opacity)
+            Text("Flash Light is \(isFlashLightOn ? "On" : "Off") now")
+                .productFont(.bold, relativeTo: .body)
+        }
+        .foregroundColor(isFlashLightOn ? .black : .white)
+        .padding(12)
+        .padding(.horizontal)
+        .background(
+            BlurMaterialView(
+                isFlashLightOn ? .systemThinMaterialLight : .systemThinMaterialDark
+            )
+        )
+        .clipShape(Capsule())
+        .shadow(radius: 20)
+        .transition(.move(edge: .bottom).combined(with: .opacity))
+    }
+}
+
+fileprivate struct LeadingLeadingButton: View {
+    let size: CGSize
+    let onTap: () -> Void
+    var body: some View {
+        SFButton("photo", action: onTap)
             .scaledToFit()
             .padding(12)
             .frame(
@@ -162,18 +117,14 @@ struct CameraBottomBar: View {
                 Circle()
                     .fill(.regularMaterial)
             }
-        }
     }
-    
-    fileprivate struct TrailingTrailingButton: View {
-        let size: CGSize
-        let isFlashLightOn: Bool
-        let onTap: () -> Void
-        var body: some View {
-            SFButton(
-                isFlashLightOn ? "bolt.slash.circle" : "bolt.circle",
-                action: onTap
-            )
+}
+
+fileprivate struct LeadingButton: View {
+    let size: CGSize
+    let onTap: () -> Void
+    var body: some View {
+        SFButton("photo", action: onTap)
             .scaledToFit()
             .padding(12)
             .frame(
@@ -184,6 +135,64 @@ struct CameraBottomBar: View {
                 Circle()
                     .fill(.regularMaterial)
             }
+    }
+}
+
+fileprivate struct CenterButton: View {
+    let size: CGSize
+    var body: some View {
+        SFButton("photo")
+            .scaledToFit()
+            .frame(
+                width: max(0, size.height - 32),
+                height: max(0, size.height - 32)
+            )
+            .opacity(0)
+    }
+}
+
+fileprivate struct TrailingButton: View {
+    let size: CGSize
+    let isPhotoCaptured: Bool
+    let isScaleToFit: Bool
+    let onTap: () -> Void
+    var body: some View {
+        SFButton(
+            !isPhotoCaptured ? "arrow.triangle.2.circlepath.camera" :
+                (isScaleToFit ?  "arrow.down.right.and.arrow.up.left.circle" : "arrow.up.backward.and.arrow.down.forward.circle"),
+            action: onTap
+        )
+        .scaledToFit()
+        .padding(12)
+        .frame(
+            width: max(0, size.height - 32),
+            height: max(0, size.height - 32)
+        )
+        .background {
+            Circle()
+                .fill(.regularMaterial)
+        }
+    }
+}
+
+fileprivate struct TrailingTrailingButton: View {
+    let size: CGSize
+    let isFlashLightOn: Bool
+    let onTap: () -> Void
+    var body: some View {
+        SFButton(
+            isFlashLightOn ? "bolt.slash.circle" : "bolt.circle",
+            action: onTap
+        )
+        .scaledToFit()
+        .padding(12)
+        .frame(
+            width: max(0, size.height - 32),
+            height: max(0, size.height - 32)
+        )
+        .background {
+            Circle()
+                .fill(.regularMaterial)
         }
     }
 }
