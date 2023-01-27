@@ -74,10 +74,14 @@ struct CameraBottomBar: View {
                         Text("Flash Light is \(isFlashLightOn ? "On" : "Off") now")
                             .productFont(.bold, relativeTo: .body)
                     }
-                    .foregroundColor(.primary)
+                    .foregroundColor(isFlashLightOn ? .black : .white)
                     .padding(12)
                     .padding(.horizontal)
-                    .background(.thickMaterial)
+                    .background(
+                        BlurMaterialView(
+                            isFlashLightOn ? .systemThinMaterialLight : .systemThinMaterialDark
+                        )
+                    )
                     .clipShape(Capsule())
                     .shadow(radius: 20)
                     .transition(.move(edge: .bottom).combined(with: .opacity))
@@ -166,17 +170,20 @@ struct CameraBottomBar: View {
         let isFlashLightOn: Bool
         let onTap: () -> Void
         var body: some View {
-            SFButton(isFlashLightOn ? "bolt.slash.circle" : "bolt.circle", action: onTap)
-                .scaledToFit()
-                .padding(12)
-                .frame(
-                    width: max(0, size.height - 32),
-                    height: max(0, size.height - 32)
-                )
-                .background {
-                    Circle()
-                        .fill(.regularMaterial)
-                }
+            SFButton(
+                isFlashLightOn ? "bolt.slash.circle" : "bolt.circle",
+                action: onTap
+            )
+            .scaledToFit()
+            .padding(12)
+            .frame(
+                width: max(0, size.height - 32),
+                height: max(0, size.height - 32)
+            )
+            .background {
+                Circle()
+                    .fill(.regularMaterial)
+            }
         }
     }
 }

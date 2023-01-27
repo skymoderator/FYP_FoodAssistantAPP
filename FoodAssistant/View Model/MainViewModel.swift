@@ -11,7 +11,6 @@ import Combine
 class MainViewModel: ObservableObject {
     
     @Published var bottomBarVM: BottomBarViewModel
-    @Published var cameraService: CameraService
     @Published var cvm: CameraViewModel
     
     var anyCancellables = Set<AnyCancellable>()
@@ -19,11 +18,9 @@ class MainViewModel: ObservableObject {
     init() {
         let cm = CameraService()
         self._bottomBarVM = Published(wrappedValue: BottomBarViewModel())
-        self._cameraService = Published(wrappedValue: cm)
         self._cvm = Published(wrappedValue: CameraViewModel(cameraService: cm))
         
-        bottomBarVM.parent = self
-        cameraService.configure()
+        cm.configure()
         
         bottomBarVM.objectWillChange.sink { [weak self] _ in
             DispatchQueue.main.async { [weak self] in
@@ -38,11 +35,6 @@ class MainViewModel: ObservableObject {
         .store(in: &anyCancellables)
         
         cvm.objectWillChange.sink { [weak self] _ in
-            self?.objectWillChange.send()
-        }
-        .store(in: &anyCancellables)
-        
-        cameraService.objectWillChange.sink { [weak self] _ in
             self?.objectWillChange.send()
         }
         .store(in: &anyCancellables)
@@ -68,9 +60,9 @@ class MainViewModel: ObservableObject {
     
     func handlePageChange() {
         if bottomBarVM.currentPageNumber == .two {
-            cameraService.start()
+            cvm.cameraService.start()
         } else {
-            cameraService.stop()
+            cvm.cameraService.stop()
         }
     }
     
@@ -83,7 +75,7 @@ class MainViewModel: ObservableObject {
     
     func bottomTabBarOnCenterButTap() {
         if bottomBarVM.normalizedCurrentTabOffset != 1 {
-            bottomBarVM.scrollTo(page: .two, animated: true)
+            bottomBarVM.scrollTo(page: .two, animated: false)
             handlePageChange()
         } else {
             cvm.onSnapButtonTapped()

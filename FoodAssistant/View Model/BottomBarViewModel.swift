@@ -18,9 +18,7 @@ class BottomBarViewModel: NSObject, ObservableObject {
     @Published var normalizedCurrentTabOffset: CGFloat = 0
     @Published var showBar = true
     @Published var pageChange = true // just a dummy publisher
-    
-    weak var parent: MainViewModel?
-    
+        
     var tabSV: UIScrollView?
     
     var tabScrollProgress: CGFloat {
@@ -65,7 +63,6 @@ extension BottomBarViewModel: UIScrollViewDelegate {
         guard let tabSV else { return }
         tabOffset = tabSV.contentOffset.x
         
-//        let screenWidth: CGFloat = parent?.screenWidth ?? .zero
         let screenWidth: CGFloat = scrollView.frame.width
         normalizedCurrentTabOffset = tabOffset/screenWidth
     }
