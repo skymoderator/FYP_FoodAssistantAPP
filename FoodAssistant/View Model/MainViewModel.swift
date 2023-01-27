@@ -29,11 +29,6 @@ class MainViewModel: ObservableObject {
             self?.handlePageChange()
         }
         .store(in: &anyCancellables)
-        
-        cvm.objectWillChange.sink { [weak self] _ in
-            self?.objectWillChange.send()
-        }
-        .store(in: &anyCancellables)
                 
         AppState.shared.authService.getUserProfile()
     }
@@ -104,6 +99,7 @@ class MainViewModel: ObservableObject {
             } else {
                 cvm.cameraService.flashMode = .on
             }
+            bottomBarVM.objectWillChange.send()
         }
     }
     
