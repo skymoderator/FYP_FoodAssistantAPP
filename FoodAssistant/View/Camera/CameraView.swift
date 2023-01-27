@@ -9,9 +9,7 @@ import SwiftUI
 
 struct CameraView: View {
     
-//    @EnvironmentObject var mvm: MainViewModel
     @ObservedObject var cvm: CameraViewModel
-    let view = VideoPreviewView()
     let screenSize: CGSize
     
     init(
@@ -35,7 +33,10 @@ struct CameraView: View {
                 CameraPreview(session: cvm.cameraService.session)
                     .onTapGesture(perform: cvm.onCameraPreviewTap)
                     .overlay(alignment: .top) {
-                        Header(barcode: $cvm.barcode)
+                        Header(
+                            barcode: $cvm.barcode,
+                            onXmarkButPressed: cvm.onXmarkButPressed
+                        )
                     }
             }
             Color.black
@@ -56,6 +57,7 @@ struct CameraView: View {
 fileprivate struct Header: View {
     @Environment(\.safeAreaInsets) var safeArea
     @Binding var barcode: String
+    let onXmarkButPressed: () -> Void
     var body: some View {
         VStack {
             HStack {
@@ -77,11 +79,7 @@ fileprivate struct Header: View {
                     }
                 }
                 .overlay(alignment: .trailing) {
-                    Button {
-                        withAnimation(.spring()) {
-                            barcode = ""
-                        }
-                    } label: {
+                    Button(action: onXmarkButPressed) {
                         Circle()
                             .fill(.ultraThickMaterial)
                             .overlay {

@@ -22,7 +22,10 @@ class ScanBarcodeService: NSObject, ObservableObject {
     
     func setUp() {
         cameraService.stop { [weak self] in
-            guard let self = self else { return }
+            guard let self = self else {
+                print("optional self")
+                return
+            }
             self.cameraService.sessionQueue.async { [weak self] in
                 guard let self = self else { return }
                 let captureSession: AVCaptureSession = self.cameraService.session

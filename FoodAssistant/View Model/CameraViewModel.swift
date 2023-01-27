@@ -15,6 +15,7 @@ class CameraViewModel: ObservableObject {
     @Published var cameraService: CameraService
     @Published var pickerService = ImagePickerService()
     @Published var ntDetection = NutritionTableDetectionService()
+    @Published var scanBarcode: ScanBarcodeService
     
     @Published var captureSource: CaptureSource?
     
@@ -39,6 +40,9 @@ class CameraViewModel: ObservableObject {
     
     init(cameraService: CameraService) {
         self._cameraService = Published(wrappedValue: cameraService)
+        self._scanBarcode = Published(wrappedValue: ScanBarcodeService(cameraService: cameraService))
+        
+        scanBarcode.onAppear()
         
         cameraService.objectWillChange.sink { [weak self] (_) in
             self?.objectWillChange.send()
@@ -52,6 +56,13 @@ class CameraViewModel: ObservableObject {
         
         ntDetection.objectWillChange.sink { [weak self] (_) in
             self?.objectWillChange.send()
+        }
+        .store(in: &anyCancellables)
+        
+        scanBarcode.$barcode.sink { [weak self] (barcode: String) in
+            withAnimation(.spring()) {
+                self?.barcode = barcode
+            }
         }
         .store(in: &anyCancellables)
     }
@@ -103,6 +114,12 @@ class CameraViewModel: ObservableObject {
     
     func onCameraPreviewTap() {
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
+    
+    func onXmarkButPressed() {
+        withAnimation(.spring()) {
+            scanBarcode.barcode = ""
+        }
     }
     
     private func captureCameraPhoto() {

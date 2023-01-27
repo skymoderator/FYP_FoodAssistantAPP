@@ -10,7 +10,6 @@ import Introspect
 
 struct CatagoryView: View {
     
-//    @EnvironmentObject var mvm: MainViewModel
     @StateObject var cvm = CatagoryViewModel()
     @Namespace var ns
     let screenSize: CGSize
@@ -58,7 +57,6 @@ struct CatagoryView: View {
                 switch detail {
                 case .scanBarCodeView:
                     ScanBarcodeView(
-//                        mvm: mvm,
                         path: $cvm.navigationPath,
                         screenSize: screenSize,
                         viewDidLoad: onScanBarcodeViewLoad,

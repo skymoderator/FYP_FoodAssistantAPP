@@ -10,6 +10,7 @@ import Combine
 
 class MainViewModel: ObservableObject {
     
+//    @Published var scanBarcode: ScanBarcodeService
     @Published var bottomBarVM: BottomBarViewModel
     @Published var cvm: CameraViewModel
     
@@ -19,8 +20,10 @@ class MainViewModel: ObservableObject {
         let cm = CameraService()
         self._bottomBarVM = Published(wrappedValue: BottomBarViewModel())
         self._cvm = Published(wrappedValue: CameraViewModel(cameraService: cm))
+//        self._scanBarcode = Published(wrappedValue: ScanBarcodeService(cameraService: cm))
         
-        cm.configure()
+//        cm.configure()
+//        scanBarcode.onAppear()
         
         bottomBarVM.objectWillChange.sink { [weak self] _ in
             DispatchQueue.main.async { [weak self] in
@@ -38,6 +41,11 @@ class MainViewModel: ObservableObject {
             self?.objectWillChange.send()
         }
         .store(in: &anyCancellables)
+        
+//        scanBarcode.$barcode.sink { [weak self] (barcode: String) in
+//            self?.cvm.barcode = barcode
+//        }
+//        .store(in: &anyCancellables)
         
         AppState.shared.authService.getUserProfile()
     }
