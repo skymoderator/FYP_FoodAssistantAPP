@@ -25,7 +25,7 @@ struct ContentView: View {
                             onScanBarcodeViewUnload: mvm.onScanBarcodeViewUnload
                         )
                         CameraView(
-                            cameraViewModel: mvm.cvm,
+                            cvm: mvm.cvm,
                             screenSize: screenSize
                         )
                         SettingView(screenSize: screenSize)

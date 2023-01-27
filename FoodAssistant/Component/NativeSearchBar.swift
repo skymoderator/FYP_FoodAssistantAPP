@@ -8,8 +8,18 @@
 import SwiftUI
 
 extension View {
-    func nativeSearchBar(text: Binding<String>, placeHolder: String, backgroundColor: Color? = nil) -> some View {
-        self.modifier(NativeSearchBarModifier(text: text, placeHolder: placeHolder, backgroundColor: backgroundColor))
+    func nativeSearchBar(
+        text: Binding<String>,
+        placeHolder: String,
+        backgroundColor: Color? = nil
+    ) -> some View {
+        self.modifier(
+            NativeSearchBarModifier(
+                text: text,
+                placeHolder: placeHolder,
+                backgroundColor: backgroundColor
+            )
+        )
     }
 }
 
@@ -21,8 +31,12 @@ struct NativeSearchBarModifier: ViewModifier {
     
     func body(content: Content) -> some View {
         content.overlay(
-            NativeSearchBarControllerRepresentable(text: $text, placeHolder: placeHolder, backgroundColor: backgroundColor)
-                .frame(width: 0, height: 0)
+            NativeSearchBarControllerRepresentable(
+                text: $text,
+                placeHolder: placeHolder,
+                backgroundColor: backgroundColor
+            )
+            .frame(width: 0, height: 0)
         )
     }
 }
@@ -32,13 +46,7 @@ struct NativeSearchBarControllerRepresentable: UIViewControllerRepresentable {
     @Binding var text: String
     let placeHolder: String
     let backgroundColor: Color?
-    
-    init(text: Binding<String>, placeHolder: String, backgroundColor: Color?) {
-        self._text = text
-        self.placeHolder = placeHolder
-        self.backgroundColor = backgroundColor
-    }
-    
+        
     func makeUIViewController(context: Context) -> NativeSearchBarController {
         let viewController = NativeSearchBarController { (vc: UIViewController) in
             let searchController: UISearchController? = vc.navigationItem.searchController

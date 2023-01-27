@@ -11,15 +11,7 @@ struct CameraView: View {
     
     @ObservedObject var cvm: CameraViewModel
     let screenSize: CGSize
-    
-    init(
-        cameraViewModel: CameraViewModel,
-        screenSize: CGSize
-    ) {
-        self._cvm = ObservedObject(wrappedValue: cameraViewModel)
-        self.screenSize = screenSize
-    }
-    
+        
     var body: some View {
         ZStack {
             if let image: UIImage = cvm.displayedImage {
