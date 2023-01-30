@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import SwiftUI
 
 class FoodProductDataService: ObservableObject {
     
@@ -45,7 +46,9 @@ class FoodProductDataService: ObservableObject {
                 switch completion {
                 case let .failure(error):
                     print("Couldn't load food products: \(error)")
-                    self?.errorMessage = error.localizedDescription
+                    withAnimation(.spring()) {
+                        self?.errorMessage = error.localizedDescription
+                    }
                 case .finished:
                     self?.postProcessing()
                     self?.isLoading = false

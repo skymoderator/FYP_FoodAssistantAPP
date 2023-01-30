@@ -67,7 +67,13 @@ struct CatagoryView: View {
                 case .inputProductDetailView(let detail):
                     InputProductDetailView(detail: detail)
                 }
-                
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .overlay(alignment: .top) {
+                if let error: String = cvm.foodsService.errorMessage {
+                    ErrorView(message: error, ns: ns)
+                        .padding(.horizontal)
+                }
             }
         }
         .productLargeNavigationBar()
@@ -80,45 +86,24 @@ fileprivate struct ErrorView: View {
     let ns: Namespace.ID
     
     var body: some View {
-        VStack(spacing: 16) {
-            Text("Error Inspection")
+        HStack(spacing: 16) {
+            Image(systemName: "exclamationmark.triangle")
+                .matchedGeometryEffect(id: "error-icon", in: ns)
                 .foregroundColor(.white)
-                .productFont(.bold, relativeTo: .title)
-                .matchedGeometryEffect(id: "error-title", in: ns)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .overlay(alignment: .trailing) {
-                    Image(systemName: "exclamationmark.triangle")
-                        .resizable()
-                        .scaledToFit()
-                        .matchedGeometryEffect(id: "error-icon", in: ns)
-                        .foregroundColor(.white)
-                        .padding(4)
-                }
+                .padding(4)
             Text(message)
                 .foregroundColor(.white)
                 .productFont(.regular, relativeTo: .body)
                 .matchedGeometryEffect(id: "error-context", in: ns)
                 .frame(maxWidth: .infinity, alignment: .topLeading)
-            Button {
-                
-            } label: {
-                Text("Reload Now")
-                    .foregroundColor(.systemOrange)
-                    .productFont(.bold, relativeTo: .title2)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 8)
-                    .background(.white)
-                    .cornerRadius(10, style: .continuous)
-                    .shadow(color: Color.primary.opacity(0.2), radius: 10)
-            }
-            .matchedGeometryEffect(id: "error-button", in: ns)
         }
-        .padding(24)
-        .background(.systemOrange)
-        .cornerRadius(20, style: .continuous)
+        .padding()
+        .background(.systemRed)
+        .cornerRadius(8, style: .continuous)
         .matchedGeometryEffect(id: "error-background", in: ns)
         .listRowBackground(EmptyView())
         .listRowInsets(.zero)
+        .transition(.move(edge: .top))
     }
 }
 
