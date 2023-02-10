@@ -50,7 +50,7 @@ class AuthService: ObservableObject {
                 }
             } receiveValue: { (user: User) in //[weak self]
                 self.user = user
-                self.avator = user.user_avator
+                self.avator = user.userAvator
             }
             .store(in: &subscriptions)
     }
@@ -70,17 +70,39 @@ class AuthService: ObservableObject {
             }) {  user in //[weak self]
                 
                 self.user = user
-                self.avator = user.user_avator
+                self.avator = user.userAvator
                 //                    print(self.user)
             }
             .store(in: &subscriptions)
         
     }
     
-    func register(userName: String, password: String, lastname: String, firstname: String, genderIndex: Int, birthDate: Date, imageData: Data?){
-        AppState.shared.dataService.post(object: User(email: userName, password: password, last_name: lastname, first_name: firstname, date_of_birth: birthDate, gender: genderIndex == 0 ? "M" : "F"), type: User.self, path: "/api/users/create/")
+    func register(
+        userName: String,
+        password: String,
+        lastname: String,
+        firstname: String,
+        genderIndex: Int,
+        birthDate: Date,
+        imageData: Data?
+    ) {
+        AppState
+            .shared
+            .dataService
+            .post(
+                object: User(
+                    email: userName,
+                    password: password,
+                    lastName: lastname,
+                    firstName: firstname,
+                    dateOfBirth: birthDate,
+                    gender: genderIndex == 0 ? "M" : "F"
+                ),
+                type: User.self,
+                path: "/api/users/create/"
+            )
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { (completion) in
+            .sink { (completion: Subscribers.Completion<Error>) in
                 switch completion {
                 case let .failure(error):
                     print("Couldn't get userssssss: \(error)")
@@ -91,10 +113,9 @@ class AuthService: ObservableObject {
                     //                self.login(userName: userName, password: password)
                     //                AppState.shared.authService.upload_user_profile(image_data: imageData!)
                 }
-            }) {  user in //[weak self]
+            } receiveValue: { (user: User) in //[weak self]
                 //            self.login(userName: userName, password: password)
                 self.user = user
-                
                 //print(self.user)
             }
             .store(in: &subscriptions)

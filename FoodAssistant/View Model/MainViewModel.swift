@@ -21,7 +21,10 @@ class MainViewModel: ObservableObject {
         self._cvm = Published(wrappedValue: CameraViewModel(cameraService: cm))
         
         bottomBarVM.objectWillChange.sink { [weak self] _ in
-            self?.objectWillChange.send()
+            // Because device rotation is not perform on main thread
+            DispatchQueue.main.async { [weak self] in
+                self?.objectWillChange.send()
+            }
         }
         .store(in: &anyCancellables)
         
@@ -103,11 +106,22 @@ class MainViewModel: ObservableObject {
         }
     }
     
-    func onDeviceRotate() {
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            self.bottomBarVM.scrollTo(page: self.bottomBarVM.currentPageNumber, animated: false)
-        }
+    func onDeviceRotate(
+        oldScreenSize: CGSize,
+        orientation: UIDeviceOrientation
+    ) {
+        guard orientation != .unknown else { return }
+        let width: CGFloat = oldScreenSize.width
+        let height: CGFloat = oldScreenSize.height
+        let min: CGFloat = min(width, height)
+        let max: CGFloat = max(width, height)
+        let singlePageWidth: CGFloat = orientation.isPortrait ? min : max
+        bottomBarVM.viewWidth = singlePageWidth
+        bottomBarVM.scrollTo(
+            page: bottomBarVM.currentPageNumber,
+            animated: false
+        )
+//        svProxy.scrollTo(bottomBarVM.currentPageNumber, anchor: .leading)
     }
     
     func onScanBarcodeViewLoad() {
@@ -115,7 +129,6 @@ class MainViewModel: ObservableObject {
             bottomBarVM.showBar = false
             bottomBarVM.setSrollable(to: false)
         }
-
     }
     
     func onScanBarcodeViewUnload() {

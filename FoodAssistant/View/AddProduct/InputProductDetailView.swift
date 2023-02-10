@@ -330,7 +330,7 @@ fileprivate struct MissingNutTabSession: View {
             .overlay {
                 GeometryReader { (proxy: GeometryProxy) in
                     let size: CGSize = proxy.size
-                    Text("hu")
+                    Text("")
                 }
             }
         } header: {

@@ -16,33 +16,48 @@ struct ContentView: View {
     var body: some View {
         GeometryReader { (proxy: GeometryProxy) in
             let screenSize: CGSize = proxy.size
-            ScrollView(.vertical) {
-                ScrollView(.horizontal) {
-                    HStack(spacing: 0) {
-                        CatagoryView(
-                            screenSize: screenSize,
-                            onScanBarcodeViewLoad: mvm.onScanBarcodeViewLoad,
-                            onScanBarcodeViewUnload: mvm.onScanBarcodeViewUnload
-                        )
-                        CameraView(
-                            cvm: mvm.cvm,
-                            screenSize: screenSize
-                        )
-                        SettingView(screenSize: screenSize)
+//            ScrollView([], showsIndicators: false) {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 0) {
+                            CatagoryView(
+                                screenSize: screenSize,
+                                onScanBarcodeViewLoad: mvm.onScanBarcodeViewLoad,
+                                onScanBarcodeViewUnload: mvm.onScanBarcodeViewUnload
+                            )
+                            CameraView(
+                                cvm: mvm.cvm,
+                                screenSize: screenSize
+                            )
+                            SettingView(screenSize: screenSize)
+                        }
                     }
-                }
-                .introspectScrollView { (s: UIScrollView) in
-                    if mvm.bottomBarVM.tabSV == nil {
-                        mvm.bottomBarVM.tabSV = s
+                    .introspectScrollView { (s: UIScrollView) in
+                        if mvm.bottomBarVM.tabSV == nil {
+                            mvm.bottomBarVM.tabSV = s
+                            mvm.bottomBarVM.viewWidth = screenSize.width
+                            s.delegate = mvm.bottomBarVM
+                            s.isPagingEnabled = true
+                            mvm.bottomBarVM.scrollTo(page: .two, animated: false)
+                        }
                     }
-                    s.delegate = mvm.bottomBarVM
-                    s.isPagingEnabled = true
-                    mvm.bottomBarVM.scrollTo(page: .two, animated: false)
-                }
-            }
-            .introspectScrollView { (s: UIScrollView) in
-                s.isScrollEnabled = false
-            }
+                    .toolbar(.hidden, for: .tabBar)
+                    .frame(width: screenSize.width, height: screenSize.height)
+//                    .overlay {
+//                        VStack {
+//                            Text("contentOffset.x: \(mvm.bottomBarVM.tabSV?.contentOffset.x ?? .zero)")
+//                            Text("normalizedCurrentTabOffset: \(mvm.bottomBarVM.normalizedCurrentTabOffset)")
+//                        }
+//                    }
+                    .onRotate { (o: UIDeviceOrientation) in
+                        mvm.onDeviceRotate(
+                            oldScreenSize: screenSize,
+                            orientation: o
+                        )
+                    }
+//            }
+//            .introspectScrollView { (s: UIScrollView) in
+//                s.isScrollEnabled = false
+//            }
             .overlay(alignment: .bottom) {
                 BottomBar(
                     screenSize: screenSize,
@@ -70,13 +85,9 @@ struct ContentView: View {
                 )
                 .animation(.spring(), value: mvm.bottomBarVM.showBar)
             }
-            .edgesIgnoringSafeArea(.all)
             .environmentObject(mvm)
         }
         .edgesIgnoringSafeArea(.all)
-        .onRotate { _ in
-            mvm.onDeviceRotate()
-        }
     }
     
     func bottomBarHeight(screenHeight: CGFloat) -> CGFloat {
