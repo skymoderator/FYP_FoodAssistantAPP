@@ -32,8 +32,13 @@ class MainViewModel: ObservableObject {
             self?.handlePageChange()
         }
         .store(in: &anyCancellables)
+        
+        cvm.objectWillChange.sink { [weak self] in
+            self?.bottomBarVM.objectWillChange.send()
+        }
+        .store(in: &anyCancellables)
                 
-        AppState.shared.authService.getUserProfile()
+//        AppState.shared.authService.getUserProfile()
     }
     
     var isCenterButMorphing: Bool {
@@ -53,10 +58,16 @@ class MainViewModel: ObservableObject {
     }
     
     func handlePageChange() {
-        if bottomBarVM.currentPageNumber == .two {
+        if bottomBarVM.currentPageNumber == .two,
+           // If there is already a photo captured,
+           // then no need to start the camera session again
+            cvm.captureSource == nil
+        {
             cvm.cameraService.start()
+            print("start, \(bottomBarVM.currentPageNumber)")
         } else {
             cvm.cameraService.stop()
+            print("stop, \(bottomBarVM.currentPageNumber)")
         }
     }
     
@@ -125,6 +136,9 @@ class MainViewModel: ObservableObject {
             page: bottomBarVM.currentPageNumber,
             animated: false
         )
+        // Since rotation may cause page change
+        // although it shouldn't be
+        handlePageChange()
     }
     
     func onScanBarcodeViewLoad() {
@@ -143,6 +157,14 @@ class MainViewModel: ObservableObject {
             bottomBarVM.showBar = true
             bottomBarVM.setSrollable(to: true)
         }
+    }
+    
+    func onCameraViewPhotoCaptured() {
+        bottomBarVM.setSrollable(to: false)
+    }
+    
+    func onCameraViewPhotoReleased() {
+        bottomBarVM.setSrollable(to: true)
     }
     
 }

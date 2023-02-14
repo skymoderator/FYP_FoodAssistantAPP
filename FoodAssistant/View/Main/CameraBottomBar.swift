@@ -84,6 +84,7 @@ fileprivate struct FlashLightLabel: View {
             )
             .font(.body)
             .rotationEffect(isFlashLightOn ? .pi : .zero)
+            .animation(.spring(), value: isFlashLightOn)
             .transition(.opacity)
             Text("Flash Light is \(isFlashLightOn ? "On" : "Off") now")
                 .productFont(.bold, relativeTo: .body)
@@ -163,6 +164,10 @@ fileprivate struct TrailingButton: View {
             action: onTap
         )
         .scaledToFit()
+        .rotationEffect(
+            isPhotoCaptured ? (isScaleToFit ? .pi : .zero) : .zero
+        )
+        .animation(.spring(), value: isScaleToFit)
         .padding(12)
         .frame(
             width: max(0, size.height - 32),

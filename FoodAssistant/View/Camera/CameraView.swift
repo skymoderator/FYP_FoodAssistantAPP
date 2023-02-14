@@ -11,15 +11,19 @@ struct CameraView: View {
     
     @ObservedObject var cvm: CameraViewModel
     let screenSize: CGSize
+    let onPhotoCaptured: () -> Void
+    let onPhotoReleased: () -> Void
         
     var body: some View {
         ZStack {
-            if let image: UIImage = cvm.displayedImage {
+            if cvm.captureSource != nil {
                 DisplayedImageView(
-                    image: image,
-                    isScaleToFill: cvm.isScaleToFill,
+                    image: cvm.displayImageGetter,
+                    isScaleToFill: $cvm.isScaleToFill,
                     bboxes: cvm.ntDetection.boundingBoxes,
-                    rescaledImageSize: cvm.resacledImageSize
+                    rescaledImageSize: cvm.resacledImageSize,
+                    onPhotoCaptured: onPhotoCaptured,
+                    onPhotoReleased: onPhotoReleased
                 )
             } else {
                 CameraPreview(session: cvm.cameraService.session)
@@ -125,61 +129,38 @@ fileprivate struct Header: View {
 
 fileprivate struct DisplayedImageView: View {
     
-    let image: UIImage
-    let isScaleToFill: Bool
+    let image: () -> UIImage?
+    @Binding var isScaleToFill: Bool
     let bboxes: [BoundingBox]
     let rescaledImageSize: CGSize
-    
-    @State private var scale: CGFloat = 1
-    @State private var lastScale: CGFloat = 0
-//    @State private var offset: CGSize = .zero
-//    @State private var lastStoredOffset: CGSize = .zero
-    @GestureState private var isInteracting: Bool = false
+    let onPhotoCaptured: () -> ()
+    let onPhotoReleased: () -> ()
     
     var body: some View {
-        Image(uiImage: image)
-            .resizable()
-            .aspectRatio(contentMode: isScaleToFill ? .fill : .fit)
-            .overlay {
-                GeometryReader { (proxy: GeometryProxy) in
-                    let size: CGSize = proxy.size
-                    BoundingBoxView(
-                        boundingBoxes: bboxes,
-                        size: size,
-                        rescaledSize: rescaledImageSize
-                    )
-                }
-            }
-            .scaleEffect(scale)
-//            .offset(offset)
-//            .gesture(
-//                DragGesture()
-//                    .updating($isInteracting, body: { _, out, _ in
-//                        out = true
-//                    }).onChanged({ value in
-//                        let translation = value.translation
-//                        offset = CGSize(width: translation.width + lastStoredOffset.width, height: translation.height + lastStoredOffset.height)
-//                    })
-//            )
-            .gesture(
-                MagnificationGesture()
-                    .updating($isInteracting, body: { _, out, _ in
-                        out = true
-                    }).onChanged({ value in
-                        let updatedScale = value + lastScale
-                        /// - Limiting Beyond 1
-                        scale = (updatedScale < 1 ? 1 : updatedScale)
-                    }).onEnded({ value in
-                        withAnimation(.easeInOut(duration: 0.2)){
-                            if scale < 1{
-                                scale = 1
-                                lastScale = 0
-                            }else{
-                                lastScale = scale - 1
-                            }
-                        }
-                    })
+//        GeometryReader { (proxy: GeometryProxy) in
+//            let size: CGSize = proxy.size
+//            Image(uiImage: image)
+//                .resizable()
+//                .aspectRatio(contentMode: isScaleToFill ? .fill : .fit)
+//                .overlay {
+//                    GeometryReader { (proxy: GeometryProxy) in
+//                        let size: CGSize = proxy.size
+//                        BoundingBoxView(
+//                            boundingBoxes: bboxes,
+//                            size: size,
+//                            rescaledSize: rescaledImageSize
+//                        )
+//                    }
+//                }
+//        }
+        GeometryReader { (proxy: GeometryProxy) in
+            let size: CGSize = proxy.size
+            ZoomableScrollView(
+                image: image,
+                isScaleToFill: $isScaleToFill,
+                size: size
             )
+        }
     }
 }
 
@@ -194,3 +175,22 @@ struct CameraView_Previews: PreviewProvider {
         .environmentObject(mvm)
     }
 }
+
+//                     .updating($isInteracting, body: { _, out, _ in
+//                         out = true
+//                     }).onChanged({ value in
+// //                        let updatedScale = value + lastScale
+// //                        /// - Limiting Beyond 1
+// //                        scale = (updatedScale < 1 ? 1 : updatedScale)
+//                         print("value: \(value), lastScale: \(lastScale)")
+//                         scale = value + lastScale
+//                     }).onEnded({ value in
+//                         withAnimation(.easeInOut(duration: 0.2)){
+//                             if scale < 1 {
+//                                 scale = 1
+//                                 lastScale = 0
+//                             }else{
+//                                 lastScale = scale - 1
+//                             }
+//                         }
+//                     })

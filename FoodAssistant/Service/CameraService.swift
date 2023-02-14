@@ -350,6 +350,7 @@ public class CameraService: NSObject, Identifiable, ObservableObject {
     }
     
     @objc public func stop(completion: (() -> ())? = nil) {
+        guard isSessionRunning else { return }
         sessionQueue.async { [weak self] in
             guard let self = self else { return }
             if self.isSessionRunning {
@@ -370,6 +371,7 @@ public class CameraService: NSObject, Identifiable, ObservableObject {
     }
     
     @objc public func start() {
+        guard !isSessionRunning else { return }
         sessionQueue.async { [weak self] in
             guard let self = self else { return }
             if !self.isSessionRunning && self.isConfigured {

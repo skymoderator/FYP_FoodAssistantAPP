@@ -58,7 +58,6 @@ class BottomBarViewModel: NSObject, ObservableObject {
             tabOffset = viewWidth*2
             normalizedCurrentTabOffset = 2
         }
-        pageChange.toggle()
     }
     
     func setSrollable(to scrollable: Bool) {
@@ -78,7 +77,8 @@ extension BottomBarViewModel: UIScrollViewDelegate {
     }
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-//        onScrollViewDidEndScrolling()
+        onScrollViewDidEndScrolling()
+        pageChange.toggle()
     }
     
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {

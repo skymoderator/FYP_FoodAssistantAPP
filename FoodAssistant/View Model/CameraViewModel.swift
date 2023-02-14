@@ -113,13 +113,24 @@ class CameraViewModel: ObservableObject {
     }
     
     func onCameraPreviewTap() {
-        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+        UIApplication
+            .shared
+            .sendAction(
+                #selector(UIResponder.resignFirstResponder),
+                to: nil,
+                from: nil,
+                for: nil
+            )
     }
     
     func onXmarkButPressed() {
         withAnimation(.spring()) {
             scanBarcode.barcode = ""
         }
+    }
+    
+    func displayImageGetter() -> UIImage? {
+        displayedImage
     }
     
     private func captureCameraPhoto() {

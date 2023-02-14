@@ -26,7 +26,9 @@ struct ContentView: View {
                             )
                             CameraView(
                                 cvm: mvm.cvm,
-                                screenSize: screenSize
+                                screenSize: screenSize,
+                                onPhotoCaptured: mvm.onCameraViewPhotoCaptured,
+                                onPhotoReleased: mvm.onCameraViewPhotoReleased
                             )
                             SettingView(screenSize: screenSize)
                         }
