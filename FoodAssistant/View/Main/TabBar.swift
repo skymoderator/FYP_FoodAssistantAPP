@@ -104,6 +104,7 @@ struct TabBar: View {
                 .frame(width: size, height: size - (isPortrait ? 0 : 10))
                 .padding(.top, isPortrait ? 0 : 10)
                 .scaleEffect( 1 + tabScrollProgress, anchor: .bottom)
+                .animation(.easeOut, value: tabScrollProgress)
                 .onTapGesture(perform: onTap)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }

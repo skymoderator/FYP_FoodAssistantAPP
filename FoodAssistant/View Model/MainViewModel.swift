@@ -110,7 +110,11 @@ class MainViewModel: ObservableObject {
         oldScreenSize: CGSize,
         orientation: UIDeviceOrientation
     ) {
-        guard orientation != .unknown else { return }
+        guard
+            orientation == .landscapeRight ||
+            orientation == .landscapeLeft ||
+            orientation == .portrait
+        else { return }
         let width: CGFloat = oldScreenSize.width
         let height: CGFloat = oldScreenSize.height
         let min: CGFloat = min(width, height)
@@ -121,7 +125,6 @@ class MainViewModel: ObservableObject {
             page: bottomBarVM.currentPageNumber,
             animated: false
         )
-//        svProxy.scrollTo(bottomBarVM.currentPageNumber, anchor: .leading)
     }
     
     func onScanBarcodeViewLoad() {

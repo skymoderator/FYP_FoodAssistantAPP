@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 import Combine
+import SwiftUI
 
 class BottomBarViewModel: NSObject, ObservableObject {
     
@@ -26,7 +27,7 @@ class BottomBarViewModel: NSObject, ObservableObject {
     var tabSV: UIScrollView?
     var viewWidth: CGFloat = .zero
     
-    var tabScrollProgress: CGFloat { // [0, 1, 2]
+    var tabScrollProgress: CGFloat { // [0, 1, 0]
         let progress: CGFloat = normalizedCurrentTabOffset <= 1 ? normalizedCurrentTabOffset : 2 - normalizedCurrentTabOffset
         return max(0, min(2, progress))
     }
@@ -43,15 +44,21 @@ class BottomBarViewModel: NSObject, ObservableObject {
         )
     }   
     
-    func onPageChange() {
-        pageChange.toggle()
-        if normalizedCurrentTabOffset < 1 {
+    func onScrollViewDidEndScrolling() {
+        if normalizedCurrentTabOffset < 0.5 {
             currentPageNumber = .one
-        } else if normalizedCurrentTabOffset < 2 {
+            tabOffset = .zero
+            normalizedCurrentTabOffset = 0
+        } else if normalizedCurrentTabOffset < 1.5 {
             currentPageNumber = .two
+            tabOffset = viewWidth
+            normalizedCurrentTabOffset = 1
         } else {
             currentPageNumber = .three
+            tabOffset = viewWidth*2
+            normalizedCurrentTabOffset = 2
         }
+        pageChange.toggle()
     }
     
     func setSrollable(to scrollable: Bool) {
@@ -71,13 +78,13 @@ extension BottomBarViewModel: UIScrollViewDelegate {
     }
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        onPageChange()
+//        onScrollViewDidEndScrolling()
     }
     
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        if (!decelerate) {
-            onPageChange()
-        }
+//        if (!decelerate) {
+            onScrollViewDidEndScrolling()
+//        }
     }
 }
 

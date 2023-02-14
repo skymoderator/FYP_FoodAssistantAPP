@@ -130,8 +130,14 @@ fileprivate struct DisplayedImageView: View {
     let bboxes: [BoundingBox]
     let rescaledImageSize: CGSize
     
+    @State private var scale: CGFloat = 1
+    @State private var lastScale: CGFloat = 0
+//    @State private var offset: CGSize = .zero
+//    @State private var lastStoredOffset: CGSize = .zero
+    @GestureState private var isInteracting: Bool = false
+    
     var body: some View {
-        return Image(uiImage: image)
+        Image(uiImage: image)
             .resizable()
             .aspectRatio(contentMode: isScaleToFill ? .fill : .fit)
             .overlay {
@@ -144,6 +150,36 @@ fileprivate struct DisplayedImageView: View {
                     )
                 }
             }
+            .scaleEffect(scale)
+//            .offset(offset)
+//            .gesture(
+//                DragGesture()
+//                    .updating($isInteracting, body: { _, out, _ in
+//                        out = true
+//                    }).onChanged({ value in
+//                        let translation = value.translation
+//                        offset = CGSize(width: translation.width + lastStoredOffset.width, height: translation.height + lastStoredOffset.height)
+//                    })
+//            )
+            .gesture(
+                MagnificationGesture()
+                    .updating($isInteracting, body: { _, out, _ in
+                        out = true
+                    }).onChanged({ value in
+                        let updatedScale = value + lastScale
+                        /// - Limiting Beyond 1
+                        scale = (updatedScale < 1 ? 1 : updatedScale)
+                    }).onEnded({ value in
+                        withAnimation(.easeInOut(duration: 0.2)){
+                            if scale < 1{
+                                scale = 1
+                                lastScale = 0
+                            }else{
+                                lastScale = scale - 1
+                            }
+                        }
+                    })
+            )
     }
 }
 

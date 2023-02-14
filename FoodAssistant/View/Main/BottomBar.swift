@@ -42,6 +42,7 @@ struct BottomBar: View {
                     height: 80 * tabScrollProgress
                 )
                 .opacity(tabScrollProgress)
+                .animation(.easeOut, value: tabScrollProgress)
                 TabBar(
                     screenSize: screenSize,
                     onLeadingButtonTap: onTabBarLeadingButtonTap,

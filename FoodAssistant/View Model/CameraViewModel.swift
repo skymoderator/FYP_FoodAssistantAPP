@@ -97,7 +97,7 @@ class CameraViewModel: ObservableObject {
     
     func onTrailingButtonTapped() {
         if captureSource != nil {
-            withAnimation(.spring()) {
+            withAnimation(.easeInOut) {
                 isScaleToFill.toggle()
             }
         } else {
