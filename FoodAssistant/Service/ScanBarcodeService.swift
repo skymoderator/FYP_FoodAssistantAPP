@@ -78,10 +78,35 @@ class ScanBarcodeService: NSObject, ObservableObject {
         let convertedRect: CGRect = self.getConvertedRect(
             boundingBox: observation.boundingBox,
             inImage: imageSize,
-            containedIn: UIScreen.main.bounds.size
+            containedIn: UIScreen.protraitSize
         )
         Task {
             await MainActor.run {
+                var convertedRect = convertedRect
+                let orientation: UIInterfaceOrientation = UIApplication
+                    .shared
+                    .connectedScenes
+                    .compactMap({ ($0 as? UIWindowScene)?.keyWindow })
+                    .first?
+                    .windowScene?
+                    .interfaceOrientation ?? .portrait
+                if orientation == .landscapeRight {
+                    // Rotate the rect by 90 degrees clockwise
+                    convertedRect = CGRect(
+                        x: convertedRect.origin.y,
+                        y: UIScreen.protraitSize.width - convertedRect.origin.x - convertedRect.width,
+                        width: convertedRect.height,
+                        height: convertedRect.width
+                    )
+                } else if orientation == .landscapeLeft {
+                    // Rotate the rect by 90 degrees counter-clockwise
+                    convertedRect = CGRect(
+                        x: UIScreen.protraitSize.height - convertedRect.origin.y - convertedRect.height,
+                        y: convertedRect.origin.x,
+                        width: convertedRect.height,
+                        height: convertedRect.width
+                    )
+                }
                 boundingBox = convertedRect
                 
                 guard let newBarcode: String = observation.payloadStringValue,
@@ -99,7 +124,7 @@ class ScanBarcodeService: NSObject, ObservableObject {
     private func getConvertedRect(
         boundingBox: CGRect,
         inImage imageSize: CGSize, // 1920x1080
-        containedIn containerSize: CGSize // 428x926
+        containedIn containerSize: CGSize // 428x926 or 926x428
     ) -> CGRect {
         let rectOfImage: CGRect
         

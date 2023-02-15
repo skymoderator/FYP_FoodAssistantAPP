@@ -30,3 +30,14 @@ extension View {
     }
 }
 
+extension UIScreen {
+    static let protraitSize: CGSize = .init(
+        width: min(UIScreen.main.bounds.size.width, UIScreen.main.bounds.size.height),
+        height: max(UIScreen.main.bounds.size.width, UIScreen.main.bounds.size.height)
+    )
+    static let landscapeSize: CGSize = .init(
+        width: max(UIScreen.main.bounds.size.width, UIScreen.main.bounds.size.height),
+        height: min(UIScreen.main.bounds.size.width, UIScreen.main.bounds.size.height)
+    )
+}
+
