@@ -106,11 +106,11 @@ fileprivate struct LowerView: View {
                 .foregroundColor(.primary)
                 .fixedSize(horizontal: false, vertical: true)
             CameraPreview(session: session)
-                .overlay {
-                    BarCodeIndicatorView(
-                        barcode: barcode,
-                        height: 100)
-                }
+//                .overlay {
+//                    BarCodeIndicatorView(
+//                        barcode: barcode,
+//                        height: 100)
+//                }
                 .cornerRadius(30)
         }
     }

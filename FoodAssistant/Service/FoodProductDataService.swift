@@ -99,24 +99,24 @@ class FoodProductDataService: ObservableObject {
     
     func postProcessing() {
         // Find unique value in products.category{1/2/3}
-        self.categories1 = Array(Set(self.products.compactMap({ $0.category_1 })))
-        self.categories2 = Array(Set(self.products.compactMap({ $0.category_2 })))
-        self.categories3 = Array(Set(self.products.compactMap({ $0.category_3 })))
+        self.categories1 = Array(Set(self.products.compactMap({ $0.category1 })))
+        self.categories2 = Array(Set(self.products.compactMap({ $0.category2 })))
+        self.categories3 = Array(Set(self.products.compactMap({ $0.category3 })))
     }
     
     // Return array of products whose categroy_{1,2,3} is categoryStr
     func productWhoweCategory(number: Int, is categoryStr: String) -> [Product] {
         if number == 1 {
             return products.filter {
-                $0.category_1 == categoryStr
+                $0.category1 == categoryStr
             }
         } else if number == 2 {
             return products.filter {
-                $0.category_2 == categoryStr
+                $0.category2 == categoryStr
             }
         } else {
             return products.filter {
-                $0.category_3 == categoryStr
+                $0.category3 == categoryStr
             }
         }
     }

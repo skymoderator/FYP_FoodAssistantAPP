@@ -18,6 +18,13 @@ class MainViewModel: ObservableObject {
     init() {
         let cm = CameraService()
         self._bottomBarVM = Published(wrappedValue: BottomBarViewModel())
+        // Note:
+        // Here we just initialize the camera service,
+        // but we don't start and configure the camera session yet
+        // because we need to add the scan barcode service to the camera service
+        // in the camera view model, so we need to wait until the camera view model
+        // is initialized, then we can start the camera session,
+        // thats why we are passing the camera service to the camera view model
         self._cvm = Published(wrappedValue: CameraViewModel(cameraService: cm))
         
         bottomBarVM.objectWillChange.sink { [weak self] _ in
@@ -64,10 +71,8 @@ class MainViewModel: ObservableObject {
             cvm.captureSource == nil
         {
             cvm.cameraService.start()
-            print("start, \(bottomBarVM.currentPageNumber)")
         } else {
             cvm.cameraService.stop()
-            print("stop, \(bottomBarVM.currentPageNumber)")
         }
     }
     
@@ -157,14 +162,6 @@ class MainViewModel: ObservableObject {
             bottomBarVM.showBar = true
             bottomBarVM.setSrollable(to: true)
         }
-    }
-    
-    func onCameraViewPhotoCaptured() {
-        bottomBarVM.setSrollable(to: false)
-    }
-    
-    func onCameraViewPhotoReleased() {
-        bottomBarVM.setSrollable(to: true)
     }
     
 }

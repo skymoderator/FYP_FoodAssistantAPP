@@ -16,13 +16,25 @@ struct Product: IdentifyEquateCodeHashable {
     var nutrition: NutritionInformation?
     var manufacturer: String?
     var brand: String?
-    var product_price: [ProductPrice] = []
-    var category_1: String?
-    var category_2: String?
-    var category_3: String?
+    var prices: [ProductPrice] = []
+    var category1: String?
+    var category2: String?
+    var category3: String?
 //    var ingredients: [Ingredient] = []
-    //var price: Double = 0
     //var supermarket: Supermarket?
+    
+    enum CodingKeys: String, CodingKey {
+        case id = "id"
+        case name = "name"
+        case barcode = "barcode"
+        case nutrition = "nutrition"
+        case manufacturer = "manufacturer"
+        case brand = "brand"
+        case prices = "product_price"
+        case category1 = "category_1"
+        case category2 = "category_2"
+        case category3 = "category_3"
+    }
 }
 
 struct ProductPrice: Hashable, Codable {

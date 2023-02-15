@@ -21,7 +21,15 @@ struct InputProductDetailView: View {
             hasher.combine(product)
         }
         let product: Product
+        /**
+         onAppear: Perform some logics when view appears,
+         e.g. hide tab bar and lock the scrollview from scrollable
+        */
         let onAppear: (() -> Void)?
+        /**
+         onDisappear: Similarly, reset back the logics performed on onAppear
+         when view disappears
+        */
         let onDisappear: (() -> Void)?
         
         init(
@@ -130,6 +138,7 @@ fileprivate struct InfoSession: View {
                     .foregroundColor(.systemBlue)
             }
             .buttonStyle(.plain)
+            .hoverEffect()
             .popover(
                 present: $show,
                 attributes: { (a: inout Popover.Attributes) in
@@ -178,7 +187,7 @@ fileprivate struct InfoSession: View {
                     .foregroundColor(.primary)
                 Spacer()
                 PricePopoverBut(product: product, show: $showPopover)
-                Text("HKD $\(product.product_price.first?.price.formatted() ?? "NA")")
+                Text("HKD $\(product.prices.first?.price.formatted() ?? "NA")")
                     .productFont(.regular, relativeTo: .body)
                     .foregroundColor(.secondary)
             }
@@ -194,12 +203,12 @@ fileprivate struct PricePopover: View {
     let avgPrice: Double
     init(product: Product) {
         self.product = product
-        let dates: [Date] = product.product_price.map { $0.date }
-        let prices: [Double] = product.product_price.map { $0.price }
+        let dates: [Date] = product.prices.map { $0.date }
+        let prices: [Double] = product.prices.map { $0.price }
         datas = zip(dates, prices).map { ($0, $1) }
-        minPrice = product.product_price.map(\.price).min() ?? 0
-        maxPrice = product.product_price.map(\.price).max() ?? 0
-        avgPrice = product.product_price.map(\.price).reduce(0.0, +)/Double(product.product_price.count)
+        minPrice = product.prices.map(\.price).min() ?? 0
+        maxPrice = product.prices.map(\.price).max() ?? 0
+        avgPrice = product.prices.map(\.price).reduce(0.0, +)/Double(product.prices.count)
     }
     var body: some View {
         Templates.Container(
@@ -313,17 +322,18 @@ fileprivate struct MissingNutTabSession: View {
                 Button(action: onTap) {
                     HStack {
                         Image(systemName: "plus.viewfinder")
-                            .foregroundColor(.white)
                             .fontWeight(.bold)
                         Text("Scan Nutrition Table")
                             .productFont(.bold, relativeTo: .body)
-                            .foregroundColor(.white)
                     }
-                    .padding()
+                    .foregroundColor(.white)
+                    .padding(8)
                     .padding(.horizontal)
                     .background(.systemBlue)
                     .clipShape(Capsule())
+                    .contentShape(Capsule())
                 }
+                .hoverEffect()
             }
             .padding(32)
             .frame(maxWidth: .infinity)

@@ -66,6 +66,7 @@ struct TabBar: View {
                         .frame(width: size, height: size)
                 }
                 .frame(width: size, height: size - (isPortrait ? 0 : 10))
+                .hoverEffect()
                 .padding(.top, isPortrait ? 0 : 10)
                 .onTapGesture(perform: onTap)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -131,6 +132,7 @@ struct TabBar: View {
                         .scaledToFit()
                 }
                 .frame(width: size, height: size - (isPortrait ? 0 : 10))
+                .hoverEffect()
                 .padding(.top, isPortrait ? 0 : 10)
                 .onTapGesture(perform: onTap)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)

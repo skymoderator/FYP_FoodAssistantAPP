@@ -12,32 +12,25 @@ import SwiftUI
 
 class CameraViewModel: ObservableObject {
     
+    // MARK: - Services
     @Published var cameraService: CameraService
     @Published var pickerService = ImagePickerService()
     @Published var ntDetection = NutritionTableDetectionService()
     @Published var scanBarcode: ScanBarcodeService
-    
+    // MARK: - Photo Capture
     @Published var captureSource: CaptureSource?
-    
-    @Published var isScaleToFill = true
-    @Published var barcode = ""
+    // MARK: - Camera Bottom Bar
+    @Published var isScaleToFill: Bool = true
+    // MARK: - Barcode Header
+    @Published var barcode: String = ""
     @Published var isEditing = false
-    
+    // MARK: - Displayed Image View Header Buttons
+    @Published var showSimilarProductView: Bool = false
+    @Published var showAnalysisView: Bool = false
+    // MARK: Cancellables to Store All Subscribers
     var anyCancellables = Set<AnyCancellable>()
     
-    var displayedImage: UIImage? {
-        if let captureSource {
-            switch captureSource {
-            case .byCamera:
-                return cameraService.photo?.rescaledImage
-            case .byImagePicker:
-                return pickerService.photo?.rescaledImage
-            }
-        } else {
-            return nil
-        }
-    }
-    
+    // MARK: - Init
     init(cameraService: CameraService) {
         self._cameraService = Published(wrappedValue: cameraService)
         self._scanBarcode = Published(wrappedValue: ScanBarcodeService(cameraService: cameraService))
@@ -59,6 +52,11 @@ class CameraViewModel: ObservableObject {
         }
         .store(in: &anyCancellables)
         
+        scanBarcode.objectWillChange.sink { [weak self] (_) in
+            self?.objectWillChange.send()
+        }
+        .store(in: &anyCancellables)
+        
         scanBarcode.$barcode.sink { [weak self] (barcode: String) in
             withAnimation(.spring()) {
                 self?.barcode = barcode
@@ -67,6 +65,37 @@ class CameraViewModel: ObservableObject {
         .store(in: &anyCancellables)
     }
     
+    // MARK: - Private Logic
+    private func captureCameraPhoto() {
+        cameraService.capturePhoto { [weak self] in
+            guard let self = self,
+                  let photo: Photo = self.cameraService.photo,
+                  let resizedImage: UIImage = photo.resizedImage else { return }
+            self.cameraService.stop {
+                print("session stopped")
+            }
+            self.ntDetection.detectNuritionTable(image: resizedImage)
+            
+            DispatchQueue.main.async { [weak self] in
+                self?.captureSource = .byCamera
+            }
+        }
+    }
+    
+    // MARK: - View Logic
+    var displayedImage: UIImage? {
+        if let captureSource {
+            switch captureSource {
+            case .byCamera:
+                return cameraService.photo?.rescaledImage
+            case .byImagePicker:
+                return pickerService.photo?.rescaledImage
+            }
+        } else {
+            return nil
+        }
+    }
+
     var resacledImageSize: CGSize {
         switch captureSource {
         case .none: return .zero
@@ -77,6 +106,31 @@ class CameraViewModel: ObservableObject {
             case .byImagePicker:
                 return pickerService.photo?.rescaledImage?.size ?? .zero
             }
+        }
+    }
+    
+    func didSearchButtonCliced() {
+        showSimilarProductView.toggle()
+    }
+    
+    func didAnalysisButtonCliced() {
+        showAnalysisView.toggle()
+    }
+    
+    func onCameraPreviewTap() {
+        UIApplication
+            .shared
+            .sendAction(
+                #selector(UIResponder.resignFirstResponder),
+                to: nil,
+                from: nil,
+                for: nil
+            )
+    }
+    
+    func onXmarkButPressed() {
+        withAnimation(.spring()) {
+            scanBarcode.barcode = ""
         }
     }
     
@@ -112,40 +166,9 @@ class CameraViewModel: ObservableObject {
         ntDetection.detectNuritionTable(image: resizedImage)
     }
     
-    func onCameraPreviewTap() {
-        UIApplication
-            .shared
-            .sendAction(
-                #selector(UIResponder.resignFirstResponder),
-                to: nil,
-                from: nil,
-                for: nil
-            )
-    }
-    
-    func onXmarkButPressed() {
-        withAnimation(.spring()) {
-            scanBarcode.barcode = ""
-        }
-    }
-    
     func displayImageGetter() -> UIImage? {
         displayedImage
     }
-    
-    private func captureCameraPhoto() {
-        cameraService.capturePhoto { [weak self] in
-            guard let self = self,
-                  let photo: Photo = self.cameraService.photo,
-                  let resizedImage: UIImage = photo.resizedImage else { return }
-            self.cameraService.stop {
-                print("session stopped")
-            }
-            self.ntDetection.detectNuritionTable(image: resizedImage)
-            
-            DispatchQueue.main.async { [weak self] in
-                self?.captureSource = .byCamera
-            }
-        }
-    }
+
+
 }

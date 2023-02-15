@@ -118,6 +118,7 @@ fileprivate struct LeadingLeadingButton: View {
                 Circle()
                     .fill(.regularMaterial)
             }
+            .hoverEffect()
     }
 }
 
@@ -136,6 +137,7 @@ fileprivate struct LeadingButton: View {
                 Circle()
                     .fill(.regularMaterial)
             }
+            .hoverEffect()
     }
 }
 
@@ -177,6 +179,7 @@ fileprivate struct TrailingButton: View {
             Circle()
                 .fill(.regularMaterial)
         }
+        .hoverEffect()
     }
 }
 
@@ -199,6 +202,7 @@ fileprivate struct TrailingTrailingButton: View {
             Circle()
                 .fill(.regularMaterial)
         }
+        .hoverEffect()
     }
 }
 

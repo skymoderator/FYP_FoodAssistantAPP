@@ -37,6 +37,7 @@ struct ZoomableScrollView: UIViewRepresentable {
         scrollView.addSubview(imageView)
         scrollView.minimumZoomScale = 1.0
         scrollView.maximumZoomScale = 6.0
+        animateContentMode(imageView: imageView)
         return scrollView
     }
 

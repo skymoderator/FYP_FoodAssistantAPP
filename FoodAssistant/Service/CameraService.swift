@@ -46,19 +46,44 @@ public class CameraService: NSObject, Identifiable, ObservableObject {
         }
     }
     
-    public func configure(onComplete: (() -> Void)? = nil) {
-        /*
-         Setup the capture session.
-         In general, it's not safe to mutate an AVCaptureSession or any of its
-         inputs, outputs, or connections from multiple threads at the same time.
-         
-         Don't perform these tasks on the main queue because
-         AVCaptureSession.startRunning() is a blocking call, which can
-         take a long time. Dispatch session setup to the sessionQueue, so
-         that the main queue isn't blocked, which keeps the UI responsive.
-         */
+    /// Setup the capture session.
+    /// 
+    /// The session is configured on an internal session queue. 
+    /// This ensures that the main queue isn't blocked.
+    /// 
+    /// - Parameters:
+    ///   - onComplete: An optional closure to be executed when the session is configured
+    ///   - additionalInput: An optional closure to be executed during the session configuration
+    ///     process. This is useful for adding additional inputs to the session.
+    ///     The closure should not throw any errors, should not start the session, and should
+    ///     not begin or commit the configuration. If there is any configuration that needs to
+    ///     modify the capture session, perform it in the session queue provided by the closure
+    ///   - additionalOutput: An optional closure to be executed during the session configuration
+    ///     process. This is useful for adding additional changes to the `AVCaptureVideoDataOutput` of the session.
+    ///     The closure should not throw any errors, should not start the session, and should
+    ///     not begin or commit the configuration. If there is any configuration that needs to
+    ///     modify the capture session, perform it in the session queue provided by the closure.
+    ///     If there is any configuration that needs to be performed on the output, perform it in the
+    ///     `AVCaptureVideoDataOutput` provided in the closure
+    ///
+    public func configure(
+        onComplete: (() -> Void)? = nil, 
+        additionalInput: ((AVCaptureSession, DispatchQueue) -> Void)? = nil,
+        additionalOutput: ((AVCaptureSession, AVCaptureVideoDataOutput, DispatchQueue) -> Void)? = nil
+        ) {
+        /// In general, it's not safe to mutate an AVCaptureSession or any of its
+        /// inputs, outputs, or connections from multiple threads at the same time.
+        ///  
+        /// Don't perform these tasks on the main queue because
+        /// AVCaptureSession.startRunning() is a blocking call, which can
+        /// take a long time. Dispatch session setup to the sessionQueue, so
+        /// that the main queue isn't blocked, which keeps the UI responsive.
         sessionQueue.async { [weak self] in
-            self?.configureSession(onComplete: onComplete)
+            self?.configureSession(
+                onComplete: onComplete,
+                additionalInput: additionalInput,
+                additionalOutput: additionalOutput
+            )
         }
     }
     
@@ -115,10 +140,32 @@ public class CameraService: NSObject, Identifiable, ObservableObject {
     }
     
     //  MARK: Session Managment
-    
-    // Call this on the session queue.
-    /// - Tag: ConfigureSession
-    private func configureSession(onComplete: (() -> Void)? = nil) {
+    /// Configures the camera capture session
+    /// 
+    /// After the session is configured, the function will automatically start the session.
+    /// If everything works as expected, then the `onComplete` closure is executed and the
+    /// very end.
+    /// 
+    /// - Parameters:
+    ///   - onComplete: An optional closure to be executed when the session is configured
+    ///   - additionalInput: An optional closure to be executed during the session configuration
+    ///     process. This is useful for adding additional inputs to the session.
+    ///     The closure should not throw any errors, should not start the session, and should
+    ///     not begin or commit the configuration. If there is any configuration that needs to
+    ///     modify the capture session, perform it in the session queue provided by the closure
+    ///   - additionalOutput: An optional closure to be executed during the session configuration
+    ///     process. This is useful for adding additional changes to the `AVCaptureVideoDataOutput` of the session.
+    ///     The closure should not throw any errors, should not start the session, and should
+    ///     not begin or commit the configuration. If there is any configuration that needs to
+    ///     modify the capture session, perform it in the session queue provided by the closure.
+    ///     If there is any configuration that needs to be performed on the output, perform it in the
+    ///     `AVCaptureVideoDataOutput` provided in the closure
+    ///             
+    private func configureSession(
+        onComplete: (() -> Void)? = nil, 
+        additionalInput: ((AVCaptureSession, DispatchQueue) -> Void)? = nil,
+        additionalOutput: ((AVCaptureSession, AVCaptureVideoDataOutput, DispatchQueue) -> Void)? = nil
+        ) {
         if setupResult != .success {
             return
         }
@@ -135,11 +182,11 @@ public class CameraService: NSObject, Identifiable, ObservableObject {
         do {
             var defaultVideoDevice: AVCaptureDevice?
             
-//            if let backCameraDevice = AVCaptureDevice.default(.builtInUltraWideCamera, for: .video, position: .back) {
-            if let backCameraDevice = AVCaptureDevice.default(.builtInDualCamera, for: .video, position: .back) {
+            // if let backCameraDevice = AVCaptureDevice.default(.builtInUltraWideCamera, for: .video, position: .back) {
+            if let backCameraDevice: AVCaptureDevice = AVCaptureDevice.default(.builtInDualCamera, for: .video, position: .back) {
                 // If a rear dual camera is not available, default to the rear wide angle camera.
                 defaultVideoDevice = backCameraDevice
-            } else if let frontCameraDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front) {
+            } else if let frontCameraDevice: AVCaptureDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front) {
                 // If the rear wide angle camera isn't available, default to the front wide angle camera.
                 defaultVideoDevice = frontCameraDevice
             }
@@ -170,6 +217,8 @@ public class CameraService: NSObject, Identifiable, ObservableObject {
             return
         }
         
+        additionalInput?(session, sessionQueue)
+        
         // Add the photo output.
         if session.canAddOutput(photoOutput) {
             session.addOutput(photoOutput)
@@ -185,6 +234,7 @@ public class CameraService: NSObject, Identifiable, ObservableObject {
         let output = AVCaptureVideoDataOutput()
         output.alwaysDiscardsLateVideoFrames = true
 //        output.setSampleBufferDelegate(self, queue: sampleBufferQueue)
+        additionalOutput?(session, output, sampleBufferQueue)
         session.addOutput(output)
         session.commitConfiguration()
         self.isConfigured = true

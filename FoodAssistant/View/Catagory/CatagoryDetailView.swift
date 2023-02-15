@@ -287,8 +287,8 @@ fileprivate struct Row: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             Text(
-                product.product_price.first?.price == nil ?
-                "NA" : "$\(product.product_price.first!.price.formatted())"
+                product.prices.first?.price == nil ?
+                "NA" : "$\(product.prices.first!.price.formatted())"
             )
             .foregroundColor(.primary)
             .productFont(.bold, relativeTo: .body)

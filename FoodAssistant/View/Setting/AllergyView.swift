@@ -62,6 +62,7 @@ fileprivate struct SelectedAllergiesSession: View {
                             Image(systemName: "minus.circle.fill")
                                 .foregroundColor(.systemRed)
                         }
+                        .hoverEffect()
                         Text(i.englishName)
                             .productFont(.regular, relativeTo: .body)
                     }
@@ -90,6 +91,7 @@ fileprivate struct AllAllergiesSession: View {
                         Image(systemName: "plus.circle.fill")
                             .foregroundColor(.systemGreen)
                     }
+                    .hoverEffect()
                     Text(i.englishName)
                         .productFont(.regular, relativeTo: .body)
                 }

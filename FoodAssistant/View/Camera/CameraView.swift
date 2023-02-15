@@ -11,8 +11,6 @@ struct CameraView: View {
     
     @ObservedObject var cvm: CameraViewModel
     let screenSize: CGSize
-    let onPhotoCaptured: () -> Void
-    let onPhotoReleased: () -> Void
         
     var body: some View {
         ZStack {
@@ -22,14 +20,26 @@ struct CameraView: View {
                     isScaleToFill: $cvm.isScaleToFill,
                     bboxes: cvm.ntDetection.boundingBoxes,
                     rescaledImageSize: cvm.resacledImageSize,
-                    onPhotoCaptured: onPhotoCaptured,
-                    onPhotoReleased: onPhotoReleased
+                    screenSize: screenSize,
+                    didSearchButtonCliced: cvm.didSearchButtonCliced,
+                    didAnalysisButtonCliced: cvm.didAnalysisButtonCliced
                 )
             } else {
                 CameraPreview(session: cvm.cameraService.session)
+                    .overlay(alignment: .topLeading) {
+                        if let bbox: CGRect = cvm.scanBarcode.boundingBox {
+                            BarCodeIndicatorView(
+                                barcode: cvm.scanBarcode.barcode,
+                                width: bbox.width,
+                                height: bbox.height,
+                                offset: bbox.origin
+                            )
+                            .animation(.easeIn, value: cvm.scanBarcode.boundingBox)
+                        }
+                    }
                     .onTapGesture(perform: cvm.onCameraPreviewTap)
                     .overlay(alignment: .top) {
-                        Header(
+                        BarcodeHeader(
                             barcode: $cvm.barcode,
                             onXmarkButPressed: cvm.onXmarkButPressed
                         )
@@ -47,10 +57,21 @@ struct CameraView: View {
         ) {
             ImagePicker(image: $cvm.pickerService.image, camera: false)
         }
+        .sheet(isPresented: $cvm.showAnalysisView) {
+            let detail: InputProductDetailView.Detail = .init(product: Product())
+            // Note:
+            // The InputProductDetailView itself does not contain NavigationStack
+            // therefore, it is the parent view's (this view) responsibility to
+            // embed InputProductDetailView to NavigationStack so that the
+            // navigation bar and large navigation title can display properly
+            NavigationStack {
+                InputProductDetailView(detail: detail)
+            }
+        }
     }
 }
 
-fileprivate struct Header: View {
+fileprivate struct BarcodeHeader: View {
     @Environment(\.safeAreaInsets) var safeArea
     @Binding var barcode: String
     let onXmarkButPressed: () -> Void
@@ -86,6 +107,7 @@ fileprivate struct Header: View {
                                     .foregroundColor(.primary)
                             }
                     }
+                    .hoverEffect()
                 }
             }
             .padding()
@@ -112,6 +134,7 @@ fileprivate struct Header: View {
                         removal: .identity)
                 )
                 .zIndex(0)
+                .hoverEffect()
             }
         }
         .productFont(.bold, relativeTo: .title2)
@@ -128,13 +151,13 @@ fileprivate struct Header: View {
 }
 
 fileprivate struct DisplayedImageView: View {
-    
     let image: () -> UIImage?
     @Binding var isScaleToFill: Bool
     let bboxes: [BoundingBox]
     let rescaledImageSize: CGSize
-    let onPhotoCaptured: () -> ()
-    let onPhotoReleased: () -> ()
+    let screenSize: CGSize
+    let didSearchButtonCliced: (() -> Void)?
+    let didAnalysisButtonCliced: (() -> Void)?
     
     var body: some View {
 //        GeometryReader { (proxy: GeometryProxy) in
@@ -153,13 +176,56 @@ fileprivate struct DisplayedImageView: View {
 //                    }
 //                }
 //        }
-        GeometryReader { (proxy: GeometryProxy) in
-            let size: CGSize = proxy.size
-            ZoomableScrollView(
-                image: image,
-                isScaleToFill: $isScaleToFill,
-                size: size
+        ZoomableScrollView(
+            image: image,
+            isScaleToFill: $isScaleToFill,
+            size: screenSize
+        )
+        .frame(width: screenSize.width, height: screenSize.height)
+        .overlay(alignment: .top) {
+            Header(
+                didSearchButtonCliced: didSearchButtonCliced,
+                didAnalysisButtonCliced: didAnalysisButtonCliced
             )
+        }
+    }
+    
+    fileprivate struct Header: View {
+        @Environment(\.safeAreaInsets) var safeArea
+        let didSearchButtonCliced: (() -> Void)?
+        let didAnalysisButtonCliced: (() -> Void)?
+        var body: some View {
+            HStack {
+                Button {
+                    didSearchButtonCliced?()
+                } label: {
+                    VStack {
+                        Image(systemName: "magnifyingglass.circle")
+                        Text("Search")
+                            .productFont(.bold, relativeTo: .title3)
+                    }
+                    .foregroundStyle(.secondary)
+                }
+                .frame(maxWidth: .infinity)
+                .hoverEffect()
+                Button {
+                    didAnalysisButtonCliced?()
+                } label: {
+                    VStack {
+                        Image(systemName: "tablecells.badge.ellipsis")
+                        Text("Analysis")
+                            .productFont(.bold, relativeTo: .title3)
+                    }
+                    .foregroundStyle(.secondary)
+                }
+                .frame(maxWidth: .infinity)
+                .hoverEffect()
+            }
+            .buttonStyle(.plain)
+            .padding(.top, safeArea.top)
+            .padding()
+            .background(.thinMaterial, in: Rectangle())
+            .transition(.move(edge: .top))
         }
     }
 }
@@ -167,30 +233,7 @@ fileprivate struct DisplayedImageView: View {
 struct CameraView_Previews: PreviewProvider {
     @StateObject static var mvm = MainViewModel()
     static var previews: some View {
-//        GeometryReader { (proxy: GeometryProxy) in
-//            let size: CGSize = proxy.size
-//            CameraView(screenSize: size)
-//        }
         ContentView()
         .environmentObject(mvm)
     }
 }
-
-//                     .updating($isInteracting, body: { _, out, _ in
-//                         out = true
-//                     }).onChanged({ value in
-// //                        let updatedScale = value + lastScale
-// //                        /// - Limiting Beyond 1
-// //                        scale = (updatedScale < 1 ? 1 : updatedScale)
-//                         print("value: \(value), lastScale: \(lastScale)")
-//                         scale = value + lastScale
-//                     }).onEnded({ value in
-//                         withAnimation(.easeInOut(duration: 0.2)){
-//                             if scale < 1 {
-//                                 scale = 1
-//                                 lastScale = 0
-//                             }else{
-//                                 lastScale = scale - 1
-//                             }
-//                         }
-//                     })

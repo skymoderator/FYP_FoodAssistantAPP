@@ -179,9 +179,9 @@ class CatagoryDetailViewModel: ObservableObject {
                 pc.products.sort { (p1: Product, p2: Product) in
                     switch self.orderBy {
                     case .ascending:
-                        return (p1.product_price[safe: 0]?.price ?? 0) < (p2.product_price[safe: 0]?.price ?? 0)
+                        return (p1.prices[safe: 0]?.price ?? 0) < (p2.prices[safe: 0]?.price ?? 0)
                     case .descending:
-                        return (p1.product_price[safe: 0]?.price ?? 0) > (p2.product_price[safe: 0]?.price ?? 0)
+                        return (p1.prices[safe: 0]?.price ?? 0) > (p2.prices[safe: 0]?.price ?? 0)
                     }
                 }
                 return pc
@@ -198,7 +198,7 @@ class CatagoryDetailViewModel: ObservableObject {
                     case .name:
                         return p1.name < p2.name
                     case .price:
-                        return (p1.product_price[safe: 0]?.price ?? 0) < (p2.product_price[safe: 0]?.price ?? 0)
+                        return (p1.prices[safe: 0]?.price ?? 0) < (p2.prices[safe: 0]?.price ?? 0)
                     }
                 }
                 return pc
@@ -210,7 +210,7 @@ class CatagoryDetailViewModel: ObservableObject {
                     case .name:
                         return p1.name > p2.name
                     case .price:
-                        return (p1.product_price[safe: 0]?.price ?? 0) > (p2.product_price[safe: 0]?.price ?? 0)
+                        return (p1.prices[safe: 0]?.price ?? 0) > (p2.prices[safe: 0]?.price ?? 0)
                     }
                 }
                 return pc
