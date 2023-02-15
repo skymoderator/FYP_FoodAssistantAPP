@@ -58,6 +58,7 @@ struct InputProductDetailView: View {
     
     var body: some View {
         List {
+            BarcodeSession(barcode: vm.product.barcode)
             NameSession(product: $vm.product)
             InfoSession(product: vm.product)
             if let nutInfo: NutritionInformation = vm.product.nutrition {
@@ -75,6 +76,20 @@ struct InputProductDetailView: View {
         }
         .onAppear(perform: onAppear)
         .onDisappear(perform: onDisappear)
+    }
+}
+
+fileprivate struct BarcodeSession: View {
+    let barcode: String
+    var body: some View {
+        Section {
+            Text(barcode)
+                .foregroundColor(.primary)
+                .productFont(.regular, relativeTo: .body)
+        } header: {
+            Text("Barcode")
+                .productFont(.regular, relativeTo: .footnote)
+        }
     }
 }
 

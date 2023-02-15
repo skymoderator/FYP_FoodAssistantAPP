@@ -13,6 +13,12 @@ import Vision
 
 class ScanBarcodeService: NSObject, ObservableObject {
     
+    /// Note:
+    /// This `barcode` property can either be changed by
+    /// - the functon `processClassification` whenever a new barcode has been detected by `Vision`
+    /// - the textfield on the header in `CameraView`
+    /// The new value will replace the old value, so the user-inputted barcode maybe replaced by newly detected
+    /// barcode when `Vision` has detected a new barcode on the screen
     @Published var barcode: String = ""
     @Published var errorMessage: String?
     @Published var boundingBox: CGRect?
@@ -138,6 +144,31 @@ class ScanBarcodeService: NSObject, ObservableObject {
     
     func onDisappear() {
         cameraService.stop()
+    }
+    
+    /// Detect barcode from an image
+    /// 
+    /// - Parameters:
+    ///   - image: an UIImage object to be detected from
+    ///
+    /// - Returns: An optional string of the barcode if detected, otherwise nil
+    func detectBarcode(from image: UIImage) -> String? {
+        guard let cgImage: CGImage = image.cgImage else { return nil }
+        
+        let requestHandler = VNImageRequestHandler(cgImage: cgImage, options: [:])
+        
+        do {
+            try requestHandler.perform([detectBarcodeRequest])
+        } catch {
+            print(error)
+            return nil
+        }
+        
+        guard let observations: [VNBarcodeObservation] = detectBarcodeRequest.results,
+              let observation: VNBarcodeObservation = observations.first
+        else { return nil }
+        
+        return observation.payloadStringValue
     }
     
     deinit {

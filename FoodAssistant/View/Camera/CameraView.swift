@@ -21,6 +21,7 @@ struct CameraView: View {
                     bboxes: cvm.ntDetection.boundingBoxes,
                     rescaledImageSize: cvm.resacledImageSize,
                     screenSize: screenSize,
+                    barcode: cvm.scanBarcode.barcode,
                     didSearchButtonCliced: cvm.didSearchButtonCliced,
                     didAnalysisButtonCliced: cvm.didAnalysisButtonCliced
                 )
@@ -40,7 +41,7 @@ struct CameraView: View {
                     .onTapGesture(perform: cvm.onCameraPreviewTap)
                     .overlay(alignment: .top) {
                         BarcodeHeader(
-                            barcode: $cvm.barcode,
+                            barcode: $cvm.scanBarcode.barcode,
                             onXmarkButPressed: cvm.onXmarkButPressed
                         )
                     }
@@ -58,14 +59,13 @@ struct CameraView: View {
             ImagePicker(image: $cvm.pickerService.image, camera: false)
         }
         .sheet(isPresented: $cvm.showAnalysisView) {
-            let detail: InputProductDetailView.Detail = .init(product: Product())
-            // Note:
-            // The InputProductDetailView itself does not contain NavigationStack
-            // therefore, it is the parent view's (this view) responsibility to
-            // embed InputProductDetailView to NavigationStack so that the
-            // navigation bar and large navigation title can display properly
+            /// Note:
+            /// The `InputProductDetailView` itself does not contain `NavigationStack`
+            /// therefore, it is the parent view's (this view) responsibility to
+            /// embed `InputProductDetailView` to `NavigationStack` so that the
+            /// navigation bar and large navigation title could display properly
             NavigationStack {
-                InputProductDetailView(detail: detail)
+                InputProductDetailView(detail: cvm.detail)
             }
         }
     }
@@ -156,6 +156,7 @@ fileprivate struct DisplayedImageView: View {
     let bboxes: [BoundingBox]
     let rescaledImageSize: CGSize
     let screenSize: CGSize
+    let barcode: String
     let didSearchButtonCliced: (() -> Void)?
     let didAnalysisButtonCliced: (() -> Void)?
     
@@ -184,6 +185,7 @@ fileprivate struct DisplayedImageView: View {
         .frame(width: screenSize.width, height: screenSize.height)
         .overlay(alignment: .top) {
             Header(
+                barcode: barcode,
                 didSearchButtonCliced: didSearchButtonCliced,
                 didAnalysisButtonCliced: didAnalysisButtonCliced
             )
@@ -192,36 +194,53 @@ fileprivate struct DisplayedImageView: View {
     
     fileprivate struct Header: View {
         @Environment(\.safeAreaInsets) var safeArea
+        let barcode: String
         let didSearchButtonCliced: (() -> Void)?
         let didAnalysisButtonCliced: (() -> Void)?
         var body: some View {
-            HStack {
-                Button {
-                    didSearchButtonCliced?()
-                } label: {
-                    VStack {
-                        Image(systemName: "magnifyingglass.circle")
-                        Text("Search")
-                            .productFont(.bold, relativeTo: .title3)
+            VStack(spacing: 16) {
+                HStack {
+                    Button {
+                        didSearchButtonCliced?()
+                    } label: {
+                        VStack {
+                            Image(systemName: "magnifyingglass.circle")
+                            Text("Search")
+                                .productFont(.bold, relativeTo: .title3)
+                        }
+                        .foregroundStyle(.secondary)
                     }
-                    .foregroundStyle(.secondary)
-                }
-                .frame(maxWidth: .infinity)
-                .hoverEffect()
-                Button {
-                    didAnalysisButtonCliced?()
-                } label: {
-                    VStack {
-                        Image(systemName: "tablecells.badge.ellipsis")
-                        Text("Analysis")
-                            .productFont(.bold, relativeTo: .title3)
+                    .frame(maxWidth: .infinity)
+                    .hoverEffect()
+                    Button {
+                        didAnalysisButtonCliced?()
+                    } label: {
+                        VStack {
+                            Image(systemName: "tablecells.badge.ellipsis")
+                            Text("Analysis")
+                                .productFont(.bold, relativeTo: .title3)
+                        }
+                        .foregroundStyle(.secondary)
                     }
-                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity)
+                    .hoverEffect()
                 }
-                .frame(maxWidth: .infinity)
-                .hoverEffect()
+                .buttonStyle(.plain)
+                if !barcode.isEmpty {
+                    Rectangle()
+                        .frame(height: 1)
+                        .frame(maxWidth: .infinity)
+                        .foregroundStyle(.secondary)
+                    HStack {
+                        Text("Barcode: ")
+                            .productFont(.bold, relativeTo: .body)
+                            .foregroundStyle(.primary)
+                        Text(barcode)
+                            .productFont(.regular, relativeTo: .body)
+                            .foregroundStyle(.secondary)
+                    }
+                }
             }
-            .buttonStyle(.plain)
             .padding(.top, safeArea.top)
             .padding()
             .background(.thinMaterial, in: Rectangle())

@@ -22,7 +22,6 @@ class CameraViewModel: ObservableObject {
     // MARK: - Camera Bottom Bar
     @Published var isScaleToFill: Bool = true
     // MARK: - Barcode Header
-    @Published var barcode: String = ""
     @Published var isEditing = false
     // MARK: - Displayed Image View Header Buttons
     @Published var showSimilarProductView: Bool = false
@@ -54,13 +53,6 @@ class CameraViewModel: ObservableObject {
         
         scanBarcode.objectWillChange.sink { [weak self] (_) in
             self?.objectWillChange.send()
-        }
-        .store(in: &anyCancellables)
-        
-        scanBarcode.$barcode.sink { [weak self] (barcode: String) in
-            withAnimation(.spring()) {
-                self?.barcode = barcode
-            }
         }
         .store(in: &anyCancellables)
     }
@@ -109,6 +101,14 @@ class CameraViewModel: ObservableObject {
         }
     }
     
+    /// Note:
+    /// pass the detected (editer from user-inputted or system-detected) barcode to the
+    /// `InputProductDetailView` view via the type of `Product`
+    var detail: InputProductDetailView.Detail {
+        let product = Product(barcode: scanBarcode.barcode)
+        return .init(product: product)
+    }
+    
     func didSearchButtonCliced() {
         showSimilarProductView.toggle()
     }
@@ -144,6 +144,7 @@ class CameraViewModel: ObservableObject {
                 cameraService.photo = nil
             }
             cameraService.start()
+            scanBarcode.barcode = ""
         } else {
             captureCameraPhoto()
         }
@@ -160,10 +161,17 @@ class CameraViewModel: ObservableObject {
     }
     
     func captureGalleryImage() {
-        guard let resizedImage: UIImage = pickerService.photo?.resizedImage else { return }
+        guard let photo: Photo = pickerService.photo,
+              let resizedImage: UIImage = photo.resizedImage,
+              let image: UIImage = photo.image
+        else { return }
         cameraService.stop()
         captureSource = .byImagePicker
         ntDetection.detectNuritionTable(image: resizedImage)
+        
+        if let result: String = scanBarcode.detectBarcode(from: image) {
+            scanBarcode.barcode = result
+        }
     }
     
     func displayImageGetter() -> UIImage? {
