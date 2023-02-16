@@ -75,8 +75,6 @@
 		88C2292E29535BAC005E5A27 /* SwiftDate in Frameworks */ = {isa = PBXBuildFile; productRef = 88C2292D29535BAC005E5A27 /* SwiftDate */; };
 		88C22930295414BD005E5A27 /* SettingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C2292F295414BD005E5A27 /* SettingViewModel.swift */; };
 		88C2293229541631005E5A27 /* GeneralView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C2293129541631005E5A27 /* GeneralView.swift */; };
-		88D053A9293E143600277155 /* ScanBarcodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D053A8293E143600277155 /* ScanBarcodeView.swift */; };
-		88D053AB293E146400277155 /* ScanBarcodeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D053AA293E146400277155 /* ScanBarcodeViewModel.swift */; };
 		88D053AD293EE3E200277155 /* NutritionInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D053AC293EE3E200277155 /* NutritionInformation.swift */; };
 		88D053AF293EE54E00277155 /* Ingredient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D053AE293EE54E00277155 /* Ingredient.swift */; };
 		88D053B1293EF42C00277155 /* BarCodeIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D053B0293EF42C00277155 /* BarCodeIndicatorView.swift */; };
@@ -188,8 +186,6 @@
 		88C229282952C6F6005E5A27 /* Supermarket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Supermarket.swift; sourceTree = "<group>"; };
 		88C2292F295414BD005E5A27 /* SettingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewModel.swift; sourceTree = "<group>"; };
 		88C2293129541631005E5A27 /* GeneralView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralView.swift; sourceTree = "<group>"; };
-		88D053A8293E143600277155 /* ScanBarcodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanBarcodeView.swift; sourceTree = "<group>"; };
-		88D053AA293E146400277155 /* ScanBarcodeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanBarcodeViewModel.swift; sourceTree = "<group>"; };
 		88D053AC293EE3E200277155 /* NutritionInformation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NutritionInformation.swift; sourceTree = "<group>"; };
 		88D053AE293EE54E00277155 /* Ingredient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ingredient.swift; sourceTree = "<group>"; };
 		88D053B0293EF42C00277155 /* BarCodeIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarCodeIndicatorView.swift; sourceTree = "<group>"; };
@@ -418,7 +414,6 @@
 				88F213FC292499F700940928 /* CameraViewModel.swift */,
 				8894EBD629264B6C00204185 /* MainViewModel.swift */,
 				8894EBF429274CA100204185 /* CatagoryViewModel.swift */,
-				88D053AA293E146400277155 /* ScanBarcodeViewModel.swift */,
 				88D053B2293EF7C400277155 /* BottomBarViewModel.swift */,
 				88C2292F295414BD005E5A27 /* SettingViewModel.swift */,
 				889F29BE29647CFC00D10192 /* CatagoryDetailViewModel.swift */,
@@ -440,7 +435,6 @@
 		88D053A7293E142800277155 /* AddProduct */ = {
 			isa = PBXGroup;
 			children = (
-				88D053A8293E143600277155 /* ScanBarcodeView.swift */,
 				882631CF294C2EF6003080DF /* InputProductDetailView.swift */,
 			);
 			path = AddProduct;
@@ -670,7 +664,6 @@
 				8894EBF729274FC400204185 /* NativeSearchBar.swift in Sources */,
 				889F29CA296D708800D10192 /* UIDeviceExtension.swift in Sources */,
 				88F213F929247B2B00940928 /* NMS.swift in Sources */,
-				88D053A9293E143600277155 /* ScanBarcodeView.swift in Sources */,
 				88C2293229541631005E5A27 /* GeneralView.swift in Sources */,
 				889F29BD2964788400D10192 /* CatagoryDetailView.swift in Sources */,
 				88A7979129252728007AE689 /* ImagePickerService.swift in Sources */,
@@ -703,7 +696,6 @@
 				88F2140B29251B9300940928 /* SFButton.swift in Sources */,
 				88F213FB29247C2100940928 /* IOU.swift in Sources */,
 				88C229292952C6F6005E5A27 /* Supermarket.swift in Sources */,
-				88D053AB293E146400277155 /* ScanBarcodeViewModel.swift in Sources */,
 				88A7979529252C7F007AE689 /* BoundingBoxView.swift in Sources */,
 				886C76E429055D7000B1026D /* FoodAssistantApp.swift in Sources */,
 				882631D2294C31D7003080DF /* ProductFontPlaceholderTextField.swift in Sources */,

@@ -13,6 +13,13 @@ struct ProductFontPlaceholderTextField: View {
     let keyboardType: UIKeyboardType
     let onCommit: (() -> Void)?
     
+    /// Initialize `ProductFontPlaceholderTextField` view
+    ///
+    /// - Parameters:
+    ///   - text: a `Binding<String>` object which links to textfield's value
+    ///   - placeHolder: a placeholder `String`
+    ///   - keyboardType: textfield keyboard type in `UIKeyboardType` type
+    ///   - onCommit: an optional closure to be triggered when user tap on `Enter` button on keyboarrd
     init(
         text: Binding<String>,
         placeholder: String,

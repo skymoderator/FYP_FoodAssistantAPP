@@ -12,7 +12,6 @@ import Combine
 class CatagoryViewModel: ObservableObject {
     
     enum NavigationRoute: Hashable {
-        case scanBarCodeView
         case categoryDetailView(CatagoryDetailView.CategoryDetail)
         case inputProductDetailView(InputProductDetailView.Detail)
     }
@@ -78,7 +77,8 @@ class CatagoryViewModel: ObservableObject {
                 }
             }
             ButtonItem(label: "Add Product", systemName: "plus") {
-                self.navigationPath.append(NavigationRoute.scanBarCodeView)
+                /// TODO: Navigate user to `CameraView` and prompt a message asking user
+                /// to scan the barcode/product in that view
             }
         }
     }

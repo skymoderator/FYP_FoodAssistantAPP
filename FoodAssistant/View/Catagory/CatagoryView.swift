@@ -55,13 +55,6 @@ struct CatagoryView: View {
             .navigationDestination(for: CatagoryViewModel.NavigationRoute.self) {
                 (detail: CatagoryViewModel.NavigationRoute) in
                 switch detail {
-                case .scanBarCodeView:
-                    ScanBarcodeView(
-                        path: $cvm.navigationPath,
-                        screenSize: screenSize,
-                        viewDidLoad: onScanBarcodeViewLoad,
-                        viewDidUnload: onScanBarcodeViewUnload
-                    )
                 case .categoryDetailView(let categoryDetail):
                     CatagoryDetailView(detail: categoryDetail, screenHeight: screenSize.height)
                 case .inputProductDetailView(let detail):
