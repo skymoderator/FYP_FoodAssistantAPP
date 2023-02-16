@@ -12,6 +12,7 @@
 		882631D5294C3899003080DF /* Popovers in Frameworks */ = {isa = PBXBuildFile; productRef = 882631D4294C3899003080DF /* Popovers */; };
 		8829B5472983B5B200A2DC0E /* BlurMaterialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8829B5462983B5B200A2DC0E /* BlurMaterialView.swift */; };
 		884099C429571FE900AFC290 /* UserDefaultExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 884099C329571FE900AFC290 /* UserDefaultExtension.swift */; };
+		8844E08D299E04B500133FE0 /* OrientationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8844E08C299E04B500133FE0 /* OrientationExtension.swift */; };
 		8845AB11293CBFB000BF6C5E /* RoundedRectangleCorners.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8845AB10293CBFB000BF6C5E /* RoundedRectangleCorners.swift */; };
 		8845AB13293CC29000BF6C5E /* NutritionTableDetectionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8845AB12293CC29000BF6C5E /* NutritionTableDetectionService.swift */; };
 		884E3157292A6311009DF3CA /* Product.swift in Sources */ = {isa = PBXBuildFile; fileRef = 884E3156292A6311009DF3CA /* Product.swift */; };
@@ -121,6 +122,7 @@
 		882631D1294C31D7003080DF /* ProductFontPlaceholderTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductFontPlaceholderTextField.swift; sourceTree = "<group>"; };
 		8829B5462983B5B200A2DC0E /* BlurMaterialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlurMaterialView.swift; sourceTree = "<group>"; };
 		884099C329571FE900AFC290 /* UserDefaultExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultExtension.swift; sourceTree = "<group>"; };
+		8844E08C299E04B500133FE0 /* OrientationExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrientationExtension.swift; sourceTree = "<group>"; };
 		8845AB10293CBFB000BF6C5E /* RoundedRectangleCorners.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedRectangleCorners.swift; sourceTree = "<group>"; };
 		8845AB12293CC29000BF6C5E /* NutritionTableDetectionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NutritionTableDetectionService.swift; sourceTree = "<group>"; };
 		884E3156292A6311009DF3CA /* Product.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Product.swift; sourceTree = "<group>"; };
@@ -465,6 +467,7 @@
 				889F29CB297000B300D10192 /* IdentifyEquateCodeHashable.swift */,
 				889F29CD2970F8C800D10192 /* ArrayExtension.swift */,
 				889F29D72972CC1E00D10192 /* SequenceExtension.swift */,
+				8844E08C299E04B500133FE0 /* OrientationExtension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -682,6 +685,7 @@
 				889F29DC2976C9AC00D10192 /* InputProductDetailViewModel.swift in Sources */,
 				882631D0294C2EF6003080DF /* InputProductDetailView.swift in Sources */,
 				884F0B6A291BEC2700B5FEC3 /* Photo.swift in Sources */,
+				8844E08D299E04B500133FE0 /* OrientationExtension.swift in Sources */,
 				8868E68A291B9CE100545D7C /* AlertError.swift in Sources */,
 				8894EBDD29264E9000204185 /* TabBar.swift in Sources */,
 				889F29C62967C7C400D10192 /* AllergyViewModel.swift in Sources */,

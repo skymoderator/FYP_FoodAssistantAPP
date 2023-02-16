@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct BoundingBox: Identifiable {
+struct BoundingBox: IdentifyEquateCodeHashable {
     let id = UUID()
     let classIndex: Int /** Index of the predicted class. */
     let score: Float /** Confidence score. */

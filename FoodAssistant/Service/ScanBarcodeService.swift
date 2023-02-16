@@ -10,6 +10,7 @@ import AVFoundation
 import UIKit
 import SwiftUI
 import Vision
+import ImageIO
 
 class ScanBarcodeService: NSObject, ObservableObject {
     
@@ -22,6 +23,7 @@ class ScanBarcodeService: NSObject, ObservableObject {
     @Published var barcode: String = ""
     @Published var errorMessage: String?
     @Published var boundingBox: CGRect?
+    @Published var normalizedBbox: CGRect?
     
     var cameraService: CameraService
     
@@ -67,6 +69,7 @@ class ScanBarcodeService: NSObject, ObservableObject {
                 await MainActor.run {
                     barcode = ""
                     boundingBox = nil
+                    normalizedBbox = nil
                 }
             }
             return
@@ -75,10 +78,15 @@ class ScanBarcodeService: NSObject, ObservableObject {
 //            print(observation.payloadStringValue ?? "unknown barcode")
 //            print(observation.boundingBox)
             
+        /// Note:
+        /// Since the video preview's content mode id `.aspectFill`, so we
+        /// specific the content mode to also be `.fill`, so that the coordinate of the
+        /// drawn bounding box matches the container (which is the video preview)
         let convertedRect: CGRect = self.getConvertedRect(
             boundingBox: observation.boundingBox,
             inImage: imageSize,
-            containedIn: UIScreen.protraitSize
+            containedIn: UIScreen.protraitSize,
+            contentMode: .fill
         )
         Task {
             await MainActor.run {
@@ -108,6 +116,7 @@ class ScanBarcodeService: NSObject, ObservableObject {
                     )
                 }
                 boundingBox = convertedRect
+                normalizedBbox = observation.boundingBox
                 
                 guard let newBarcode: String = observation.payloadStringValue,
                       newBarcode != barcode
@@ -121,43 +130,105 @@ class ScanBarcodeService: NSObject, ObservableObject {
         detectBarcodeRequest.symbologies = [.ean8, .ean13, .pdf417]
     }
     
+    /// Return the appropriate image frame that best suit to be placed inside
+    /// the container with specific size
+    ///
+    /// Suppose an image needs to be placed (either `fit` or `fill`) inside a container,
+    /// but they are in different sizes. Call this function to get an image frame whose x and y
+    /// well are offseted, and the returned frame size is respect to the original image aspect
+    /// ratio, which can be directly used as the frame of the image placed inside the container.
+    ///
+    /// - Parameters:
+    ///   - imageSize: image Size
+    ///   - containerSize: container size in which the image to be placed on
+    ///   - contentMode: the content mode that the image are placed on the container
+    ///
+    /// - Returns: The image rect representing the placed image's frame on the container
+    func convertImage(
+        ofSize imageSize: CGSize,
+        to containerSize: CGSize,
+        contentMode: ContentMode
+    ) -> CGRect {
+        let rectOfImage: CGRect
+        let imageAspect = imageSize.width / imageSize.height // 1.78
+        let containerAspect = containerSize.width / containerSize.height // 0.46
+        
+        if contentMode == .fill {
+            if imageAspect > containerAspect { /// image extends left and right
+                let newImageWidth = containerSize.height * imageAspect /// the width of the overflowing image
+                let newX = -(newImageWidth - containerSize.width) / 2
+                rectOfImage = CGRect(x: newX, y: 0, width: newImageWidth, height: containerSize.height)
+                
+            } else { /// image extends top and bottom
+                let newImageHeight = containerSize.width * (1 / imageAspect) /// the width of the overflowing image
+                let newY = -(newImageHeight - containerSize.height) / 2
+                rectOfImage = CGRect(x: 0, y: newY, width: containerSize.width, height: newImageHeight)
+            }
+            
+            return rectOfImage
+        } else {
+            if imageAspect > containerAspect { /// container extends top and bottom
+                let newImageHeight = containerSize.width * (1 / imageAspect) /// the width of the overflowing image
+                let newY = (containerSize.height - newImageHeight) / 2
+                rectOfImage = CGRect(x: 0, y: newY, width: containerSize.width, height: newImageHeight)
+            } else { /// container extends left and right
+                let newImageWidth = containerSize.height * imageAspect /// the width of the overflowing image
+                let newX = (containerSize.width - newImageWidth) / 2
+                rectOfImage = CGRect(x: newX, y: 0, width: newImageWidth, height: containerSize.height)
+            }
+
+            return rectOfImage
+        }
+    }
+    
     /// Convert the normalized bounding box to bounding box whose coordinate system
     /// is the same as the the container
     ///
     /// The `boundingBox` returned from `Vision` is normalized w.r.t to image size, and its
     /// origin is at the top-left corner of the image, while the normal UI coordinate system 
     /// is at the bottom-left corner of the screen. In order to draw the bounding box on the 
-    /// screen, one needs to transform the normalized `boundingBox`` to back to the normal.
-    /// 
-    /// The function expects the content mode of displayed image is `.aspectFill`.
-    /// 
+    /// screen, one needs to transform the normalized `boundingBox` to back to the normal.
+    ///
     /// - Parameters:
     ///    - boundingBox: a `CGRect` returned from `Vision` framework
     ///    - inImage: a `CGSize` of the image
-    ///    - containedIn: a `CGSize` of the container
+    ///    - containedIn: a `CGSize` of the container which the image is displayed on. In our project case,
+    ///    This is the size of the full screen, because the image is displayed on `CameraView`, and `CameraView`
+    ///    is taking the full screen size.
+    ///    - contentMode: specify the content mode of the image to be displayed (either `.fill` or `.fit`)
     /// 
     /// - Returns: a `CGRect` whose coordinate system is the same as the container
-    private func getConvertedRect(
+    func getConvertedRect(
         boundingBox: CGRect,
-        inImage imageSize: CGSize, // 1920x1080
-        containedIn containerSize: CGSize // 428x926 or 926x428
+        /// 1920x1080 when photo is captured by camera (other size in otherwise,
+        /// e.g. Photo library, which can have custom size)
+        inImage imageSize: CGSize,
+        containedIn containerSize: CGSize, // 428x926 or 926x428,
+        contentMode: ContentMode = .fill
     ) -> CGRect {
-        let rectOfImage: CGRect
-        
         let imageAspect = imageSize.width / imageSize.height // 1.78
         let containerAspect = containerSize.width / containerSize.height // 0.46
+        let rectOfImage: CGRect = convertImage(ofSize: imageSize, to: containerSize, contentMode: contentMode)
         
-        if imageAspect > containerAspect { /// image extends left and right
-            let newImageWidth = containerSize.height * imageAspect /// the width of the overflowing image
-            let newX = -(newImageWidth - containerSize.width) / 2
-            rectOfImage = CGRect(x: newX, y: 0, width: newImageWidth, height: containerSize.height)
-            
-        } else { /// image extends top and bottom
-            let newImageHeight = containerSize.width * (1 / imageAspect) /// the width of the overflowing image
-            let newY = -(newImageHeight - containerSize.height) / 2
-            rectOfImage = CGRect(x: 0, y: newY, width: containerSize.width, height: newImageHeight)
-        }
-        
+        return transform(normalizedBBox: boundingBox, to: rectOfImage)
+    }
+    
+    /// Convert the normalized bounding box to bounding box whose coordinate system
+    /// is the same as the image rect provided
+    ///
+    /// The `boundingBox` returned from `Vision` is normalized w.r.t to image size, and its
+    /// origin is at the top-left corner of the image, while the normal UI coordinate system
+    /// is at the bottom-left corner of the screen. In order to draw the bounding box on the
+    /// screen, one needs to transform the normalized `boundingBox` to back to the normal.
+    ///
+    /// - Parameters:
+    ///    - normalizedBBox: a `CGRect` returned from `Vision` framework, in which bounding box
+    ///    is normalized w.r.t. image size
+    ///    - rectOfImage: a appropriate image frame that represent the image frame when placed inside
+    ///    the container
+    ///
+    /// - Returns: a `CGRect` whose coordinate system is the same as the container
+    func transform(normalizedBBox boundingBox: CGRect, to rectOfImage: CGRect) -> CGRect {
         let newOriginBoundingBox = CGRect(
             x: boundingBox.origin.x,
             y: 1 - boundingBox.origin.y - boundingBox.height,
@@ -189,29 +260,36 @@ class ScanBarcodeService: NSObject, ObservableObject {
     
     /// Detect barcode from an image
     ///
-    /// This function is when user capture the photo (either from camera or photo library via image picker)
+    /// This function is called when user capture the photo (either from camera or photo library via image picker)
     /// 
     /// - Parameters:
     ///   - image: an UIImage object to be detected from
-    ///
-    /// - Returns: An optional string of the barcode if detected, otherwise nil
-    func detectBarcode(from image: UIImage) -> String? {
-        guard let cgImage: CGImage = image.cgImage else { return nil }
+    func detectBarcode(from image: UIImage) {
+        guard let cgImage: CGImage = image.cgImage else { return }
         
-        let requestHandler = VNImageRequestHandler(cgImage: cgImage, options: [:])
+        let requestHandler = VNImageRequestHandler(
+            cgImage: cgImage,
+            orientation: CGImagePropertyOrientation(image.imageOrientation),
+            options: [:]
+        )
         
         do {
             try requestHandler.perform([detectBarcodeRequest])
         } catch {
             print(error)
-            return nil
+            errorMessage = error.localizedDescription
+//            return nil
         }
         
-        guard let observations: [VNBarcodeObservation] = detectBarcodeRequest.results,
-              let observation: VNBarcodeObservation = observations.first
-        else { return nil }
-        
-        return observation.payloadStringValue
+//        guard let observations: [VNBarcodeObservation] = detectBarcodeRequest.results,
+//              let observation: VNBarcodeObservation = observations.first
+//        else { return nil }
+//
+//        return observation.payloadStringValue
+        print(image.size, cgImage.width, cgImage.height)
+        processClassification(
+            imageSize: image.size
+        )
     }
     
     deinit {
@@ -220,24 +298,24 @@ class ScanBarcodeService: NSObject, ObservableObject {
     
 }
 
-extension ScanBarcodeService: AVCaptureMetadataOutputObjectsDelegate {
-    func metadataOutput(
-        _ output: AVCaptureMetadataOutput,
-        didOutput metadataObjects: [AVMetadataObject],
-        from connection: AVCaptureConnection
-    ) {
-        guard barcode.isEmpty,
-              let metadataObject = metadataObjects.first,
-              let readableObject = metadataObject as? AVMetadataMachineReadableCodeObject,
-              let stringValue = readableObject.stringValue
-        else { return }
-        AudioServicesPlaySystemSound(SystemSoundID(kSystemSoundID_Vibrate))
-        
-        DispatchQueue.main.async { [weak self] in
-            self?.barcode = stringValue
-        }
-    }
-}
+//extension ScanBarcodeService: AVCaptureMetadataOutputObjectsDelegate {
+//    func metadataOutput(
+//        _ output: AVCaptureMetadataOutput,
+//        didOutput metadataObjects: [AVMetadataObject],
+//        from connection: AVCaptureConnection
+//    ) {
+//        guard barcode.isEmpty,
+//              let metadataObject = metadataObjects.first,
+//              let readableObject = metadataObject as? AVMetadataMachineReadableCodeObject,
+//              let stringValue = readableObject.stringValue
+//        else { return }
+//        AudioServicesPlaySystemSound(SystemSoundID(kSystemSoundID_Vibrate))
+//
+//        DispatchQueue.main.async { [weak self] in
+//            self?.barcode = stringValue
+//        }
+//    }
+//}
 
 extension ScanBarcodeService: AVCaptureVideoDataOutputSampleBufferDelegate {
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {

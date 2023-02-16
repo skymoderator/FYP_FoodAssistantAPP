@@ -62,14 +62,18 @@ class CameraViewModel: ObservableObject {
         cameraService.capturePhoto { [weak self] in
             guard let self = self,
                   let photo: Photo = self.cameraService.photo,
+                  let image: UIImage = photo.image,
                   let resizedImage: UIImage = photo.resizedImage else { return }
             self.cameraService.stop {
                 print("session stopped")
             }
             self.ntDetection.detectNuritionTable(image: resizedImage)
+            self.scanBarcode.detectBarcode(from: image)
             
-            DispatchQueue.main.async { [weak self] in
-                self?.captureSource = .byCamera
+            Task {
+                await MainActor.run { [weak self] in
+                    self?.captureSource = .byCamera
+                }
             }
         }
     }
@@ -159,6 +163,7 @@ class CameraViewModel: ObservableObject {
             }
             cameraService.start()
             scanBarcode.barcode = ""
+            scanBarcode.boundingBox = nil
         } else {
             captureCameraPhoto()
         }
@@ -195,23 +200,10 @@ class CameraViewModel: ObservableObject {
         captureSource = .byImagePicker
         ntDetection.detectNuritionTable(image: resizedImage)
         
-        let result: String? = scanBarcode.detectBarcode(from: image)
-        if let result {
-            scanBarcode.barcode = result
-        }
+//        let result: String? = scanBarcode.detectBarcode(from: image)
+//        if let result {
+//            scanBarcode.barcode = result
+//        }
+        scanBarcode.detectBarcode(from: image)
     }
-    
-    /// Get the displayed image
-    ///
-    /// The image can be nil, camera captured image or image-picker captured image
-    ///
-    /// This function is used to be passed to the `ZoomableScrollView` to display the displayed image
-    /// in the `CameraView`. User can then pinch to zoom the image.
-    ///
-    /// - Returns: An optional UIImage
-    func displayImageGetter() -> UIImage? {
-        displayedImage
-    }
-
-
 }

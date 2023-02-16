@@ -11,6 +11,9 @@ import SwiftUI
 struct Product: IdentifyEquateCodeHashable {
     
     let id = UUID()
+    /// Note:
+    /// Because in the `InputFoodProductDetailView`, user can modify the product's name
+    /// therefore we are declaring it to be `var` instead of `let` to let `name` be modifiable
     var name: String
     let barcode: String
     let nutrition: NutritionInformation?

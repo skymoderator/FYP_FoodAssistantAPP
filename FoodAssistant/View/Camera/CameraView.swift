@@ -11,19 +11,25 @@ struct CameraView: View {
     
     @ObservedObject var cvm: CameraViewModel
     let screenSize: CGSize
+    
+    @State private var isBarCodeIndicatorViewAppear: Bool = false
         
     var body: some View {
         ZStack {
             if cvm.captureSource != nil {
                 DisplayedImageView(
-                    image: cvm.displayImageGetter,
+                    image: cvm.displayedImage ?? UIImage(),
                     isScaleToFill: $cvm.isScaleToFill,
-                    bboxes: cvm.ntDetection.boundingBoxes,
-                    rescaledImageSize: cvm.resacledImageSize,
+//                    bboxes: cvm.ntDetection.boundingBoxes,
+//                    rescaledImageSize: cvm.resacledImageSize,
                     screenSize: screenSize,
                     barcode: cvm.scanBarcode.barcode,
+                    normalizedBarcodeBBox: cvm.scanBarcode.normalizedBbox,
                     didSearchButtonCliced: cvm.didSearchButtonCliced,
-                    didAnalysisButtonCliced: cvm.didAnalysisButtonCliced
+                    didAnalysisButtonCliced: cvm.didAnalysisButtonCliced,
+                    convertNormalizedBBoxToRectInSpecificView: cvm.scanBarcode.getConvertedRect,
+                    convertImage: cvm.scanBarcode.convertImage,
+                    transform: cvm.scanBarcode.transform
                 )
             } else {
                 CameraPreview(session: cvm.cameraService.session)
@@ -33,8 +39,11 @@ struct CameraView: View {
                                 barcode: cvm.scanBarcode.barcode,
                                 width: bbox.width,
                                 height: bbox.height,
-                                offset: bbox.origin
+                                offset: bbox.origin,
+                                isAppeared: $isBarCodeIndicatorViewAppear
                             )
+                            .onAppear { isBarCodeIndicatorViewAppear = true }
+                            .onDisappear { isBarCodeIndicatorViewAppear = false }
                             .animation(.easeIn, value: cvm.scanBarcode.boundingBox)
                         }
                     }
@@ -68,6 +77,22 @@ struct CameraView: View {
                 InputProductDetailView(detail: cvm.detail)
             }
         }
+        .alert(
+            "Error",
+            isPresented: Binding<Bool>(
+                get: { cvm.scanBarcode.errorMessage != nil },
+                set: { _ in cvm.scanBarcode.errorMessage = nil }
+            )
+        ) {
+            Button(role: .cancel) {
+                
+            } label: {
+                Text("OK")
+            }
+        } message: {
+            Text(cvm.scanBarcode.errorMessage ?? "")
+        }
+
     }
 }
 
@@ -151,14 +176,30 @@ fileprivate struct BarcodeHeader: View {
 }
 
 fileprivate struct DisplayedImageView: View {
-    let image: () -> UIImage?
+    
+//    static func ==(lhs: DisplayedImageView, rhs: DisplayedImageView) -> Bool {
+//        lhs.image == rhs.image &&
+//        lhs.isScaleToFill == rhs.isScaleToFill &&
+//        lhs.bboxes == rhs.bboxes &&
+//        lhs.rescaledImageSize == rhs.rescaledImageSize &&
+//        lhs.screenSize == rhs.screenSize &&
+//        lhs.barcode == rhs.barcode &&
+//        lhs.barcodeBBox == rhs.barcodeBBox
+//    }
+    let image: UIImage
     @Binding var isScaleToFill: Bool
-    let bboxes: [BoundingBox]
-    let rescaledImageSize: CGSize
+//    let bboxes: [BoundingBox]
+//    let rescaledImageSize: CGSize
     let screenSize: CGSize
     let barcode: String
+    let normalizedBarcodeBBox: CGRect?
     let didSearchButtonCliced: (() -> Void)?
     let didAnalysisButtonCliced: (() -> Void)?
+    let convertNormalizedBBoxToRectInSpecificView: (CGRect, CGSize, CGSize, ContentMode) -> CGRect
+    let convertImage: (CGSize, CGSize, ContentMode) -> CGRect
+    let transform: (CGRect, CGRect) -> CGRect
+    
+    @State private var isBarCodeIndicatorViewAppear: Bool = false
     
     var body: some View {
 //        GeometryReader { (proxy: GeometryProxy) in
@@ -177,12 +218,60 @@ fileprivate struct DisplayedImageView: View {
 //                    }
 //                }
 //        }
+//        ZoomableScrollView(
+//            image: image,
+//            isScaleToFill: $isScaleToFill,
+//            size: screenSize
+//        )
+//        .frame(width: screenSize.width, height: screenSize.height)
+//        .overlay(alignment: .topLeading) {
+//            if let bbox: CGRect = barcodeBBox {
+//                BarCodeIndicatorView(
+//                    barcode: barcode,
+//                    width: bbox.width,
+//                    height: bbox.height,
+//                    offset: bbox.origin
+//                )
+//                .animation(.easeIn, value: barcodeBBox)
+//            }
+//        }
         ZoomableScrollView(
-            image: image,
             isScaleToFill: $isScaleToFill,
             size: screenSize
-        )
-        .frame(width: screenSize.width, height: screenSize.height)
+        ) {
+            Image(uiImage: image)
+                .resizable()
+                .aspectRatio(contentMode: isScaleToFill ? .fill : .fit)
+                .overlay(alignment: .topLeading) {
+                    GeometryReader { (proxy: GeometryProxy) in
+                        /// Note:
+                        /// This `containerSize` will keep update its value when user pinch to zoom the image
+                        /// in the scrollview, then the `rectOfImage` will be called and keep up-to-dated,
+                        /// therefore it will result in the `BarCodeIndicatorView` well-positioned w.r.t.
+                        /// user zooming direction and position
+                        ///
+                        /// Btw, this `containerSize` is not the same as screen size, because for example, when the
+                        /// content mode is `scaleToFill`, there will be area in iamge overflowed outside the screen view,
+                        /// so we need this `containerSize` to keep track of the entire image size (including the overflowed area)
+                        let containerSize: CGSize = proxy.frame(in: .local).size
+                        
+                        if let normalizedBarcodeBBox {
+                            let rectOfImage: CGRect = convertImage(image.size, containerSize, isScaleToFill ? .fill : .fit)
+                            /// un-normalized bounding box, given the real image frame (which contains
+                            /// the real image size to be scaled, and the position to be offseted) placed on container
+                            let convertedRect: CGRect = transform(normalizedBarcodeBBox, rectOfImage)
+                            BarCodeIndicatorView(
+                                barcode: barcode,
+                                width: convertedRect.width,
+                                height: convertedRect.height,
+                                offset: convertedRect.origin,
+                                isAppeared: $isBarCodeIndicatorViewAppear
+                            )
+                        }
+                    }
+                }
+                .frame(width: screenSize.width, height: screenSize.height)
+        }
         .overlay(alignment: .top) {
             Header(
                 barcode: barcode,
@@ -190,6 +279,16 @@ fileprivate struct DisplayedImageView: View {
                 didAnalysisButtonCliced: didAnalysisButtonCliced
             )
         }
+        .onAppear {
+            isBarCodeIndicatorViewAppear = true
+        }
+    }
+    
+    private func toBinding<T: View>(v: T) -> Binding<T> {
+        Binding<T>(
+            get: { v },
+            set: { _ in }
+        )
     }
     
     fileprivate struct Header: View {
