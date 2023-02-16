@@ -101,22 +101,30 @@ class CameraViewModel: ObservableObject {
         }
     }
     
-    /// Note:
-    /// pass the detected (editer from user-inputted or system-detected) barcode to the
-    /// `InputProductDetailView` view via the type of `Product`
+    /// Return the `InputProductDetailView.Detail` object assoicated with `Product` that contains
+    /// the detected barcode string
+    ///
+    /// Pass the detected (editer from user-inputted or system-detected) barcode to the
+    /// `InputProductDetailView` view via the type of `Product` so that the
+    /// `InputProductDetailView` can be presented via sheet
+    ///
+    /// - Returns: An `InputProductDetailView.Detail` object
     var detail: InputProductDetailView.Detail {
         let product = Product(barcode: scanBarcode.barcode)
         return .init(product: product)
     }
     
+    // - TODO: Show a page that search for similar product
     func didSearchButtonCliced() {
         showSimilarProductView.toggle()
     }
     
+    /// Show the `InputProductDetailView` via sheet
     func didAnalysisButtonCliced() {
         showAnalysisView.toggle()
     }
     
+    /// Dismiss keyboard when user taps on any area on the `CameraView`
     func onCameraPreviewTap() {
         UIApplication
             .shared
@@ -128,12 +136,18 @@ class CameraViewModel: ObservableObject {
             )
     }
     
+    /// Clear the text in the barcode search textfield
     func onXmarkButPressed() {
         withAnimation(.spring()) {
             scanBarcode.barcode = ""
         }
     }
     
+    /// Action to be triggered when user taps on the capture button at the middle of the `CameraBottomBar`
+    ///
+    /// When called, when there is currently no captured photo (either from camear or image picker),
+    /// the function to capture the image from camera, otherwise it will reset the captured image and
+    /// start the camera session again
     func onSnapButtonTapped() {
         if let captureSource {
             self.captureSource = nil
@@ -150,6 +164,11 @@ class CameraViewModel: ObservableObject {
         }
     }
     
+    /// Action to be triggered when user has tapped the trailing button on the `CameraBottomBar`
+    ///
+    /// When called, when there is currently no captured photo (either from camear or image picker),
+    /// the function will toggle the `isScaleToFill` published property, otherwise the function
+    /// will perform call to change the camera (between front and back camera)
     func onTrailingButtonTapped() {
         if captureSource != nil {
             withAnimation(.easeInOut) {
@@ -160,6 +179,13 @@ class CameraViewModel: ObservableObject {
         }
     }
     
+    /// Capture Gallert Image
+    ///
+    /// Call this function when user has tapped/selected an image from photo library
+    /// The function will automatically look for the image from the `ImagePickerService`,
+    /// so there is no need to pass the image to the function
+    ///
+    /// After getting the image, the function will detect barcode and nutrition table from the image
     func captureGalleryImage() {
         guard let photo: Photo = pickerService.photo,
               let resizedImage: UIImage = photo.resizedImage,
@@ -169,11 +195,20 @@ class CameraViewModel: ObservableObject {
         captureSource = .byImagePicker
         ntDetection.detectNuritionTable(image: resizedImage)
         
-        if let result: String = scanBarcode.detectBarcode(from: image) {
+        let result: String? = scanBarcode.detectBarcode(from: image)
+        if let result {
             scanBarcode.barcode = result
         }
     }
     
+    /// Get the displayed image
+    ///
+    /// The image can be nil, camera captured image or image-picker captured image
+    ///
+    /// This function is used to be passed to the `ZoomableScrollView` to display the displayed image
+    /// in the `CameraView`. User can then pinch to zoom the image.
+    ///
+    /// - Returns: An optional UIImage
     func displayImageGetter() -> UIImage? {
         displayedImage
     }

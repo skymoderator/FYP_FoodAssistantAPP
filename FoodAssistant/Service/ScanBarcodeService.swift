@@ -121,6 +121,22 @@ class ScanBarcodeService: NSObject, ObservableObject {
         detectBarcodeRequest.symbologies = [.ean8, .ean13, .pdf417]
     }
     
+    /// Convert the normalized bounding box to bounding box whose coordinate system
+    /// is the same as the the container
+    ///
+    /// The `boundingBox` returned from `Vision` is normalized w.r.t to image size, and its
+    /// origin is at the top-left corner of the image, while the normal UI coordinate system 
+    /// is at the bottom-left corner of the screen. In order to draw the bounding box on the 
+    /// screen, one needs to transform the normalized `boundingBox`` to back to the normal.
+    /// 
+    /// The function expects the content mode of displayed image is `.aspectFill`.
+    /// 
+    /// - Parameters:
+    ///    - boundingBox: a `CGRect` returned from `Vision` framework
+    ///    - inImage: a `CGSize` of the image
+    ///    - containedIn: a `CGSize` of the container
+    /// 
+    /// - Returns: a `CGRect` whose coordinate system is the same as the container
     private func getConvertedRect(
         boundingBox: CGRect,
         inImage imageSize: CGSize, // 1920x1080
@@ -143,10 +159,10 @@ class ScanBarcodeService: NSObject, ObservableObject {
         }
         
         let newOriginBoundingBox = CGRect(
-        x: boundingBox.origin.x,
-        y: 1 - boundingBox.origin.y - boundingBox.height,
-        width: boundingBox.width,
-        height: boundingBox.height
+            x: boundingBox.origin.x,
+            y: 1 - boundingBox.origin.y - boundingBox.height,
+            width: boundingBox.width,
+            height: boundingBox.height
         )
         
         var convertedRect = VNImageRectForNormalizedRect(newOriginBoundingBox, Int(rectOfImage.width), Int(rectOfImage.height))
@@ -172,6 +188,8 @@ class ScanBarcodeService: NSObject, ObservableObject {
     }
     
     /// Detect barcode from an image
+    ///
+    /// This function is when user capture the photo (either from camera or photo library via image picker)
     /// 
     /// - Parameters:
     ///   - image: an UIImage object to be detected from
@@ -223,6 +241,7 @@ extension ScanBarcodeService: AVCaptureMetadataOutputObjectsDelegate {
 
 extension ScanBarcodeService: AVCaptureVideoDataOutputSampleBufferDelegate {
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+        /// `CVPixelBuffer` stands for `Core Video Pixel Buffer`
         guard let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
         let ciImage = CIImage(cvPixelBuffer: pixelBuffer)
         let uiImage = UIImage(ciImage: ciImage, scale: 1.0, orientation: .right)
