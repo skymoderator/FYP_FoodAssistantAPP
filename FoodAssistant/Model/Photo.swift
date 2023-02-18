@@ -12,14 +12,17 @@ import UIKit
 struct Photo: Identifiable, Equatable {
     
     static let targetSize: CGSize = .init(width: 416, height: 416)
-    // rescaledImage is image whose size is less than 416x416
-    // and it is guaranteed to one side is 416
-    // e.g. 416x312, 312x416
     static let rescaler = ImageRescaler(targetSize: targetSize)
     
     var id: String
     var image: UIImage?
+    /// `resizedImage` is an image whose size is strictly 416x416
+    /// and its background is black (can be changed)
     var resizedImage: UIImage?
+    /// Note:
+    /// `rescaledImage` is an image whose size is less than 416x416
+    /// and it is guaranteed to one side is 416 e.g. 416x312, 312x416
+    /// This size is useful for feeding to model for nutrition label detection
     var rescaledImage: UIImage?
     
     init(
@@ -37,8 +40,6 @@ struct Photo: Identifiable, Equatable {
         self.id = id
         self.image = image
         self.rescaledImage = Photo.rescaler(originalImage: self.image!)
-        // resizedImage is an image whose size is strictly 416x416
-        // and its background is black (can be changed)
         self.resizedImage = rescaledImage?.drawOnCanvas(withCanvasSize: Photo.targetSize, andCanvasColor: UIColor.black, atPosition: .middle)
     }
     

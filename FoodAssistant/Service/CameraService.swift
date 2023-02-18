@@ -489,7 +489,20 @@ public class CameraService: NSObject, Identifiable, ObservableObject {
          */
         
         if self.setupResult != .configurationFailed {
-            let videoPreviewLayerOrientation: AVCaptureVideoOrientation = .portrait
+//            let videoPreviewLayerOrientation: AVCaptureVideoOrientation = .portrait
+            let videoPreviewLayerOrientation: AVCaptureVideoOrientation
+            switch UIDevice.current.orientation {
+            case .portrait:
+                videoPreviewLayerOrientation = .portrait // 1
+            case .portraitUpsideDown:
+                videoPreviewLayerOrientation = .portraitUpsideDown // 2
+            case .landscapeLeft:
+                videoPreviewLayerOrientation = .landscapeRight // 3
+            case .landscapeRight:
+                videoPreviewLayerOrientation = .landscapeLeft // 4
+            default:
+                videoPreviewLayerOrientation = .portrait // 1
+            }
             
             sessionQueue.async { [weak self] in
                 guard let self = self else { return }
@@ -537,11 +550,7 @@ public class CameraService: NSObject, Identifiable, ObservableObject {
                     }
                 } photoProcessingHandler: { animate in
                     // Animates a spinner while photo is processing
-                    if animate {
-                        self.shouldShowSpinner = true
-                    } else {
-                        self.shouldShowSpinner = false
-                    }
+                    self.shouldShowSpinner = animate
                 }
                 
                 // The photo output holds a weak reference to the photo capture delegate and stores it in an array to maintain a strong reference.

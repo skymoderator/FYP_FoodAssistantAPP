@@ -64,15 +64,16 @@ class CameraViewModel: ObservableObject {
                   let photo: Photo = self.cameraService.photo,
                   let image: UIImage = photo.image,
                   let resizedImage: UIImage = photo.resizedImage else { return }
-            self.cameraService.stop {
+            self.cameraService.stop { [weak self] in
+                guard let self = self else { return }
                 print("session stopped")
-            }
-            self.ntDetection.detectNuritionTable(image: resizedImage)
-            self.scanBarcode.detectBarcode(from: image)
-            
-            Task {
-                await MainActor.run { [weak self] in
-                    self?.captureSource = .byCamera
+                self.ntDetection.detectNuritionTable(image: resizedImage)
+                self.scanBarcode.detectBarcode(from: image, on: .byCamera)
+                
+                Task {
+                    await MainActor.run { [weak self] in
+                        self?.captureSource = .byCamera
+                    }
                 }
             }
         }
@@ -83,9 +84,9 @@ class CameraViewModel: ObservableObject {
         if let captureSource {
             switch captureSource {
             case .byCamera:
-                return cameraService.photo?.rescaledImage
+                return cameraService.photo?.image
             case .byImagePicker:
-                return pickerService.photo?.rescaledImage
+                return pickerService.photo?.image
             }
         } else {
             return nil
@@ -164,6 +165,7 @@ class CameraViewModel: ObservableObject {
             cameraService.start()
             scanBarcode.barcode = ""
             scanBarcode.boundingBox = nil
+            scanBarcode.normalizedBbox = nil
         } else {
             captureCameraPhoto()
         }
@@ -204,6 +206,6 @@ class CameraViewModel: ObservableObject {
 //        if let result {
 //            scanBarcode.barcode = result
 //        }
-        scanBarcode.detectBarcode(from: image)
+        scanBarcode.detectBarcode(from: image, on: .byImagePicker)
     }
 }

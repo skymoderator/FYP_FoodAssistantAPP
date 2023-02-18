@@ -11,7 +11,7 @@ import SwiftUI
 
 struct ImagePicker: UIViewControllerRepresentable {
     
-    @Environment(\.presentationMode) var presentationMode
+    @Binding var showImagePicker: Bool
     @Binding var image: UIImage?
     let camera: Bool
     
@@ -28,7 +28,7 @@ struct ImagePicker: UIViewControllerRepresentable {
                 parent.image = uiImage
             }
 
-            parent.presentationMode.wrappedValue.dismiss()
+            parent.showImagePicker = false
         }
     }
     

@@ -74,9 +74,6 @@ class ScanBarcodeService: NSObject, ObservableObject {
             }
             return
         }
-        
-//            print(observation.payloadStringValue ?? "unknown barcode")
-//            print(observation.boundingBox)
             
         /// Note:
         /// Since the video preview's content mode id `.aspectFill`, so we
@@ -91,6 +88,7 @@ class ScanBarcodeService: NSObject, ObservableObject {
         Task {
             await MainActor.run {
                 var convertedRect = convertedRect
+                var convertedNormRect = observation.boundingBox
                 let orientation: UIInterfaceOrientation = UIApplication
                     .shared
                     .connectedScenes
@@ -99,24 +97,38 @@ class ScanBarcodeService: NSObject, ObservableObject {
                     .windowScene?
                     .interfaceOrientation ?? .portrait
                 if orientation == .landscapeRight {
-                    // Rotate the rect by 90 degrees clockwise
+                    // Rotate the rect by 90 degrees counter-clockwise
                     convertedRect = CGRect(
                         x: convertedRect.origin.y,
                         y: UIScreen.protraitSize.width - convertedRect.origin.x - convertedRect.width,
                         width: convertedRect.height,
                         height: convertedRect.width
                     )
+                    convertedNormRect = CGRect(
+                        x: convertedNormRect.origin.y,
+                        y: 1 - convertedNormRect.origin.x - convertedNormRect.width,
+                        width: convertedNormRect.height,
+                        height: convertedNormRect.width
+                        )
                 } else if orientation == .landscapeLeft {
-                    // Rotate the rect by 90 degrees counter-clockwise
+                    // Rotate the rect by 90 degrees clockwise
                     convertedRect = CGRect(
                         x: UIScreen.protraitSize.height - convertedRect.origin.y - convertedRect.height,
                         y: convertedRect.origin.x,
                         width: convertedRect.height,
                         height: convertedRect.width
                     )
+                    convertedNormRect = CGRect(
+                        x: 1 - convertedNormRect.origin.y - convertedNormRect.height,
+                        y: convertedNormRect.origin.x,
+                        width: convertedNormRect.height,
+                        height: convertedNormRect.width
+                    )
+//                    print(convertedNormRect)
                 }
+//                print("result: \(convertedNormRect)")
                 boundingBox = convertedRect
-                normalizedBbox = observation.boundingBox
+                normalizedBbox = convertedNormRect
                 
                 guard let newBarcode: String = observation.payloadStringValue,
                       newBarcode != barcode
@@ -206,10 +218,7 @@ class ScanBarcodeService: NSObject, ObservableObject {
         containedIn containerSize: CGSize, // 428x926 or 926x428,
         contentMode: ContentMode = .fill
     ) -> CGRect {
-        let imageAspect = imageSize.width / imageSize.height // 1.78
-        let containerAspect = containerSize.width / containerSize.height // 0.46
         let rectOfImage: CGRect = convertImage(ofSize: imageSize, to: containerSize, contentMode: contentMode)
-        
         return transform(normalizedBBox: boundingBox, to: rectOfImage)
     }
     
@@ -264,29 +273,59 @@ class ScanBarcodeService: NSObject, ObservableObject {
     /// 
     /// - Parameters:
     ///   - image: an UIImage object to be detected from
-    func detectBarcode(from image: UIImage) {
+    func detectBarcode(from image: UIImage, on source: CaptureSource) {
         guard let cgImage: CGImage = image.cgImage else { return }
-        
+        let imageOrientation: UIImage.Orientation = image.imageOrientation
+        let cgOrientation: CGImagePropertyOrientation
+        if source == .byCamera {
+            switch imageOrientation {
+            case .right: // Portrait mode
+                cgOrientation = .right
+                print("Camera Portrait mode")
+            case .down: // Landscape Right
+                cgOrientation = .left
+                print("Camera Landscape Right")
+            case .up: // Landscape Left
+                cgOrientation = .left
+                print("Camera Landscape Left")
+            default:
+                cgOrientation = .right
+                print("Camera unknown")
+            }
+        } else {
+            switch imageOrientation {
+            case .right: // Portrait mode
+                cgOrientation = .right
+                print("ImagePicker Portrait mode")
+            case .down: // Landscape Right
+                cgOrientation = .down
+                print("ImagePicker Landscape Right")
+            case .up: // Landscape Left
+                cgOrientation = .up //.right //.left
+                print("ImagePicker Landscape Left")
+            case .left:
+                cgOrientation = .left
+            default:
+                cgOrientation = .right
+                print("ImagePicker unknown")
+            }
+        }
+
         let requestHandler = VNImageRequestHandler(
             cgImage: cgImage,
-            orientation: CGImagePropertyOrientation(image.imageOrientation),
+            orientation: cgOrientation, // CGImagePropertyOrientation(imageOrientation),
             options: [:]
         )
+        
+//        print("rawValue: \(image.imageOrientation.rawValue), to: \(CGImagePropertyOrientation(image.imageOrientation))")
         
         do {
             try requestHandler.perform([detectBarcodeRequest])
         } catch {
             print(error)
             errorMessage = error.localizedDescription
-//            return nil
         }
         
-//        guard let observations: [VNBarcodeObservation] = detectBarcodeRequest.results,
-//              let observation: VNBarcodeObservation = observations.first
-//        else { return nil }
-//
-//        return observation.payloadStringValue
-        print(image.size, cgImage.width, cgImage.height)
         processClassification(
             imageSize: image.size
         )
@@ -298,36 +337,23 @@ class ScanBarcodeService: NSObject, ObservableObject {
     
 }
 
-//extension ScanBarcodeService: AVCaptureMetadataOutputObjectsDelegate {
-//    func metadataOutput(
-//        _ output: AVCaptureMetadataOutput,
-//        didOutput metadataObjects: [AVMetadataObject],
-//        from connection: AVCaptureConnection
-//    ) {
-//        guard barcode.isEmpty,
-//              let metadataObject = metadataObjects.first,
-//              let readableObject = metadataObject as? AVMetadataMachineReadableCodeObject,
-//              let stringValue = readableObject.stringValue
-//        else { return }
-//        AudioServicesPlaySystemSound(SystemSoundID(kSystemSoundID_Vibrate))
-//
-//        DispatchQueue.main.async { [weak self] in
-//            self?.barcode = stringValue
-//        }
-//    }
-//}
-
 extension ScanBarcodeService: AVCaptureVideoDataOutputSampleBufferDelegate {
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         /// `CVPixelBuffer` stands for `Core Video Pixel Buffer`
-        guard let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
+        guard let pixelBuffer: CVImageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
         let ciImage = CIImage(cvPixelBuffer: pixelBuffer)
+//        let uiImage = UIImage(ciImage: ciImage, scale: 1.0, orientation: .right)
+//        let imageRequestHandler = VNImageRequestHandler(
+//          cvPixelBuffer: pixelBuffer,
+//          orientation: .right
+//        )
+        
         let uiImage = UIImage(ciImage: ciImage, scale: 1.0, orientation: .right)
         let imageRequestHandler = VNImageRequestHandler(
           cvPixelBuffer: pixelBuffer,
           orientation: .right
         )
-
+        
         do {
           try imageRequestHandler.perform([detectBarcodeRequest])
         } catch {

@@ -65,7 +65,11 @@ struct CameraView: View {
             isPresented: $cvm.pickerService.showImagePicker,
             onDismiss: cvm.captureGalleryImage
         ) {
-            ImagePicker(image: $cvm.pickerService.image, camera: false)
+            ImagePicker(
+                showImagePicker: $cvm.pickerService.showImagePicker,
+                image: $cvm.pickerService.image,
+                camera: false
+            )
         }
         .sheet(isPresented: $cvm.showAnalysisView) {
             /// Note:
@@ -177,15 +181,6 @@ fileprivate struct BarcodeHeader: View {
 
 fileprivate struct DisplayedImageView: View {
     
-//    static func ==(lhs: DisplayedImageView, rhs: DisplayedImageView) -> Bool {
-//        lhs.image == rhs.image &&
-//        lhs.isScaleToFill == rhs.isScaleToFill &&
-//        lhs.bboxes == rhs.bboxes &&
-//        lhs.rescaledImageSize == rhs.rescaledImageSize &&
-//        lhs.screenSize == rhs.screenSize &&
-//        lhs.barcode == rhs.barcode &&
-//        lhs.barcodeBBox == rhs.barcodeBBox
-//    }
     let image: UIImage
     @Binding var isScaleToFill: Bool
 //    let bboxes: [BoundingBox]
