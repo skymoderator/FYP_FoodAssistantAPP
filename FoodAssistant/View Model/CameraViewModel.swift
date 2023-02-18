@@ -9,6 +9,7 @@ import Foundation
 import Combine
 import UIKit
 import SwiftUI
+import Vision
 
 class CameraViewModel: ObservableObject {
     
@@ -66,7 +67,6 @@ class CameraViewModel: ObservableObject {
                   let resizedImage: UIImage = photo.resizedImage else { return }
             self.cameraService.stop { [weak self] in
                 guard let self = self else { return }
-                print("session stopped")
                 self.ntDetection.detectNuritionTable(image: resizedImage)
                 self.scanBarcode.detectBarcode(from: image, on: .byCamera)
                 
@@ -106,6 +106,20 @@ class CameraViewModel: ObservableObject {
         }
     }
     
+    var displayedPhoto: Photo? {
+        if let captureSource {
+            switch captureSource {
+            case .byCamera:
+                return cameraService.photo
+            case .byImagePicker:
+                return pickerService.photo
+            }
+        } else {
+            return nil
+        }
+    }
+
+    
     /// Return the `InputProductDetailView.Detail` object assoicated with `Product` that contains
     /// the detected barcode string
     ///
@@ -115,7 +129,11 @@ class CameraViewModel: ObservableObject {
     ///
     /// - Returns: An `InputProductDetailView.Detail` object
     var detail: InputProductDetailView.Detail {
-        let product = Product(barcode: scanBarcode.barcode)
+        let product = Product(
+            barcode: scanBarcode.barcode,
+            photo: displayedPhoto,
+            ntBoundingBox: ntDetection.boundingBoxes.first
+        )
         return .init(product: product)
     }
     
@@ -207,5 +225,25 @@ class CameraViewModel: ObservableObject {
 //            scanBarcode.barcode = result
 //        }
         scanBarcode.detectBarcode(from: image, on: .byImagePicker)
+    }
+    
+    /// Things to do after YOLOv4 model is initialized in the background thread
+    ///
+    /// User could have already taken an image and is waiting for the model to be
+    /// initialized so that they can detect the nutrition table. This function will be called
+    /// to notify that YOLOv4 is initialized
+    func onYoloFinishedInitializing() {
+        guard let captureSource else { return }
+        let photo: Photo?
+        switch captureSource {
+        case .byCamera:
+            photo = cameraService.photo
+        case .byImagePicker:
+            photo = pickerService.photo
+        }
+        if let photo: Photo,
+           let resizedImage: UIImage = photo.resizedImage {
+            ntDetection.detectNuritionTable(image: resizedImage)
+        }
     }
 }

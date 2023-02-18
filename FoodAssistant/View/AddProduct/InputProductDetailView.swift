@@ -21,15 +21,11 @@ struct InputProductDetailView: View {
             hasher.combine(product)
         }
         let product: Product
-        /**
-         onAppear: Perform some logics when view appears,
-         e.g. hide tab bar and lock the scrollview from scrollable
-        */
+        /// onAppear: Perform some logics when view appears,
+        /// e.g. hide tab bar and lock the scrollview from scrollable
         let onAppear: (() -> Void)?
-        /**
-         onDisappear: Similarly, reset back the logics performed on onAppear
-         when view disappears
-        */
+        /// onDisappear: Similarly, reset back the logics performed on onAppear
+        /// when view disappears
         let onDisappear: (() -> Void)?
         
         init(
@@ -64,9 +60,14 @@ struct InputProductDetailView: View {
             if let nutInfo: NutritionInformation = vm.product.nutrition {
                 NutTableSession(nut: nutInfo)
             } else {
-                MissingNutTabSession(
-                    onTap: vm.onScanNutTableButTap
-                )
+                if let bbox: BoundingBox = vm.product.ntBoundingBox,
+                   let photo: Photo = vm.product.photo {
+                    AdjustBoundingBoxSession(photo: photo, bbox: bbox)
+                } else {
+                    MissingNutTabSession(
+                        onTap: vm.onScanNutTableButTap
+                    )
+                }
             }
         }
         .navigationTitle("Product Detail")
@@ -314,6 +315,38 @@ fileprivate struct PricePopover: View {
     }
 }
 
+fileprivate struct AdjustBoundingBoxSession: View {
+    let photo: Photo
+    let bbox: BoundingBox
+    var body: some View {
+        Section {
+            if let image: UIImage = photo.image {
+                Image(uiImage: image)
+                    .resizable()
+                    .scaledToFit()
+                    .overlay {
+                        GeometryReader { (proxy: GeometryProxy) in
+                            let size: CGSize = proxy.size
+                            BoundingBoxView(
+                                boundingBoxes: [bbox],
+                                size: size,
+                                rescaledSize: photo.rescaledImage?.size ?? .zero
+                            )
+                        }
+                    }
+            }
+        } header: {
+            Text("Nutrition Table")
+                .productFont(.regular, relativeTo: .footnote)
+        } footer: {
+            Text("Drag the bounding box to adjust to size and position if the result is inaccurate")
+                .productFont(.regular, relativeTo: .footnote)
+                .foregroundColor(.secondary)
+        }
+        .listRowInsets(.init(top: 8, leading: 0, bottom: 0, trailing: 0))
+    }
+}
+
 fileprivate struct MissingNutTabSession: View {
     private let title: String = "Missing Nutrition Information"
     private let subtitle: String = "Help others get to know more about this product by scanning the nutrition table on the product package"
@@ -352,12 +385,6 @@ fileprivate struct MissingNutTabSession: View {
             }
             .padding(32)
             .frame(maxWidth: .infinity)
-            .overlay {
-                GeometryReader { (proxy: GeometryProxy) in
-                    let size: CGSize = proxy.size
-                    Text("")
-                }
-            }
         } header: {
             Text("Input Nutrition Table")
                 .productFont(.regular, relativeTo: .footnote)
@@ -434,59 +461,59 @@ fileprivate struct NutTableSession: View {
                 .productFont(.regular, relativeTo: .footnote)
         }
     }
-}
-
-fileprivate struct NutRow: View {
-    let leading: String
-    let trailig: String
-    var body: some View {
-        HStack {
-            Text(leading)
-                .foregroundColor(.primary)
-            Spacer()
-            Text(trailig)
-                .foregroundColor(.secondary)
+    
+    fileprivate struct NutBarChart: View {
+        let nut: NutritionInformation
+        let datas: [(String, Double)]
+        init(nut: NutritionInformation) {
+            self.nut = nut
+            let energy = Double(nut.energy)
+            let proteun: Double = nut.protein
+            let satFat: Double = nut.saturated_fat
+            let transFat: Double = nut.trans_fat
+            let carbo: Double = nut.carbohydrates
+            let sugar: Double = nut.sugars
+            let sodium: Double = nut.sodium
+            datas = [
+                ("Energy", energy),
+                ("Protein", proteun),
+                ("Sat Fat", satFat),
+                ("Tran Fat", transFat),
+                ("Carbo", carbo),
+                ("Sugar", sugar),
+                ("Sodium", sodium)
+            ]
         }
-        .productFont(.regular, relativeTo: .body)
-    }
-}
-
-fileprivate struct NutBarChart: View {
-    let nut: NutritionInformation
-    let datas: [(String, Double)]
-    init(nut: NutritionInformation) {
-        self.nut = nut
-        let energy = Double(nut.energy)
-        let proteun: Double = nut.protein
-        let satFat: Double = nut.saturated_fat
-        let transFat: Double = nut.trans_fat
-        let carbo: Double = nut.carbohydrates
-        let sugar: Double = nut.sugars
-        let sodium: Double = nut.sodium
-        datas = [
-            ("Energy", energy),
-            ("Protein", proteun),
-            ("Sat Fat", satFat),
-            ("Tran Fat", transFat),
-            ("Carbo", carbo),
-            ("Sugar", sugar),
-            ("Sodium", sodium)
-        ]
-    }
-    var body: some View {
-        VStack(alignment: .leading) {
-            Text("Nutrition Table")
-                .foregroundColor(.primary)
-                .productFont(.bold, relativeTo: .title3)
-            Text("This product contains lots of sugar, think twice before eating")
-            Chart(datas, id: \.0) { (data: (String, Double)) in
-                BarMark(
-                    x: .value("Nutrition Info", data.0),
-                    y: .value("Nutrition Value", 10)
-                )
+        var body: some View {
+            VStack(alignment: .leading) {
+                Text("Nutrition Table")
+                    .foregroundColor(.primary)
+                    .productFont(.bold, relativeTo: .title3)
+                Text("This product contains lots of sugar, think twice before eating")
+                Chart(datas, id: \.0) { (data: (String, Double)) in
+                    BarMark(
+                        x: .value("Nutrition Info", data.0),
+                        y: .value("Nutrition Value", 10)
+                    )
+                }
             }
+            .padding(.vertical)
         }
-        .padding(.vertical)
+    }
+    
+    fileprivate struct NutRow: View {
+        let leading: String
+        let trailig: String
+        var body: some View {
+            HStack {
+                Text(leading)
+                    .foregroundColor(.primary)
+                Spacer()
+                Text(trailig)
+                    .foregroundColor(.secondary)
+            }
+            .productFont(.regular, relativeTo: .body)
+        }
     }
 }
 

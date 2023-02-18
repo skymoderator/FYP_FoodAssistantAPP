@@ -25,11 +25,14 @@ struct CameraView: View {
                     screenSize: screenSize,
                     barcode: cvm.scanBarcode.barcode,
                     normalizedBarcodeBBox: cvm.scanBarcode.normalizedBbox,
+                    isNutritionTableDetected: !cvm.ntDetection.boundingBoxes.isEmpty,
                     didSearchButtonCliced: cvm.didSearchButtonCliced,
                     didAnalysisButtonCliced: cvm.didAnalysisButtonCliced,
                     convertNormalizedBBoxToRectInSpecificView: cvm.scanBarcode.getConvertedRect,
                     convertImage: cvm.scanBarcode.convertImage,
-                    transform: cvm.scanBarcode.transform
+                    transform: cvm.scanBarcode.transform,
+                    isYoloInitializing: cvm.ntDetection.model == nil,
+                    onYoloFinishedInitializing: cvm.onYoloFinishedInitializing
                 )
             } else {
                 CameraPreview(session: cvm.cameraService.session)
@@ -188,11 +191,14 @@ fileprivate struct DisplayedImageView: View {
     let screenSize: CGSize
     let barcode: String
     let normalizedBarcodeBBox: CGRect?
+    let isNutritionTableDetected: Bool
     let didSearchButtonCliced: (() -> Void)?
     let didAnalysisButtonCliced: (() -> Void)?
     let convertNormalizedBBoxToRectInSpecificView: (CGRect, CGSize, CGSize, ContentMode) -> CGRect
     let convertImage: (CGSize, CGSize, ContentMode) -> CGRect
     let transform: (CGRect, CGRect) -> CGRect
+    let isYoloInitializing: Bool
+    let onYoloFinishedInitializing: (() -> Void)
     
     @State private var isBarCodeIndicatorViewAppear: Bool = false
     
@@ -270,8 +276,11 @@ fileprivate struct DisplayedImageView: View {
         .overlay(alignment: .top) {
             Header(
                 barcode: barcode,
+                isNutritionTableDetected: isNutritionTableDetected,
                 didSearchButtonCliced: didSearchButtonCliced,
-                didAnalysisButtonCliced: didAnalysisButtonCliced
+                didAnalysisButtonCliced: didAnalysisButtonCliced,
+                isYoloInitializing: isYoloInitializing,
+                onYoloFinishedInitializing: onYoloFinishedInitializing
             )
         }
         .onAppear {
@@ -289,8 +298,11 @@ fileprivate struct DisplayedImageView: View {
     fileprivate struct Header: View {
         @Environment(\.safeAreaInsets) var safeArea
         let barcode: String
+        let isNutritionTableDetected: Bool
         let didSearchButtonCliced: (() -> Void)?
         let didAnalysisButtonCliced: (() -> Void)?
+        let isYoloInitializing: Bool
+        let onYoloFinishedInitializing: (() -> Void)
         var body: some View {
             VStack(spacing: 16) {
                 HStack {
@@ -334,11 +346,28 @@ fileprivate struct DisplayedImageView: View {
                             .foregroundStyle(.secondary)
                     }
                 }
+                HStack {
+                    Text("Nutrition Table: ")
+                        .productFont(.bold, relativeTo: .body)
+                        .foregroundStyle(.primary)
+                    if isYoloInitializing {
+                        ProgressView()
+                    } else {
+                        Text(isNutritionTableDetected ? "Detected" : "Not Found")
+                            .productFont(.regular, relativeTo: .body)
+                            .foregroundStyle(.secondary)
+                    }
+                }
             }
             .padding(.top, safeArea.top)
             .padding()
             .background(.thinMaterial, in: Rectangle())
             .transition(.move(edge: .top))
+            .onChange(of: isYoloInitializing) { (newValue: Bool) in
+                if !newValue {
+                    onYoloFinishedInitializing()
+                }
+            }
         }
     }
 }

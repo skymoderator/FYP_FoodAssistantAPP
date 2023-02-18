@@ -36,19 +36,6 @@ class ScanBarcodeService: NSObject, ObservableObject {
         setUpBarcodeRequest()
     }
     
-    private func setUp(captureSession: AVCaptureSession, sessionQueue: DispatchQueue) {
-//        let metadataOutput = AVCaptureMetadataOutput()
-//
-//        if (captureSession.canAddOutput(metadataOutput)) {
-//            captureSession.addOutput(metadataOutput)
-//
-//            metadataOutput.setMetadataObjectsDelegate(self, queue: sessionQueue)
-//            metadataOutput.metadataObjectTypes = [.ean8, .ean13, .pdf417]
-//        } else {
-//            print("failed to add metadata output to capture session, barcode detection may not work")
-//        }
-    }
-    
     private func setUpBarcodeOutput(
         captureSession: AVCaptureSession,
         captureOutput: AVCaptureVideoDataOutput,
@@ -97,7 +84,7 @@ class ScanBarcodeService: NSObject, ObservableObject {
                     .windowScene?
                     .interfaceOrientation ?? .portrait
                 if orientation == .landscapeRight {
-                    // Rotate the rect by 90 degrees counter-clockwise
+                    /// Rotate the rect by 90 degrees counter-clockwise
                     convertedRect = CGRect(
                         x: convertedRect.origin.y,
                         y: UIScreen.protraitSize.width - convertedRect.origin.x - convertedRect.width,
@@ -111,7 +98,7 @@ class ScanBarcodeService: NSObject, ObservableObject {
                         height: convertedNormRect.width
                         )
                 } else if orientation == .landscapeLeft {
-                    // Rotate the rect by 90 degrees clockwise
+                    /// Rotate the rect by 90 degrees clockwise
                     convertedRect = CGRect(
                         x: UIScreen.protraitSize.height - convertedRect.origin.y - convertedRect.height,
                         y: convertedRect.origin.x,
@@ -124,9 +111,7 @@ class ScanBarcodeService: NSObject, ObservableObject {
                         width: convertedNormRect.height,
                         height: convertedNormRect.width
                     )
-//                    print(convertedNormRect)
                 }
-//                print("result: \(convertedNormRect)")
                 boundingBox = convertedRect
                 normalizedBbox = convertedNormRect
                 
@@ -255,12 +240,7 @@ class ScanBarcodeService: NSObject, ObservableObject {
     }
     
     func onAppear() {
-//        if cameraService.isConfigured {
-//            cameraService.start()
-//        } else {
-//            cameraService.configure(duringConfigure: setUp)
-//        }
-        cameraService.configure(additionalInput: setUp, additionalOutput: setUpBarcodeOutput)
+        cameraService.configure(additionalOutput: setUpBarcodeOutput)
     }
     
     func onDisappear() {
@@ -272,7 +252,9 @@ class ScanBarcodeService: NSObject, ObservableObject {
     /// This function is called when user capture the photo (either from camera or photo library via image picker)
     /// 
     /// - Parameters:
-    ///   - image: an UIImage object to be detected from
+    ///   - image: An UIImage object to be detected from
+    ///   - source: The source where the image is captured from.
+    ///
     func detectBarcode(from image: UIImage, on source: CaptureSource) {
         guard let cgImage: CGImage = image.cgImage else { return }
         let imageOrientation: UIImage.Orientation = image.imageOrientation
@@ -316,8 +298,6 @@ class ScanBarcodeService: NSObject, ObservableObject {
             orientation: cgOrientation, // CGImagePropertyOrientation(imageOrientation),
             options: [:]
         )
-        
-//        print("rawValue: \(image.imageOrientation.rawValue), to: \(CGImagePropertyOrientation(image.imageOrientation))")
         
         do {
             try requestHandler.perform([detectBarcodeRequest])

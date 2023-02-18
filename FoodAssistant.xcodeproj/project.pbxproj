@@ -13,6 +13,7 @@
 		8829B5472983B5B200A2DC0E /* BlurMaterialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8829B5462983B5B200A2DC0E /* BlurMaterialView.swift */; };
 		884099C429571FE900AFC290 /* UserDefaultExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 884099C329571FE900AFC290 /* UserDefaultExtension.swift */; };
 		8844E08D299E04B500133FE0 /* OrientationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8844E08C299E04B500133FE0 /* OrientationExtension.swift */; };
+		8844E09129A0D0A100133FE0 /* YOLOv4.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = 8844E09029A0D0A100133FE0 /* YOLOv4.mlpackage */; };
 		8845AB11293CBFB000BF6C5E /* RoundedRectangleCorners.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8845AB10293CBFB000BF6C5E /* RoundedRectangleCorners.swift */; };
 		8845AB13293CC29000BF6C5E /* NutritionTableDetectionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8845AB12293CC29000BF6C5E /* NutritionTableDetectionService.swift */; };
 		884E3157292A6311009DF3CA /* Product.swift in Sources */ = {isa = PBXBuildFile; fileRef = 884E3156292A6311009DF3CA /* Product.swift */; };
@@ -123,6 +124,7 @@
 		8829B5462983B5B200A2DC0E /* BlurMaterialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlurMaterialView.swift; sourceTree = "<group>"; };
 		884099C329571FE900AFC290 /* UserDefaultExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultExtension.swift; sourceTree = "<group>"; };
 		8844E08C299E04B500133FE0 /* OrientationExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrientationExtension.swift; sourceTree = "<group>"; };
+		8844E09029A0D0A100133FE0 /* YOLOv4.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; name = YOLOv4.mlpackage; path = "../../../../../../../../Developer/PyTorch Yolov4/YOLOv4.mlpackage"; sourceTree = "<group>"; };
 		8845AB10293CBFB000BF6C5E /* RoundedRectangleCorners.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedRectangleCorners.swift; sourceTree = "<group>"; };
 		8845AB12293CC29000BF6C5E /* NutritionTableDetectionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NutritionTableDetectionService.swift; sourceTree = "<group>"; };
 		884E3156292A6311009DF3CA /* Product.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Product.swift; sourceTree = "<group>"; };
@@ -254,7 +256,6 @@
 			isa = PBXGroup;
 			children = (
 				88F214012924B50F00940928 /* LaunchScreen.swift */,
-				88A7979429252C7F007AE689 /* BoundingBoxView.swift */,
 				8894EBCF29264A5D00204185 /* CameraView.swift */,
 				8868E67D291A87FF00545D7C /* VideoPreviewView.swift */,
 				88F213F529247A7600940928 /* ImagePicker.swift */,
@@ -359,6 +360,7 @@
 			isa = PBXGroup;
 			children = (
 				8894EBC829262D2100204185 /* Info.plist */,
+				8844E09029A0D0A100133FE0 /* YOLOv4.mlpackage */,
 				8894EBBF29261D8700204185 /* PreferenceKey */,
 				88A7979C2925F619007AE689 /* View Model */,
 				88F21407292518A900940928 /* Component */,
@@ -475,6 +477,7 @@
 		88F21407292518A900940928 /* Component */ = {
 			isa = PBXGroup;
 			children = (
+				88A7979429252C7F007AE689 /* BoundingBoxView.swift */,
 				8894EBF629274FC400204185 /* NativeSearchBar.swift */,
 				88F2140A29251B9300940928 /* SFButton.swift */,
 				8845AB10293CBFB000BF6C5E /* RoundedRectangleCorners.swift */,
@@ -702,6 +705,7 @@
 				88C229292952C6F6005E5A27 /* Supermarket.swift in Sources */,
 				88A7979529252C7F007AE689 /* BoundingBoxView.swift in Sources */,
 				886C76E429055D7000B1026D /* FoodAssistantApp.swift in Sources */,
+				8844E09129A0D0A100133FE0 /* YOLOv4.mlpackage in Sources */,
 				882631D2294C31D7003080DF /* ProductFontPlaceholderTextField.swift in Sources */,
 				889F29CC297000B300D10192 /* IdentifyEquateCodeHashable.swift in Sources */,
 				88F214042924CD3200940928 /* ColorExtension.swift in Sources */,

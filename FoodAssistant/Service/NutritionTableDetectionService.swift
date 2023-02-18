@@ -12,11 +12,15 @@ import UIKit
 class NutritionTableDetectionService: ObservableObject {
     
     @Published var boundingBoxes: [BoundingBox] = []
-    
-    var model: VNCoreMLModel?
+    @Published var model: VNCoreMLModel?
     
     init() {
-//        self.model = try? VNCoreMLModel(for: YOLOv4(configuration: .init()).model)
+        Task(priority: .userInitiated) { [weak self] in
+            let model: VNCoreMLModel? = try? VNCoreMLModel(for: YOLOv4(configuration: .init()).model)
+            await MainActor.run { [weak self] in
+                self?.model = model
+            }
+        }
     }
     
     func detectNuritionTable(image: UIImage) {
