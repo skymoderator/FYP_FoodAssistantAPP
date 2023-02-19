@@ -218,13 +218,10 @@ class CameraViewModel: ObservableObject {
         else { return }
         cameraService.stop()
         captureSource = .byImagePicker
-        ntDetection.detectNuritionTable(image: resizedImage)
-        
-//        let result: String? = scanBarcode.detectBarcode(from: image)
-//        if let result {
-//            scanBarcode.barcode = result
-//        }
-        scanBarcode.detectBarcode(from: image, on: .byImagePicker)
+        Task { [weak self] in
+            self?.ntDetection.detectNuritionTable(image: resizedImage)
+            self?.scanBarcode.detectBarcode(from: image, on: .byImagePicker)
+        }
     }
     
     /// Things to do after YOLOv4 model is initialized in the background thread
