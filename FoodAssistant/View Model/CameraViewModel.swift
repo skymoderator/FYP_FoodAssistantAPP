@@ -132,7 +132,7 @@ class CameraViewModel: ObservableObject {
         let product = Product(
             barcode: scanBarcode.barcode,
             photo: displayedPhoto,
-            ntBoundingBox: ntDetection.boundingBoxes.first
+            ntBoundingBox: ntDetection.boundingBox
         )
         return .init(product: product)
     }

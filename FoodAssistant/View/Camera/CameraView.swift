@@ -25,7 +25,7 @@ struct CameraView: View {
                     screenSize: screenSize,
                     barcode: cvm.scanBarcode.barcode,
                     normalizedBarcodeBBox: cvm.scanBarcode.normalizedBbox,
-                    isNutritionTableDetected: !cvm.ntDetection.boundingBoxes.isEmpty,
+                    isNutritionTableDetected: cvm.ntDetection.boundingBox != nil,
                     didSearchButtonCliced: cvm.didSearchButtonCliced,
                     didAnalysisButtonCliced: cvm.didAnalysisButtonCliced,
                     convertNormalizedBBoxToRectInSpecificView: cvm.scanBarcode.getConvertedRect,

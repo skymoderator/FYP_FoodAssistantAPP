@@ -11,7 +11,7 @@ import UIKit
 
 class NutritionTableDetectionService: ObservableObject {
     
-    @Published var boundingBoxes: [BoundingBox] = []
+    @Published var boundingBox: BoundingBox? = nil
     @Published var model: VNCoreMLModel?
     
     init() {
@@ -46,37 +46,33 @@ class NutritionTableDetectionService: ObservableObject {
     }
     
     func visionRequestDidComplete(request: VNRequest, error: Error?) {
+        guard let observations = request.results as? [VNCoreMLFeatureValueObservation],
+              let bbox = observations.first?.featureValue.multiArrayValue else { return }
+        let bboxShapedArray = MLShapedArray<Float>(bbox)
+        let predictions: [BoundingBox] = bboxShapedArray
+            .filter { (output: MLShapedArraySlice<Float>) in
+                output.scalars[4] > 0 // 0.5
+            }
+            .map {
+                (output: MLShapedArraySlice<Float>) -> BoundingBox in
+                let x = output.scalars
+                return BoundingBox(
+                    classIndex: Int(x[5]),
+                    score: x[4],
+                    rect: CGRect(
+                        x: Int(x[0]),
+                        y: Int(x[1]),
+                        width: Int(x[2]),
+                        height: Int(x[3])
+                    )
+                )
+            }
+        
+        let nms = NMS(bboxes: predictions, iouThreshold: 0.5, maxBoxes: 100)
+        let predictionsOut: BoundingBox? = nms().map { predictions[$0] }.first
         Task { [weak self] in
-            guard let self = self else { return }
             await MainActor.run { [weak self] in
-                guard let self = self else { return }
-                self.boundingBoxes.removeAll()
-                if let observations = request.results as? [VNCoreMLFeatureValueObservation],
-                   let bbox = observations.first?.featureValue.multiArrayValue {
-                    let bboxShapedArray = MLShapedArray<Float>(bbox)
-                    let predictions: [BoundingBox] = bboxShapedArray
-                        .filter { (output: MLShapedArraySlice<Float>) in
-                            output.scalars[4] > 0.5
-                        }
-                        .map {
-                            (output: MLShapedArraySlice<Float>) -> BoundingBox in
-                            let x = output.scalars
-                            return BoundingBox(
-                                classIndex: Int(x[5]),
-                                score: x[4],
-                                rect: CGRect(
-                                    x: Int(x[0]),
-                                    y: Int(x[1]),
-                                    width: Int(x[2]),
-                                    height: Int(x[3])
-                                )
-                            )
-                        }
-                    
-                    let nms = NMS(bboxes: predictions, iouThreshold: 0.5, maxBoxes: 100)
-                    let predictionsOut: [BoundingBox] = nms().map { predictions[$0] }
-                    self.boundingBoxes = predictionsOut
-                }
+                self?.boundingBox = predictionsOut
             }
         }
     }
