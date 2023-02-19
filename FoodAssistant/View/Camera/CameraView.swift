@@ -332,31 +332,29 @@ fileprivate struct DisplayedImageView: View {
                     .hoverEffect()
                 }
                 .buttonStyle(.plain)
-                if !barcode.isEmpty {
-                    Rectangle()
-                        .frame(height: 1)
-                        .frame(maxWidth: .infinity)
-                        .foregroundStyle(.secondary)
-                    HStack {
-                        Text("Barcode: ")
-                            .productFont(.bold, relativeTo: .body)
-                            .foregroundStyle(.primary)
-                        Text(barcode)
-                            .productFont(.regular, relativeTo: .body)
-                            .foregroundStyle(.secondary)
-                    }
-                }
+                Rectangle()
+                    .frame(height: 1)
+                    .frame(maxWidth: .infinity)
+                    .foregroundStyle(.secondary)
                 HStack {
-                    Text("Nutrition Table: ")
-                        .productFont(.bold, relativeTo: .body)
-                        .foregroundStyle(.primary)
-                    if isYoloInitializing {
-                        ProgressView()
-                    } else {
-                        Text(isNutritionTableDetected ? "Detected" : "Not Found")
-                            .productFont(.regular, relativeTo: .body)
-                            .foregroundStyle(.secondary)
+                    VStack(alignment: .trailing, spacing: 8) {
+                        Text("Barcode: ")
+                        Text("Nutrition Table: ")
                     }
+                    .productFont(.bold, relativeTo: .body)
+                    .foregroundStyle(.primary)
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text(barcode.isEmpty ? "Not Found" : barcode)
+                        if isYoloInitializing {
+                            ProgressView()
+                        } else {
+                            Text(isNutritionTableDetected ? "Detected" : "Not Found")
+                        }
+                    }
+                    .productFont(.regular, relativeTo: .body)
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 }
             }
             .padding(.top, safeArea.top)
