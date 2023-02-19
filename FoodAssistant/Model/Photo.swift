@@ -40,7 +40,7 @@ struct Photo: Identifiable, Equatable {
         self.id = id
         self.image = image
         self.rescaledImage = Photo.rescaler(originalImage: self.image!)
-        self.resizedImage = rescaledImage?.drawOnCanvas(withCanvasSize: Photo.targetSize, andCanvasColor: UIColor.black, atPosition: .middle)
+        self.resizedImage = rescaledImage?.drawOnCanvas(withCanvasSize: Photo.targetSize, andCanvasColor: UIColor.gray, atPosition: .middle)
     }
     
 //    var compressedData: Data? {
