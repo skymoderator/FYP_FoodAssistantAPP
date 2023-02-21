@@ -49,12 +49,13 @@ class ScanBarcodeService: NSObject, ObservableObject {
         guard let observations: [VNBarcodeObservation] = detectBarcodeRequest.results,
               let observation: VNBarcodeObservation = observations.first
         else {
+            /// If currently there is no barcode and boundingBox stored,
+            /// then there is no need to update the UI, thus return from the function
             if barcode.isEmpty || boundingBox == nil {
                 return
             }
             Task {
                 await MainActor.run {
-                    barcode = ""
                     boundingBox = nil
                     normalizedBbox = nil
                 }

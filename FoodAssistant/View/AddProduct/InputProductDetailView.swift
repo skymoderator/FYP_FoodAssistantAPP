@@ -21,6 +21,8 @@ struct InputProductDetailView: View {
             hasher.combine(product)
         }
         let product: Product
+        let boundingBox: BoundingBox?
+        let nutritionTablePhoto: Photo?
         /// onAppear: Perform some logics when view appears,
         /// e.g. hide tab bar and lock the scrollview from scrollable
         let onAppear: (() -> Void)?
@@ -30,10 +32,14 @@ struct InputProductDetailView: View {
         
         init(
             product: Product,
+            boundingBox: BoundingBox? = nil,
+            nutritionTablePhoto: Photo? = nil,
             onAppear: (() -> Void)? = nil,
             onDisappear: (() -> Void)? = nil
         ) {
             self.product = product
+            self.boundingBox = boundingBox
+            self.nutritionTablePhoto = nutritionTablePhoto
             self.onAppear = onAppear
             self.onDisappear = onDisappear
         }
@@ -46,7 +52,11 @@ struct InputProductDetailView: View {
     
     init(detail: Detail) {
         self._vm = StateObject(
-            wrappedValue: InputProductDetailViewModel(product: detail.product)
+            wrappedValue: InputProductDetailViewModel(
+                product: detail.product,
+                boundingBox: detail.boundingBox,
+                nutritionTablePhoto: detail.nutritionTablePhoto
+            )
         )
         self.onAppear = detail.onAppear
         self.onDisappear = detail.onDisappear
@@ -60,8 +70,8 @@ struct InputProductDetailView: View {
             if let nutInfo: NutritionInformation = vm.product.nutrition {
                 NutTableSession(nut: nutInfo)
             } else {
-                if let bbox: BoundingBox = vm.product.ntBoundingBox,
-                   let photo: Photo = vm.product.photo {
+                if let bbox: BoundingBox = vm.boundingBox,
+                   let photo: Photo = vm.nutritionTablePhoto {
                     AdjustBoundingBoxSession(photo: photo, bbox: bbox)
                 } else {
                     MissingNutTabSession(

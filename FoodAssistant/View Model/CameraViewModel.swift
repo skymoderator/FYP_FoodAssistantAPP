@@ -129,12 +129,12 @@ class CameraViewModel: ObservableObject {
     ///
     /// - Returns: An `InputProductDetailView.Detail` object
     var detail: InputProductDetailView.Detail {
-        let product = Product(
-            barcode: scanBarcode.barcode,
-            photo: displayedPhoto,
-            ntBoundingBox: ntDetection.boundingBox
+        let product = Product(barcode: scanBarcode.barcode)
+        return .init(
+            product: product,
+            boundingBox: ntDetection.boundingBox,
+            nutritionTablePhoto: displayedPhoto
         )
-        return .init(product: product)
     }
     
     // - TODO: Show a page that search for similar product
@@ -144,6 +144,11 @@ class CameraViewModel: ObservableObject {
     
     /// Show the `InputProductDetailView` via sheet
     func didAnalysisButtonCliced() {
+        if scanBarcode.barcode.isEmpty {
+            return
+        }
+        let croppedTable: UIImage? = ntDetection.cropTable()
+        // - TODO: Send `croppedTable` to server for 2nd stage model prediction
         showAnalysisView.toggle()
     }
     

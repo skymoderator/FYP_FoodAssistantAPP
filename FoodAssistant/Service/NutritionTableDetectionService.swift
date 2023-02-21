@@ -14,6 +14,8 @@ class NutritionTableDetectionService: ObservableObject {
     @Published var boundingBox: BoundingBox? = nil
     @Published var model: VNCoreMLModel?
     
+    private var imageToBeDetected: UIImage?
+    
     init() {
         Task(priority: .userInitiated) { [weak self] in
             print("Initializing YOLOv4")
@@ -39,6 +41,7 @@ class NutritionTableDetectionService: ObservableObject {
             let handler = VNImageRequestHandler(cgImage: image.cgImage!, orientation: orientation)//options: [:]
             do {
                 try handler.perform([request])
+                imageToBeDetected = image
             } catch {
                 print(error)
             }
@@ -77,4 +80,27 @@ class NutritionTableDetectionService: ObservableObject {
         }
     }
     
+    /// Crop the nutrition table from the 416x416 resized image
+    ///
+    /// - Returns: The cropped UIImage to be sent to the backend server for 2nd model processing
+    func cropTable() -> UIImage? {
+        guard let bbox: BoundingBox = boundingBox,
+              let image: UIImage = imageToBeDetected
+        else { return nil }
+        let scale: CGFloat = image.scale
+        let xOffset: CGFloat = bbox.rect.width/2
+        let yOffset: CGFloat = bbox.rect.height/2
+        /// - Note:
+        /// Because the format of bbox is [midx, midy, width, height],
+        /// so we are going to subtract the [midx, midy] with its [width/2, height/2]
+        /// so that it becomes [xmin, ymin, width, height]
+        let scaledBBoxRect: CGRect = .init(
+            x: (bbox.rect.origin.x - xOffset) * scale,
+            y: (bbox.rect.origin.y - yOffset) * scale,
+            width: bbox.rect.width * scale,
+            height: bbox.rect.height * scale
+        )
+        guard let imageRef: CGImage = image.cgImage?.cropping(to: scaledBBoxRect) else { return nil }
+        return UIImage(cgImage: imageRef, scale: image.scale, orientation: image.imageOrientation)
+    }
 }

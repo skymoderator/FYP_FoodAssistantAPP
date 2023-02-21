@@ -26,7 +26,6 @@ struct Product: IdentifyEquateCodeHashable {
 //    var ingredients: [Ingredient] = []
     //var supermarket: Supermarket?
     let photo: Photo?
-    let ntBoundingBox: BoundingBox?
     
     init(
         name: String = "",
@@ -38,8 +37,7 @@ struct Product: IdentifyEquateCodeHashable {
         category1: String? = nil,
         category2: String? = nil,
         category3: String? = nil,
-        photo: Photo? = nil,
-        ntBoundingBox: BoundingBox? = nil
+        photo: Photo? = nil
     ) {
         self.name = name
         self.barcode = barcode
@@ -51,7 +49,6 @@ struct Product: IdentifyEquateCodeHashable {
         self.category2 = category2
         self.category3 = category3
         self.photo = photo
-        self.ntBoundingBox = ntBoundingBox
     }
     
     init(from decoder: Decoder) throws {
@@ -65,15 +62,7 @@ struct Product: IdentifyEquateCodeHashable {
         category1 = try container.decode(String.self, forKey: .category1)
         category2 = try container.decode(String.self, forKey: .category2)
         category3 = try container.decode(String.self, forKey: .category3)
-        /// convert base64 string to UIImage
-        if let base64String: String = try container.decodeIfPresent(String.self, forKey: .photo),
-           let imageData: Data = Data(base64Encoded: base64String),
-           let image: UIImage = UIImage(data: imageData) {
-            photo = Photo(image: image)
-        } else {
-            photo = nil
-        }
-        ntBoundingBox = try container.decode(BoundingBox.self, forKey: .ntBoundingBox)
+        photo = nil
     }
     
     func encode(to encoder: Encoder) throws {
@@ -87,13 +76,6 @@ struct Product: IdentifyEquateCodeHashable {
         try container.encode(category1, forKey: .category1)
         try container.encode(category2, forKey: .category2)
         try container.encode(category3, forKey: .category3)
-        /// convert UIImage to base64 string
-        if let photo: Photo = photo,
-           let imageData: Data = photo.image?.jpegData(compressionQuality: 1.0) {
-            let base64String: String = imageData.base64EncodedString()
-            try container.encode(base64String, forKey: .photo)
-        }
-        try container.encode(ntBoundingBox, forKey: .ntBoundingBox)
     }
     
     enum CodingKeys: String, CodingKey {
@@ -108,7 +90,6 @@ struct Product: IdentifyEquateCodeHashable {
         case category2 = "category_2"
         case category3 = "category_3"
         case photo = "photo"
-        case ntBoundingBox = "ntBoundingBox"
     }
 }
 
