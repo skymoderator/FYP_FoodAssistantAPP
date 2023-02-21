@@ -45,7 +45,7 @@ struct InputProductDetailView: View {
         }
     }
     
-    
+    @Environment(\.presentationMode) var presentationMode
     @StateObject var vm: InputProductDetailViewModel
     let onAppear: (() -> Void)?
     let onDisappear: (() -> Void)?
@@ -87,6 +87,16 @@ struct InputProductDetailView: View {
         }
         .onAppear(perform: onAppear)
         .onDisappear(perform: onDisappear)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button {
+                    presentationMode.wrappedValue.dismiss()
+                } label: {
+                    Text("Close")
+                        .productFont(.regular, relativeTo: .body)
+                }
+            }
+        }
     }
 }
 

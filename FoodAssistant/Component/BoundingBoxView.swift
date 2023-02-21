@@ -39,7 +39,7 @@ struct BoundingBoxView: View {
                 .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
                 .offset(x: x - 20, y: y - 20)
             Rectangle()
-                .stroke(Color.red, lineWidth: 1.0)
+                .stroke(Color.red, lineWidth: 3.0)
                 .frame(width: bbox.rect.width * ratio, height: bbox.rect.height * ratio)
                 .offset(x: x, y: y)
         }
