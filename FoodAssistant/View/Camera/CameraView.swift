@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct CameraView: View {
-    
     @ObservedObject var cvm: CameraViewModel
     let screenSize: CGSize
     
@@ -81,7 +80,7 @@ struct CameraView: View {
             /// embed `InputProductDetailView` to `NavigationStack` so that the
             /// navigation bar and large navigation title could display properly
             NavigationStack {
-                InputProductDetailView(detail: cvm.detail)
+                InputProductDetailView(detail: cvm.detail!)
             }
         }
         .alert(

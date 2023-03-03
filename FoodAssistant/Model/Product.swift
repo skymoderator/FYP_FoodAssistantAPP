@@ -16,7 +16,7 @@ struct Product: IdentifyEquateCodeHashable {
     /// therefore we are declaring it to be `var` instead of `let` to let `name` be modifiable
     var name: String
     let barcode: String
-    let nutrition: NutritionInformation?
+    var nutrition: NutritionInformation?
     let manufacturer: String?
     let brand: String?
     let prices: [ProductPrice]
@@ -55,7 +55,12 @@ struct Product: IdentifyEquateCodeHashable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         name = try container.decode(String.self, forKey: .name)
         barcode = try container.decode(String.self, forKey: .barcode)
-        nutrition = try container.decode(NutritionInformation.self, forKey: .nutrition)
+        if container.contains(.nutrition){
+            nutrition = try container.decode(NutritionInformation.self, forKey: .nutrition)
+        }else{
+            nutrition = nil
+        }
+        
         manufacturer = try container.decode(String.self, forKey: .manufacturer)
         brand = try container.decode(String.self, forKey: .brand)
         prices = try container.decode([ProductPrice].self, forKey: .prices)

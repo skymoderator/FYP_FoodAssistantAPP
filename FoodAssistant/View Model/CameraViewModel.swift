@@ -128,14 +128,15 @@ class CameraViewModel: ObservableObject {
     /// `InputProductDetailView` can be presented via sheet
     ///
     /// - Returns: An `InputProductDetailView.Detail` object
-    var detail: InputProductDetailView.Detail {
-        let product = Product(barcode: scanBarcode.barcode)
-        return .init(
-            product: product,
-            boundingBox: ntDetection.boundingBox,
-            nutritionTablePhoto: displayedPhoto
-        )
-    }
+//    var detail: InputProductDetailView.Detail {
+//        let product = Product(barcode: scanBarcode.barcode)
+//        return .init(
+//            product: product,
+//            boundingBox: ntDetection.boundingBox,
+//            nutritionTablePhoto: displayedPhoto
+//        )
+//    }
+    var detail: InputProductDetailView.Detail?
     
     // - TODO: Show a page that search for similar product
     func didSearchButtonCliced() {
@@ -147,9 +148,71 @@ class CameraViewModel: ObservableObject {
         if scanBarcode.barcode.isEmpty {
             return
         }
-        let croppedTable: UIImage? = ntDetection.cropTable()
+        
         // - TODO: Send `croppedTable` to server for 2nd stage model prediction
-        showAnalysisView.toggle()
+        let secstage_host = "192.168.1.116"
+        let secstage_port = 9999
+        let secstage_path = "/predict"
+        AppState
+            .shared
+            .dataService
+            .get(
+                type: Product.self,
+                path: "/api/foodproducts/" + scanBarcode.barcode
+            )
+            .receive(on: DispatchQueue.main)
+            .sink { (completion: Subscribers.Completion<Error>) in
+                switch completion {
+                case let .failure(error):
+                    print("Couldn't load food products: \(error)")
+                    if let croppedTable = self.ntDetection.cropTable(){
+                        AppState
+                            .shared
+                            .dataService
+                            .post(return_type: NutritionInformation.self, image: croppedTable, host: secstage_host, port: secstage_port, path: secstage_path).receive(on: DispatchQueue.main)
+                            .receive(on: DispatchQueue.main)
+                            .sink { (completion: Subscribers.Completion<Error>) in
+                                switch completion {
+                                case let .failure(error):
+                                    print("Couldn't post image: \(error)")
+                                case .finished:
+                                    break
+                                } }receiveValue: { (nutritionInfo: NutritionInformation) in
+                                    var tmp_product = Product(barcode: self.scanBarcode.barcode)
+                                    print(nutritionInfo)
+                                    tmp_product.nutrition = nutritionInfo
+                                    self.detail = InputProductDetailView.Detail(product: tmp_product, boundingBox: self.ntDetection.boundingBox, nutritionTablePhoto: self.displayedPhoto)
+                                    self.showAnalysisView.toggle()
+                                }.store(in: &self.anyCancellables)
+                    }
+                case .finished:
+                    break
+                }
+            } receiveValue: { (product: Product) in
+                if let croppedTable = self.ntDetection.cropTable(){
+                    AppState
+                        .shared
+                        .dataService
+                        .post(return_type: NutritionInformation.self, image: croppedTable, host: secstage_host, port: secstage_port, path: secstage_path).receive(on: DispatchQueue.main)
+                        .receive(on: DispatchQueue.main)
+                        .sink { (completion: Subscribers.Completion<Error>) in
+                            switch completion {
+                            case let .failure(error):
+                                print("Couldn't post image: \(error)")
+                            case .finished:
+                                break
+                            } }receiveValue: { (nutritionInfo: NutritionInformation) in
+                                var tmp_product = product
+                                print(nutritionInfo)
+                                tmp_product.nutrition = nutritionInfo
+                                self.detail = InputProductDetailView.Detail(product: tmp_product, boundingBox: self.ntDetection.boundingBox, nutritionTablePhoto: self.displayedPhoto)
+                                self.showAnalysisView.toggle()
+                            }.store(in: &self.anyCancellables)
+                }
+                
+            }
+            .store(in: &anyCancellables)
+        
     }
     
     /// Dismiss keyboard when user taps on any area on the `CameraView`
