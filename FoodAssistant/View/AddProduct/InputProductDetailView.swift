@@ -69,15 +69,14 @@ struct InputProductDetailView: View {
             InfoSession(product: vm.product)
             if let nutInfo: NutritionInformation = vm.product.nutrition {
                 NutTableSession(nut: nutInfo)
+            }
+            if let bbox: BoundingBox = vm.boundingBox,
+               let photo: Photo = vm.nutritionTablePhoto {
+                BoundingBoxSession(photo: photo, bbox: bbox)
             } else {
-                if let bbox: BoundingBox = vm.boundingBox,
-                   let photo: Photo = vm.nutritionTablePhoto {
-                    AdjustBoundingBoxSession(photo: photo, bbox: bbox)
-                } else {
-                    MissingNutTabSession(
-                        onTap: vm.onScanNutTableButTap
-                    )
-                }
+                MissingNutTabSession(
+                    onTap: vm.onScanNutTableButTap
+                )
             }
         }
         .navigationTitle("Product Detail")
@@ -335,7 +334,7 @@ fileprivate struct PricePopover: View {
     }
 }
 
-fileprivate struct AdjustBoundingBoxSession: View {
+fileprivate struct BoundingBoxSession: View {
     let photo: Photo
     let bbox: BoundingBox
     var body: some View {
@@ -359,7 +358,7 @@ fileprivate struct AdjustBoundingBoxSession: View {
             Text("Nutrition Table")
                 .productFont(.regular, relativeTo: .footnote)
         } footer: {
-            Text("Drag the bounding box to adjust to size and position if the result is inaccurate")
+            Text("Disclaimer: The bounding box is predicted by custom-made Machine Learning model, which maybe inaccurate")
                 .productFont(.regular, relativeTo: .footnote)
                 .foregroundColor(.secondary)
         }

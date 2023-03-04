@@ -25,6 +25,7 @@ struct CameraView: View {
                     barcode: cvm.scanBarcode.barcode,
                     normalizedBarcodeBBox: cvm.scanBarcode.normalizedBbox,
                     isNutritionTableDetected: cvm.ntDetection.boundingBox != nil,
+                    isLoadingInputProductDetailView: cvm.isLoadingInputProductDetailView,
                     didSearchButtonCliced: cvm.didSearchButtonCliced,
                     didAnalysisButtonCliced: cvm.didAnalysisButtonCliced,
                     convertNormalizedBBoxToRectInSpecificView: cvm.scanBarcode.getConvertedRect,
@@ -73,12 +74,21 @@ struct CameraView: View {
                 camera: false
             )
         }
-        .sheet(isPresented: $cvm.showAnalysisView) {
+        .sheet(
+            isPresented: Binding<Bool>(
+                get: { cvm.detail != nil },
+                set: { (isPresented: Bool) in
+                    if !isPresented {
+                        cvm.detail = nil
+                    }
+                }
+            )
+        ) {
             /// Note:
             /// The `InputProductDetailView` itself does not contain `NavigationStack`
             /// therefore, it is the parent view's (this view) responsibility to
             /// embed `InputProductDetailView` to `NavigationStack` so that the
-            /// navigation bar and large navigation title could display properly
+            /// navigation bar and large navigation title could be displayed properly
             NavigationStack {
                 InputProductDetailView(detail: cvm.detail!)
             }
@@ -191,6 +201,7 @@ fileprivate struct DisplayedImageView: View {
     let barcode: String
     let normalizedBarcodeBBox: CGRect?
     let isNutritionTableDetected: Bool
+    let isLoadingInputProductDetailView: Bool
     let didSearchButtonCliced: (() -> Void)?
     let didAnalysisButtonCliced: (() -> Void)?
     let convertNormalizedBBoxToRectInSpecificView: (CGRect, CGSize, CGSize, ContentMode) -> CGRect
@@ -276,6 +287,7 @@ fileprivate struct DisplayedImageView: View {
             Header(
                 barcode: barcode,
                 isNutritionTableDetected: isNutritionTableDetected,
+                isLoadingInputProductDetailView: isLoadingInputProductDetailView,
                 didSearchButtonCliced: didSearchButtonCliced,
                 didAnalysisButtonCliced: didAnalysisButtonCliced,
                 isYoloInitializing: isYoloInitializing,
@@ -298,6 +310,7 @@ fileprivate struct DisplayedImageView: View {
         @Environment(\.safeAreaInsets) var safeArea
         let barcode: String
         let isNutritionTableDetected: Bool
+        let isLoadingInputProductDetailView: Bool
         let didSearchButtonCliced: (() -> Void)?
         let didAnalysisButtonCliced: (() -> Void)?
         let isYoloInitializing: Bool
@@ -318,14 +331,21 @@ fileprivate struct DisplayedImageView: View {
                     .frame(maxWidth: .infinity)
                     .hoverEffect()
                     Button {
-                        didAnalysisButtonCliced?()
-                    } label: {
-                        VStack {
-                            Image(systemName: "tablecells.badge.ellipsis")
-                            Text("Analysis")
-                                .productFont(.bold, relativeTo: .title3)
+                        /// To avoid sending multiple request to server at the same time
+                        if !isLoadingInputProductDetailView {
+                            didAnalysisButtonCliced?()
                         }
-                        .foregroundStyle(.secondary)
+                    } label: {
+                        if isLoadingInputProductDetailView {
+                            ProgressView()
+                        } else {
+                            VStack {
+                                Image(systemName: "tablecells.badge.ellipsis")
+                                Text("Analysis")
+                                    .productFont(.bold, relativeTo: .title3)
+                            }
+                            .foregroundStyle(.secondary)
+                        }
                     }
                     .frame(maxWidth: .infinity)
                     .hoverEffect()

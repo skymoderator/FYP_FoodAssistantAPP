@@ -9,16 +9,7 @@ import Foundation
 import Combine
 import UIKit
 
-protocol APIEngine {
-    func get<T: Decodable>(type: T.Type, path: String) -> AnyPublisher<T, Error>
-    func post<T: Codable>(object: T, type: T.Type, path: String) -> AnyPublisher<T, Error>
-    func post<T: Codable>(return_type: T.Type, image: UIImage, host: String, port: Int, path: String) -> AnyPublisher<T, Error>
-    func put<T: Codable>(object: T, type: T.Type, path: String) -> AnyPublisher<T, Error>
-    func putFile<T: Codable>(type: T.Type, path: String, data: Data) -> AnyPublisher<T, Error>
-}
-
-
-class APIService: APIEngine {
+class APIService {
     
     var scheme: String
     var host: String
@@ -45,23 +36,7 @@ class APIService: APIEngine {
     
     // Get Decodable Data from designated path
     func get<T: Decodable>(type: T.Type, path: String) -> AnyPublisher<T, Error>{
-        var components = URLComponents()
-        components.scheme = self.scheme
-        components.host = self.host
-        components.port = self.port
-        components.path = path //"/api/xxx/"
-        
-        guard let url: URL = components.url else {
-            preconditionFailure("Invalid URL components: \(components)")
-        }
-        var urlRequest = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
-        URLCache.shared.removeAllCachedResponses()
-        if let token: String = self.authService.token {
-            urlRequest.setValue(
-                "Bearer \(token)",
-                forHTTPHeaderField: "Authorization"
-            )
-        }
+        let urlRequest: URLRequest = makeURLRequest(from: path)
         
         let dataTaskPublisher: AnyPublisher<T, Error> = URLSession
             .shared
@@ -81,9 +56,31 @@ class APIService: APIEngine {
         
         return dataTaskPublisher
     }
+
+    /// Get the item of specified type in an asynchronous manner
+    ///
+    /// - Parameters:
+    ///   - type: The type of the item to be retrieved
+    ///   - path: The path of the item to be retrieved
+    /// - Returns: The decoded object of type T
+    func get<T: Decodable>(type: T.Type, path: String) async throws -> T {
+        let dataToBeDecoded: Data
+        let urlRequest: URLRequest = makeURLRequest(from: path)
+        do {
+            let (data, _): (Data, _) = try await URLSession.shared.data(for: urlRequest)
+            dataToBeDecoded = data
+        } catch {
+            guard let cacheedResponse: CachedURLResponse = URLCache
+                .shared
+                .cachedResponse(for: urlRequest) else {
+                throw error
+            }
+            dataToBeDecoded = cacheedResponse.data
+        }
+        return try jsonDecoder.decode(T.self, from: dataToBeDecoded)
+    }
     
-    func post<T: Codable>(return_type: T.Type, image: UIImage, host: String, port: Int, path: String) -> AnyPublisher<T, Error>{
-        
+    func post<T: Codable>(type: T.Type, image: UIImage, host: String, port: Int, path: String) async throws -> T {
         var components = URLComponents()
         components.scheme = self.scheme
         components.host = host
@@ -96,24 +93,22 @@ class APIService: APIEngine {
         var urlRequest = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
         URLCache.shared.removeAllCachedResponses()
         urlRequest.httpMethod = "POST"
-//        urlRequest.addValue("form-data", forHTTPHeaderField: "Content-Type")
         urlRequest.timeoutInterval = 8.0
-//        urlRequest.httpBody = image.jpegData(compressionQuality: 1)
-        let uuid = UUID().uuidString
-        let CRLF = "\r\n"
-        let filename = uuid + ".jpg"
-        let formName = "file"
-        let type = "image/jpeg"     // file type
+        
+        let uuid: String = UUID().uuidString
+        let CRLF: String = "\r\n"
+        let filename: String = uuid + ".jpg"
+        let type: String = "image/jpeg"
         let boundary = String(format: "----iOSURLSessionBoundary.%08x%08x", arc4random(), arc4random())
-        var body = Data()
-
-        // file data //
+        
+        var body: Data = Data()
         body.append(("--\(boundary)" + CRLF).data(using: .utf8)!)
         body.append("Content-Disposition: form-data; name=\"formName\"; filename=\"\(filename)\"\r\n".data(using: .utf8)!)
         body.append(("Content-Type: \(type)" + CRLF + CRLF).data(using: .utf8)!)
-        if let imagedata = image.jpegData(compressionQuality: 1){
-            body.append(imagedata as Data)
-        }else{
+        
+        if let imagedata: Data = image.jpegData(compressionQuality: 1) {
+            body.append(imagedata)
+        } else {
             print("NO JPG DATA")
         }
         body.append(CRLF.data(using: .utf8)!)
@@ -122,42 +117,24 @@ class APIService: APIEngine {
         body.append(("--\(boundary)--" + CRLF).data(using: .utf8)!)
         urlRequest.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
         urlRequest.httpBody = body
-        let dataTaskPublisher: AnyPublisher<T, Error> = URLSession
-            .shared
-            .dataTaskPublisher(for: urlRequest)
-            .map { (data: Data, response: URLResponse) -> Data in data }
-            .tryCatch { (failure: URLSession.DataTaskPublisher.Failure) -> Just<Data> in
-                //Try To Find From Cache
-                guard let cacheedResponse: CachedURLResponse = URLCache
-                    .shared
-                    .cachedResponse(for: urlRequest) else {
-                    throw failure
-                }
-                return Just(cacheedResponse.data)
+        
+        let dataToBeDecoded: Data
+        do {
+            let (data, _): (Data, _) = try await URLSession.shared.data(for: urlRequest)
+            dataToBeDecoded = data
+        } catch {
+            guard let cacheedResponse: CachedURLResponse = URLCache
+                .shared
+                .cachedResponse(for: urlRequest) else {
+                throw error
             }
-            .decode(type: T.self, decoder: self.jsonDecoder)
-            .eraseToAnyPublisher()
-        
-        return dataTaskPublisher
-        
+            dataToBeDecoded = cacheedResponse.data
+        }
+        return try jsonDecoder.decode(T.self, from: dataToBeDecoded)
     }
     
     func post<T: Codable>(object: T, type: T.Type, path: String) -> AnyPublisher<T, Error>{
-        
-        var components = URLComponents()
-        components.scheme = self.scheme
-        components.host = self.host
-        components.port = self.port
-        components.path = path //"/api/xxx/"
-        
-        guard let url: URL = components.url else {
-            preconditionFailure("Invalid URL components: \(components)")
-        }
-        var urlRequest = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
-        URLCache.shared.removeAllCachedResponses()
-        if let token: String = self.authService.token {
-            urlRequest.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        }
+        var urlRequest: URLRequest = makeURLRequest(from: path)
         urlRequest.httpMethod = "POST"
         urlRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
         do {
@@ -187,22 +164,7 @@ class APIService: APIEngine {
     }
     
     func put<T: Codable>(object: T, type: T.Type, path: String) -> AnyPublisher<T, Error>{
-        
-        var components = URLComponents()
-        components.scheme = self.scheme
-        components.host = self.host
-        components.port = self.port
-        components.path = path //"/api/xxx/"
-        
-        guard let url: URL = components.url else {
-            preconditionFailure("Invalid URL components: \(components)")
-        }
-        var urlRequest = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
-        URLCache.shared.removeAllCachedResponses()
-        if let token: String = self.authService.token {
-            urlRequest.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        }
-        
+        var urlRequest: URLRequest = makeURLRequest(from: path)
         urlRequest.httpMethod = "PUT"
         urlRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
         do {
@@ -232,6 +194,23 @@ class APIService: APIEngine {
     }
     
     func putFile<T: Codable>(type: T.Type, path: String, data: Data) -> AnyPublisher<T, Error>{
+        var request: URLRequest = makeURLRequest(from: path)
+        request.httpMethod = "PUT"
+        request.httpBody = data
+        let dataTaskPublisher = URLSession.shared.dataTaskPublisher(for: request)
+            .map { (data: Data, response: URLResponse) -> Data in data }
+            .decode(type: T.self, decoder: self.jsonDecoder)
+            .eraseToAnyPublisher()
+        
+        return dataTaskPublisher
+    }
+
+    /// Make a URLRequest from path, incorporating the designated scheme, host, and port,
+    /// and the authorization token.
+    /// 
+    /// - Parameter path: A String representing the path.
+    /// - Returns: The URLRequest object.
+    private func makeURLRequest(from path: String) -> URLRequest {
         var components = URLComponents()
         components.scheme = self.scheme
         components.host = self.host
@@ -241,19 +220,13 @@ class APIService: APIEngine {
         guard let url: URL = components.url else {
             preconditionFailure("Invalid URL components: \(components)")
         }
-        
+
         var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
         URLCache.shared.removeAllCachedResponses()
         if let token: String = self.authService.token {
             request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         }
-        request.httpMethod = "PUT"
-        request.httpBody = data
-        let dataTaskPublisher = URLSession.shared.dataTaskPublisher(for: request)
-            .map { (data: Data, response: URLResponse) -> Data in data }
-            .decode(type: T.self, decoder: self.jsonDecoder)
-            .eraseToAnyPublisher()
-        
-        return dataTaskPublisher
+
+        return request
     }
 }

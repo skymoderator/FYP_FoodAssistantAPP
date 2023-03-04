@@ -13,7 +13,7 @@ class AppState {
     static let shared = AppState()
     
     // A helper class to fetch/store/retrieve data from server
-    var dataService: APIEngine
+    var dataService: APIService
     // A helper class to manage authentication matters
     var authService: AuthService
     
