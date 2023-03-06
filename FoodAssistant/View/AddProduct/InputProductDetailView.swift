@@ -102,10 +102,6 @@ struct InputProductDetailView: View {
             if let bbox: BoundingBox = vm.boundingBox,
                let photo: Photo = vm.nutritionTablePhoto {
                 BoundingBoxSession(photo: photo, bbox: bbox)
-            } else {
-                MissingNutTabSession(
-                    onTap: vm.onScanNutTableButTap
-                )
             }
         }
         .navigationTitle("Product Detail")
@@ -459,52 +455,6 @@ fileprivate struct BoundingBoxSession: View {
                 .foregroundColor(.secondary)
         }
         .listRowInsets(.init(top: 8, leading: 0, bottom: 0, trailing: 0))
-    }
-}
-
-fileprivate struct MissingNutTabSession: View {
-    private let title: String = "Missing Nutrition Information"
-    private let subtitle: String = "Help others get to know more about this product by scanning the nutrition table on the product package"
-    let onTap: () -> Void
-    var body: some View {
-        Section {
-            VStack(alignment: .center) {
-                Image(systemName: "tablecells.badge.ellipsis")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 100, height: 100)
-                Text(title)
-                    .productFont(.bold, relativeTo: .title3)
-                    .multilineTextAlignment(.center)
-                    .foregroundColor(.primary)
-                Text(subtitle)
-                    .productFont(.regular, relativeTo: .body)
-                    .multilineTextAlignment(.center)
-                    .foregroundColor(.secondary)
-                    .padding(.bottom)
-                Button(action: onTap) {
-                    HStack {
-                        Image(systemName: "plus.viewfinder")
-                            .fontWeight(.bold)
-                        Text("Scan Nutrition Table")
-                            .productFont(.bold, relativeTo: .body)
-                    }
-                    .foregroundColor(.white)
-                    .padding(8)
-                    .padding(.horizontal)
-                    .background(.systemBlue)
-                    .clipShape(Capsule())
-                    .contentShape(Capsule())
-                }
-                .hoverEffect()
-            }
-            .padding(32)
-            .frame(maxWidth: .infinity)
-        } header: {
-            Text("Input Nutrition Table")
-                .productFont(.regular, relativeTo: .footnote)
-        }
-        .listRowInsets(.zero)
     }
 }
 
