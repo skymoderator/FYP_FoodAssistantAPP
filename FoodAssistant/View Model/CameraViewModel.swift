@@ -162,7 +162,9 @@ class CameraViewModel: ObservableObject {
                         self.detail = InputProductDetailView.Detail(
                             product: product,
                             boundingBox: ntDetection.boundingBox,
-                            nutritionTablePhoto: displayedPhoto
+                            nutritionTablePhoto: displayedPhoto,
+                            /// This product is on the server record, so its inforamtion cannot be editable
+                            editable: false
                         )
                     }
                 } catch {
@@ -178,7 +180,9 @@ class CameraViewModel: ObservableObject {
                         self.detail = InputProductDetailView.Detail(
                             product: product,
                             boundingBox: ntDetection.boundingBox,
-                            nutritionTablePhoto: displayedPhoto
+                            nutritionTablePhoto: displayedPhoto,
+                            /// This product is not on the server record, so its inforamtion is editable
+                            editable: true
                         )
                     }
                 } catch {

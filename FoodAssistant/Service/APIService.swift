@@ -64,20 +64,8 @@ class APIService {
     ///   - path: The path of the item to be retrieved
     /// - Returns: The decoded object of type T
     func get<T: Decodable>(type: T.Type, path: String) async throws -> T {
-        let dataToBeDecoded: Data
         let urlRequest: URLRequest = makeURLRequest(from: path)
-        do {
-            let (data, _): (Data, _) = try await URLSession.shared.data(for: urlRequest)
-            dataToBeDecoded = data
-        } catch {
-            guard let cacheedResponse: CachedURLResponse = URLCache
-                .shared
-                .cachedResponse(for: urlRequest) else {
-                throw error
-            }
-            dataToBeDecoded = cacheedResponse.data
-        }
-        return try jsonDecoder.decode(T.self, from: dataToBeDecoded)
+        return try await performCall(urlRequest: urlRequest)
     }
     
     func post<T: Codable>(type: T.Type, image: UIImage, host: String, port: Int, path: String) async throws -> T {
@@ -118,19 +106,20 @@ class APIService {
         urlRequest.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
         urlRequest.httpBody = body
         
-        let dataToBeDecoded: Data
+        return try await performCall(urlRequest: urlRequest)
+    }
+    
+    func post<T: Codable>(object: T, type: T.Type, path: String) async throws -> T{
+        var urlRequest: URLRequest = makeURLRequest(from: path)
+        urlRequest.httpMethod = "POST"
+        urlRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
         do {
-            let (data, _): (Data, _) = try await URLSession.shared.data(for: urlRequest)
-            dataToBeDecoded = data
-        } catch {
-            guard let cacheedResponse: CachedURLResponse = URLCache
-                .shared
-                .cachedResponse(for: urlRequest) else {
-                throw error
-            }
-            dataToBeDecoded = cacheedResponse.data
+            urlRequest.httpBody = try JSONEncoder().encode(object)
+        } catch let error {
+            print(error.localizedDescription)
         }
-        return try jsonDecoder.decode(T.self, from: dataToBeDecoded)
+        
+        return try await performCall(urlRequest: urlRequest)
     }
     
     func post<T: Codable>(object: T, type: T.Type, path: String) -> AnyPublisher<T, Error>{
@@ -160,7 +149,20 @@ class APIService {
             .eraseToAnyPublisher()
         
         return dataTaskPublisher
+    }
+    
+    func put<T: Codable>(object: T, type: T.Type, path: String) async throws -> T {
+        var urlRequest: URLRequest = makeURLRequest(from: path)
+        urlRequest.httpMethod = "PUT"
+        urlRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        do {
+            urlRequest.httpBody = try JSONEncoder().encode(object)
+        } catch let error {
+            print(error.localizedDescription)
+            
+        }
         
+        return try await performCall(urlRequest: urlRequest)
     }
     
     func put<T: Codable>(object: T, type: T.Type, path: String) -> AnyPublisher<T, Error>{
@@ -190,7 +192,6 @@ class APIService {
             .eraseToAnyPublisher()
         
         return dataTaskPublisher
-        
     }
     
     func putFile<T: Codable>(type: T.Type, path: String, data: Data) -> AnyPublisher<T, Error>{
@@ -228,5 +229,21 @@ class APIService {
         }
 
         return request
+    }
+    
+    private func performCall<T: Decodable>(urlRequest: URLRequest) async throws -> T {
+        let dataToBeDecoded: Data
+        do {
+            let (data, _): (Data, _) = try await URLSession.shared.data(for: urlRequest)
+            dataToBeDecoded = data
+        } catch {
+            guard let cacheedResponse: CachedURLResponse = URLCache
+                .shared
+                .cachedResponse(for: urlRequest) else {
+                throw error
+            }
+            dataToBeDecoded = cacheedResponse.data
+        }
+        return try jsonDecoder.decode(T.self, from: dataToBeDecoded)
     }
 }

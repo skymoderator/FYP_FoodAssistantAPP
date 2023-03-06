@@ -23,6 +23,9 @@ struct InputProductDetailView: View {
         let product: Product
         let boundingBox: BoundingBox?
         let nutritionTablePhoto: Photo?
+        /// The boolean value indicates whether or not the users
+        /// can edit the data of the product
+        let editable: Bool
         /// onAppear: Perform some logics when view appears,
         /// e.g. hide tab bar and lock the scrollview from scrollable
         let onAppear: (() -> Void)?
@@ -34,12 +37,14 @@ struct InputProductDetailView: View {
             product: Product,
             boundingBox: BoundingBox? = nil,
             nutritionTablePhoto: Photo? = nil,
+            editable: Bool = false,
             onAppear: (() -> Void)? = nil,
             onDisappear: (() -> Void)? = nil
         ) {
             self.product = product
             self.boundingBox = boundingBox
             self.nutritionTablePhoto = nutritionTablePhoto
+            self.editable = editable
             self.onAppear = onAppear
             self.onDisappear = onDisappear
         }
@@ -55,7 +60,8 @@ struct InputProductDetailView: View {
             wrappedValue: InputProductDetailViewModel(
                 product: detail.product,
                 boundingBox: detail.boundingBox,
-                nutritionTablePhoto: detail.nutritionTablePhoto
+                nutritionTablePhoto: detail.nutritionTablePhoto,
+                editable: detail.editable
             )
         )
         self.onAppear = detail.onAppear
@@ -64,12 +70,35 @@ struct InputProductDetailView: View {
     
     var body: some View {
         List {
-            BarcodeSession(barcode: vm.product.barcode)
-            NameSession(product: $vm.product)
-            InfoSession(product: vm.product)
-            if let nutInfo: NutritionInformation = vm.product.nutrition {
-                NutTableSession(nut: nutInfo)
-            }
+            BarcodeSession(
+                barcode: $vm.barcode,
+                editable: vm.editable
+            )
+            NameSession(
+                name: $vm.name,
+                editable: vm.editable
+            )
+            InfoSession(
+                product: vm.product,
+                editable: vm.editable,
+                price: $vm.price,
+                manufacturer: $vm.manufacturer,
+                brand: $vm.brand
+            )
+            NutTableSession(
+                energy: $vm.energy,
+                protein: $vm.protein,
+                totalFat: $vm.totalFat,
+                saturatedFat: $vm.saturatedFat,
+                transFat: $vm.transFat,
+                carbohydrates: $vm.carbohydrates,
+                sugars: $vm.sugars,
+                sodium: $vm.sodium,
+                vitaminB2: $vm.vitaminB2,
+                vitaminB3: $vm.vitaminB3,
+                vitaminB6: $vm.vitaminB6,
+                editable: vm.editable
+            )
             if let bbox: BoundingBox = vm.boundingBox,
                let photo: Photo = vm.nutritionTablePhoto {
                 BoundingBoxSession(photo: photo, bbox: bbox)
@@ -87,25 +116,57 @@ struct InputProductDetailView: View {
         .onAppear(perform: onAppear)
         .onDisappear(perform: onDisappear)
         .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
+            ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
-                    presentationMode.wrappedValue.dismiss()
+                    /// Only show the Done button (for uploading product information to server)
+                    /// when it is editable (that's means there is no record on server), otherwise,
+                    /// user should not be able to edit the inforamtion and thus no need to show the
+                    /// done button
+                    if vm.editable {
+                        vm.showDismissAlert = true
+                    } else {
+                        presentationMode.wrappedValue.dismiss()
+                    }
                 } label: {
-                    Text("Close")
-                        .productFont(.regular, relativeTo: .body)
+                    Text("Done")
+                        .productFont(.bold, relativeTo: .body)
+                        .foregroundColor(.systemBlue)
                 }
             }
         }
+        .alert("Oops", isPresented: $vm.showDismissAlert) {
+            Button(role: .cancel) {
+                vm.uploadProductInformationToServer()
+                presentationMode.wrappedValue.dismiss()
+            } label: {
+                Text("Yes Sure")
+            }
+            Button {
+                presentationMode.wrappedValue.dismiss()
+            } label: {
+                Text("No thanks")
+            }
+        } message: {
+            Text("Looks like this product is not on our server records, do you want to upload this product information to our server?")
+        }
+        .interactiveDismissDisabled(true)
     }
 }
 
 fileprivate struct BarcodeSession: View {
-    let barcode: String
+    @Binding var barcode: String
+    let editable: Bool
     var body: some View {
         Section {
-            Text(barcode)
-                .foregroundColor(.primary)
-                .productFont(.regular, relativeTo: .body)
+            ProductFontPlaceholderTextField(
+                text: Binding<String?>(
+                    get: { barcode },
+                    set: { barcode = $0 ?? "" }
+                ),
+                placeholder: "13-digit Product Barcode",
+                keyboardType: .numberPad,
+                editable: editable
+            )
         } header: {
             Text("Barcode")
                 .productFont(.regular, relativeTo: .footnote)
@@ -114,12 +175,17 @@ fileprivate struct BarcodeSession: View {
 }
 
 fileprivate struct NameSession: View {
-    @Binding var product: Product
+    @Binding var name: String
+    let editable: Bool
     var body: some View {
         Section {
             ProductFontPlaceholderTextField(
-                text: $product.name,
-                placeholder: "Product Name (e.g Coca Cola)"
+                text: Binding<String?>(
+                    get: { name },
+                    set: { name = $0 ?? "" }
+                ),
+                placeholder: "Product Name (e.g Coca Cola)",
+                editable: editable
             )
         } header: {
             Text("Name")
@@ -130,25 +196,32 @@ fileprivate struct NameSession: View {
 
 fileprivate struct InfoSession: View {
     let product: Product
+    let editable: Bool
     @State var showPopover = false
-    @State var priceText = ""
+    @Binding var price: Double?
+    @Binding var manufacturer: String?
+    @Binding var brand: String?
     var body: some View {
         Section {
             PriceRow(
-                product: product,
-                showPopover: $showPopover
+                prices: product.prices,
+                editable: editable,
+                showPopover: $showPopover,
+                price: $price
             )
             Row(
                 image: "hammer.circle",
                 color: .systemOrange,
                 leading: "Manufacturer",
-                trailig: product.manufacturer ?? "Unknown"
+                editable: editable,
+                trailig: $manufacturer
             )
             Row(
                 image: "bag.circle",
                 color: .systemBlue,
                 leading: "Brand",
-                trailig: product.brand ?? "Unknown"
+                editable: editable,
+                trailig: $brand
             )
 //            Row(
 //                image: "cart.circle",
@@ -163,7 +236,7 @@ fileprivate struct InfoSession: View {
     }
     
     private struct PricePopoverBut: View {
-        let product: Product
+        let prices: [ProductPrice]
         @Binding var show: Bool
         var body: some View {
             Button {
@@ -185,7 +258,7 @@ fileprivate struct InfoSession: View {
                     a.sourceFrameInset.bottom = -32
                 }
             ) {
-                PricePopover(product: product)
+                PricePopover(prices: prices)
             }
         }
     }
@@ -194,7 +267,8 @@ fileprivate struct InfoSession: View {
         let image: String
         let color: Color
         let leading: String
-        let trailig: String
+        let editable: Bool
+        @Binding var trailig: String?
         var body: some View {
             HStack {
                 Image(systemName: image)
@@ -203,16 +277,24 @@ fileprivate struct InfoSession: View {
                     .productFont(.regular, relativeTo: .body)
                     .foregroundColor(.primary)
                 Spacer()
-                Text(trailig)
-                    .productFont(.regular, relativeTo: .body)
-                    .foregroundColor(.secondary)
+                ProductFontPlaceholderTextField(
+                    text: Binding<String?>(
+                        get: { trailig == nil ? nil : trailig! },
+                        set: { trailig = $0 }
+                    ),
+                    placeholder: "Unknown",
+                    editable: editable
+                )
+                .fixedSize(horizontal: true, vertical: false)
             }
         }
     }
     
     private struct PriceRow: View {
-        let product: Product
+        let prices: [ProductPrice]
+        let editable: Bool
         @Binding var showPopover: Bool
+        @Binding var price: Double?
         var body: some View {
             HStack {
                 Image(systemName: "dollarsign.circle")
@@ -221,29 +303,43 @@ fileprivate struct InfoSession: View {
                     .productFont(.regular, relativeTo: .body)
                     .foregroundColor(.primary)
                 Spacer()
-                PricePopoverBut(product: product, show: $showPopover)
-                Text("HKD $\(product.prices.first?.price.formatted() ?? "NA")")
-                    .productFont(.regular, relativeTo: .body)
-                    .foregroundColor(.secondary)
+                /// If not editable, that means there is a record on the server, then that means
+                /// there are price trend data availabe, then we show the price popver button
+                if !editable {
+                    PricePopoverBut(prices: prices, show: $showPopover)
+                }
+                HStack(spacing: 0) {
+                    Text("HKD $")
+                        .productFont(.regular, relativeTo: .body)
+                        .foregroundColor(.secondary)
+                    ProductFontPlaceholderTextField(
+                        text: Binding<String?>(
+                            get: { price == nil ? nil : "\(price!)" },
+                            set: { price = Double($0 ?? "") }
+                        ),
+                        placeholder: "NA",
+                        keyboardType: .numberPad,
+                        editable: editable
+                    )
+                    .fixedSize(horizontal: true, vertical: false)
+                }
             }
         }
     }
 }
 
 fileprivate struct PricePopover: View {
-    let product: Product
     let datas: [(Date, Double)]
     let minPrice: Double
     let maxPrice: Double
     let avgPrice: Double
-    init(product: Product) {
-        self.product = product
-        let dates: [Date] = product.prices.map { $0.date }
-        let prices: [Double] = product.prices.map { $0.price }
+    init(prices: [ProductPrice]) {
+        let dates: [Date] = prices.map { $0.date }
+        let prices: [Double] = prices.map { $0.price }
         datas = zip(dates, prices).map { ($0, $1) }
-        minPrice = product.prices.map(\.price).min() ?? 0
-        maxPrice = product.prices.map(\.price).max() ?? 0
-        avgPrice = product.prices.map(\.price).reduce(0.0, +)/Double(product.prices.count)
+        minPrice = prices.min() ?? 0
+        maxPrice = prices.max() ?? 0
+        avgPrice = prices.reduce(0.0, +)/Double(prices.count)
     }
     var body: some View {
         Templates.Container(
@@ -413,68 +509,120 @@ fileprivate struct MissingNutTabSession: View {
 }
 
 fileprivate struct NutTableSession: View {
-    let nut: NutritionInformation
+    @Binding var energy: String?
+    @Binding var protein: String?
+    @Binding var totalFat: String?
+    @Binding var saturatedFat: String?
+    @Binding var transFat: String?
+    @Binding var carbohydrates: String?
+    @Binding var sugars: String?
+    @Binding var sodium: String?
+    @Binding var vitaminB2: String?
+    @Binding var vitaminB3: String?
+    @Binding var vitaminB6: String?
+    let editable: Bool
+    
     var body: some View {
         Section {
             VStack {
-                NutRow(leading: "營養標籤", trailig: "每100毫升")
-                NutRow(leading: "Nutrition Information", trailig: "Per 100mL")
+                NutRow(
+                    leading: "營養標籤",
+                    unit: "",
+                    editable: false,
+                    trailing: Binding<String?>.constant("每100毫升")
+                )
+                NutRow(
+                    leading: "Nutrition Information",
+                    unit: "",
+                    editable: false,
+                    trailing: Binding<String?>.constant("Per 100mL")
+                )
             }
             NutRow(
                 leading: "熱量 / Energy",
-                trailig: "\(nut.energy)千卡/kcal"
+                unit: "千卡/kcal",
+                editable: editable,
+                trailing: $energy
             )
             NutRow(
                 leading: "蛋白質 / Protein",
-                trailig: "\(nut.protein.formatted())克/g"
+                unit: "克/g",
+                editable: editable,
+                trailing: $protein
             )
             VStack {
                 NutRow(
                     leading: "脂肪總量 / Total Fat",
-                    trailig: "\(nut.total_fat.formatted())克/g"
+                    unit: "克/g",
+                    editable: editable,
+                    trailing: $totalFat
                 )
                 NutRow(
                     leading: "- 飽和脂肪 / Saturated Fat",
-                    trailig: "\(nut.saturated_fat.formatted())克/g"
+                    unit: "克/g",
+                    editable: editable,
+                    trailing: $saturatedFat
                 )
                 NutRow(
                     leading: "- 反式脂肪 / Trans Fat",
-                    trailig: "\(nut.trans_fat.formatted())克/g"
+                    unit: "克/g",
+                    editable: editable,
+                    trailing: $transFat
                 )
             }
             VStack {
                 NutRow(
                     leading: "碳水化合物 / Carbohydrates",
-                    trailig: "\(nut.carbohydrates.formatted())克/g"
+                    unit: "克/g",
+                    editable: editable,
+                    trailing: $carbohydrates
                 )
                 NutRow(
                     leading: "- 糖 / Sugar",
-                    trailig: "\(nut.sugars.formatted())克/g"
+                    unit: "克/g",
+                    editable: editable,
+                    trailing: $sugars
                 )
             }
             NutRow(
                 leading: "鈉 / Sodium",
-                trailig: "\(nut.sodium.formatted())毫克/mg"
+                unit: "克/g",
+                editable: editable,
+                trailing: $sodium
             )
-            if let vitB2: Double = nut.vitaminB2 {
+            if vitaminB2 != nil {
                 NutRow(
                     leading: "維他命B2 / Vitamin B2",
-                    trailig: "\(vitB2.formatted())毫克/mg"
+                    unit: "毫克/mg",
+                    editable: editable,
+                    trailing: $vitaminB2
                 )
             }
-            if let vitB3: Double = nut.vitaminB3 {
+            if vitaminB3 != nil {
                 NutRow(
-                    leading: "維他命B3 / Vitamin B2",
-                    trailig: "\(vitB3.formatted())毫克/mg"
+                    leading: "維他命B3 / Vitamin B3",
+                    unit: "毫克/mg",
+                    editable: editable,
+                    trailing: $vitaminB3
                 )
             }
-            if let vitB6: Double = nut.vitaminB6 {
+            if vitaminB6 != nil {
                 NutRow(
                     leading: "維他命B6 / Vitamin B6",
-                    trailig: "\(vitB6.formatted())毫克/mg"
+                    unit: "毫克/mg",
+                    editable: editable,
+                    trailing: $vitaminB6
                 )
             }
-            NutBarChart(nut: nut)
+            NutBarChart(
+                energy: $energy,
+                protein: $protein,
+                saturatedFat: $saturatedFat,
+                transFat: $transFat,
+                carbohydrates: $carbohydrates,
+                sugars: $sugars,
+                sodium: $sodium
+            )
         } header: {
             Text("Nutrition Table")
                 .productFont(.regular, relativeTo: .footnote)
@@ -482,27 +630,25 @@ fileprivate struct NutTableSession: View {
     }
     
     fileprivate struct NutBarChart: View {
-        let nut: NutritionInformation
-        let datas: [(String, Double)]
-        init(nut: NutritionInformation) {
-            self.nut = nut
-            let energy = Double(nut.energy)
-            let proteun: Double = nut.protein
-            let satFat: Double = nut.saturated_fat
-            let transFat: Double = nut.trans_fat
-            let carbo: Double = nut.carbohydrates
-            let sugar: Double = nut.sugars
-            let sodium: Double = nut.sodium
-            datas = [
-                ("Energy", energy),
-                ("Protein", proteun),
-                ("Sat Fat", satFat),
-                ("Tran Fat", transFat),
-                ("Carbo", carbo),
-                ("Sugar", sugar),
-                ("Sodium", sodium)
+        @Binding var energy: String?
+        @Binding var protein: String?
+        @Binding var saturatedFat: String?
+        @Binding var transFat: String?
+        @Binding var carbohydrates: String?
+        @Binding var sugars: String?
+        @Binding var sodium: String?
+        var datas: [(String, Double)] {
+            [
+                ("Energy", Double(energy ?? "") ?? 0),
+                ("Protein", Double(protein ?? "") ?? 0),
+                ("Sat Fat", Double(saturatedFat ?? "") ?? 0),
+                ("Tran Fat", Double(transFat ?? "") ?? 0),
+                ("Carbo", Double(carbohydrates ?? "") ?? 0),
+                ("Sugar", Double(sugars ?? "") ?? 0),
+                ("Sodium", Double(sodium ?? "") ?? 0)
             ]
         }
+        
         var body: some View {
             VStack(alignment: .leading) {
                 Text("Nutrition Table")
@@ -512,9 +658,16 @@ fileprivate struct NutTableSession: View {
                 Chart(datas, id: \.0) { (data: (String, Double)) in
                     BarMark(
                         x: .value("Nutrition Info", data.0),
-                        y: .value("Nutrition Value", 10)
+                        y: .value("Nutrition Value", data.1)
                     )
                 }
+                .animation(.easeInOut, value: energy)
+                .animation(.easeInOut, value: protein)
+                .animation(.easeInOut, value: saturatedFat)
+                .animation(.easeInOut, value: transFat)
+                .animation(.easeInOut, value: carbohydrates)
+                .animation(.easeInOut, value: sugars)
+                .animation(.easeInOut, value: sodium)
             }
             .padding(.vertical)
         }
@@ -522,14 +675,26 @@ fileprivate struct NutTableSession: View {
     
     fileprivate struct NutRow: View {
         let leading: String
-        let trailig: String
+        let unit: String
+        let editable: Bool
+        @Binding var trailing: String?
         var body: some View {
             HStack {
                 Text(leading)
                     .foregroundColor(.primary)
                 Spacer()
-                Text(trailig)
-                    .foregroundColor(.secondary)
+                HStack(spacing: 0) {
+                    ProductFontPlaceholderTextField(
+                        text: $trailing,
+                        placeholder: "0",
+                        keyboardType: .numbersAndPunctuation,
+                        editable: editable
+                    )
+                    .fixedSize(horizontal: true, vertical: false)
+                    Text(unit)
+                        .productFont(.regular, relativeTo: .body)
+                        .foregroundColor(.secondary)
+                }
             }
             .productFont(.regular, relativeTo: .body)
         }
