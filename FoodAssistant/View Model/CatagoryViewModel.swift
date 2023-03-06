@@ -35,7 +35,7 @@ class CatagoryViewModel: ObservableObject {
     }
     
     @Published private var _searchedCatagory = ""
-    @Published var foodsService = FoodProductDataService()
+    @Published var foodsService: FoodProductDataService
     @Published var viewType: ViewType = .list
     @Published var colors: [String : Color] = [:]
     @Published var navigationPath = NavigationPath()
@@ -83,7 +83,8 @@ class CatagoryViewModel: ObservableObject {
         }
     }
     
-    init() {
+    init(foodService: FoodProductDataService) {
+        self._foodsService = Published(wrappedValue: foodService)
         foodsService.objectWillChange.sink { [weak self] _ in
             self?.objectWillChange.send()
         }

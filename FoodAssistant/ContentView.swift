@@ -16,10 +16,10 @@ struct ContentView: View {
     var body: some View {
         GeometryReader { (proxy: GeometryProxy) in
             let screenSize: CGSize = proxy.size
-//            ScrollView([], showsIndicators: false) {
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 0) {
                             CatagoryView(
+                                foodDataService: mvm.foodDataService,
                                 screenSize: screenSize,
                                 onScanBarcodeViewLoad: mvm.onScanBarcodeViewLoad,
                                 onScanBarcodeViewUnload: mvm.onScanBarcodeViewUnload
@@ -42,22 +42,12 @@ struct ContentView: View {
                     }
                     .toolbar(.hidden, for: .tabBar)
                     .frame(width: screenSize.width, height: screenSize.height)
-//                    .overlay {
-//                        VStack {
-//                            Text("contentOffset.x: \(mvm.bottomBarVM.tabSV?.contentOffset.x ?? .zero)")
-//                            Text("normalizedCurrentTabOffset: \(mvm.bottomBarVM.normalizedCurrentTabOffset)")
-//                        }
-//                    }
                     .onRotate { (o: UIDeviceOrientation) in
                         mvm.onDeviceRotate(
                             oldScreenSize: screenSize,
                             orientation: o
                         )
                     }
-//            }
-//            .introspectScrollView { (s: UIScrollView) in
-//                s.isScrollEnabled = false
-//            }
             .overlay(alignment: .bottom) {
                 BottomBar(
                     screenSize: screenSize,

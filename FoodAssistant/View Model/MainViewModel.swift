@@ -12,6 +12,7 @@ class MainViewModel: ObservableObject {
     
     @Published var bottomBarVM: BottomBarViewModel
     @Published var cvm: CameraViewModel
+    @Published var foodDataService = FoodProductDataService()
     
     var anyCancellables = Set<AnyCancellable>()
     

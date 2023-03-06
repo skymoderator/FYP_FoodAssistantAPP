@@ -10,11 +10,23 @@ import Introspect
 
 struct CatagoryView: View {
     
-    @StateObject var cvm = CatagoryViewModel()
+    @StateObject var cvm: CatagoryViewModel
     @Namespace var ns
     let screenSize: CGSize
     let onScanBarcodeViewLoad: () -> Void
     let onScanBarcodeViewUnload: () -> Void
+    
+    init(
+        foodDataService: FoodProductDataService,
+        screenSize: CGSize,
+        onScanBarcodeViewLoad: @escaping () -> Void,
+        onScanBarcodeViewUnload: @escaping () -> Void
+    ) {
+        self._cvm = StateObject(wrappedValue: CatagoryViewModel(foodService: foodDataService))
+        self.screenSize = screenSize
+        self.onScanBarcodeViewLoad = onScanBarcodeViewLoad
+        self.onScanBarcodeViewUnload = onScanBarcodeViewUnload
+    }
     
     var body: some View {
         NavigationStack(path: $cvm.navigationPath) {
@@ -277,6 +289,7 @@ struct ProductView_Previews: PreviewProvider {
         GeometryReader { (proxy: GeometryProxy) in
             let size: CGSize = proxy.size
             CatagoryView(
+                foodDataService: FoodProductDataService(),
                 screenSize: size,
                 onScanBarcodeViewLoad: { },
                 onScanBarcodeViewUnload: { }
