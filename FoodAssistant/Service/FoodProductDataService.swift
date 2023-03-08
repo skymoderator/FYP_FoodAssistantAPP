@@ -120,4 +120,10 @@ class FoodProductDataService: ObservableObject {
             }
         }
     }
+
+    func searchSimilarProducts(by barcode: String) -> [Product] {
+        return products.filter {
+            $0.barcode.contains(barcode)
+        }
+    }
 }

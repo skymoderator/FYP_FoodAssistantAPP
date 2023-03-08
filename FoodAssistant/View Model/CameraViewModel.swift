@@ -18,6 +18,7 @@ class CameraViewModel: ObservableObject {
     @Published var pickerService = ImagePickerService()
     @Published var ntDetection = NutritionTableDetectionService()
     @Published var scanBarcode: ScanBarcodeService
+    @Published var foodDataService: FoodProductDataService
     // MARK: - Photo Capture
     @Published var captureSource: CaptureSource?
     // MARK: - Camera Bottom Bar
@@ -43,9 +44,13 @@ class CameraViewModel: ObservableObject {
     var anyCancellables = Set<AnyCancellable>()
     
     // MARK: - Init
-    init(cameraService: CameraService) {
+    init(
+        cameraService: CameraService,
+        foodDataService: FoodProductDataService
+    ) {
         self._cameraService = Published(wrappedValue: cameraService)
         self._scanBarcode = Published(wrappedValue: ScanBarcodeService(cameraService: cameraService))
+        self._foodDataService = Published(wrappedValue: foodDataService)
         
         scanBarcode.onAppear()
         
@@ -65,6 +70,11 @@ class CameraViewModel: ObservableObject {
         .store(in: &anyCancellables)
         
         scanBarcode.objectWillChange.sink { [weak self] (_) in
+            self?.objectWillChange.send()
+        }
+        .store(in: &anyCancellables)
+        
+        foodDataService.objectWillChange.sink { [weak self] (_) in
             self?.objectWillChange.send()
         }
         .store(in: &anyCancellables)
@@ -129,11 +139,6 @@ class CameraViewModel: ObservableObject {
         } else {
             return nil
         }
-    }
-    
-    // - TODO: Show a page that search for similar product
-    func didSearchButtonCliced() {
-        showSimilarProductView.toggle()
     }
     
     /// Show the `InputProductDetailView` via sheet
@@ -316,5 +321,16 @@ class CameraViewModel: ObservableObject {
            let resizedImage: UIImage = photo.resizedImage {
             ntDetection.detectNuritionTable(image: resizedImage)
         }
+    }
+    
+    /// Show similiar products list view after user has clicked on the search button on the barcode header
+    func onSearchButtonPressed() {
+        showSimilarProductView.toggle()
+    }
+    
+    /// Returns similiar products based on scanned/manually-typped barcode
+    /// after user has clicked on the search button on the barcode header
+    var similarProducts: [Product] {
+        foodDataService.searchSimilarProducts(by: scanBarcode.barcode)
     }
 }

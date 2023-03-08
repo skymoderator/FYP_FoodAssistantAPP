@@ -19,14 +19,11 @@ struct CameraView: View {
                 DisplayedImageView(
                     image: cvm.displayedImage ?? UIImage(),
                     isScaleToFill: $cvm.isScaleToFill,
-//                    bboxes: cvm.ntDetection.boundingBoxes,
-//                    rescaledImageSize: cvm.resacledImageSize,
                     screenSize: screenSize,
                     barcode: cvm.scanBarcode.barcode,
                     normalizedBarcodeBBox: cvm.scanBarcode.normalizedBbox,
                     isNutritionTableDetected: cvm.ntDetection.boundingBox != nil,
                     isLoadingInputProductDetailView: cvm.isLoadingInputProductDetailView,
-                    didSearchButtonCliced: cvm.didSearchButtonCliced,
                     didAnalysisButtonCliced: cvm.didAnalysisButtonCliced,
                     convertNormalizedBBoxToRectInSpecificView: cvm.scanBarcode.getConvertedRect,
                     convertImage: cvm.scanBarcode.convertImage,
@@ -54,7 +51,8 @@ struct CameraView: View {
                     .overlay(alignment: .top) {
                         BarcodeHeader(
                             barcode: $cvm.scanBarcode.barcode,
-                            onXmarkButPressed: cvm.onXmarkButPressed
+                            onXmarkButPressed: cvm.onXmarkButPressed,
+                            onSearchButtonPressed: cvm.onSearchButtonPressed
                         )
                     }
             }
@@ -93,6 +91,9 @@ struct CameraView: View {
                 InputProductDetailView(detail: cvm.detail!)
             }
         }
+        .sheet(isPresented: $cvm.showSimilarProductView) {
+            SimilarProductView(products: cvm.similarProducts)
+        }
         .alert(
             "Error",
             isPresented: Binding<Bool>(
@@ -116,6 +117,7 @@ fileprivate struct BarcodeHeader: View {
     @Environment(\.safeAreaInsets) var safeArea
     @Binding var barcode: String
     let onXmarkButPressed: () -> Void
+    let onSearchButtonPressed: () -> Void
     var body: some View {
         VStack {
             HStack {
@@ -158,9 +160,7 @@ fileprivate struct BarcodeHeader: View {
             }
             .zIndex(1)
             if !barcode.isEmpty {
-                Button {
-                    
-                } label: {
+                Button(action: onSearchButtonPressed) {
                     Text("Search")
                         .foregroundColor(.white)
                         .padding()
@@ -195,14 +195,11 @@ fileprivate struct DisplayedImageView: View {
     
     let image: UIImage
     @Binding var isScaleToFill: Bool
-//    let bboxes: [BoundingBox]
-//    let rescaledImageSize: CGSize
     let screenSize: CGSize
     let barcode: String
     let normalizedBarcodeBBox: CGRect?
     let isNutritionTableDetected: Bool
     let isLoadingInputProductDetailView: Bool
-    let didSearchButtonCliced: (() -> Void)?
     let didAnalysisButtonCliced: (() -> Void)?
     let convertNormalizedBBoxToRectInSpecificView: (CGRect, CGSize, CGSize, ContentMode) -> CGRect
     let convertImage: (CGSize, CGSize, ContentMode) -> CGRect
@@ -213,39 +210,6 @@ fileprivate struct DisplayedImageView: View {
     @State private var isBarCodeIndicatorViewAppear: Bool = false
     
     var body: some View {
-//        GeometryReader { (proxy: GeometryProxy) in
-//            let size: CGSize = proxy.size
-//            Image(uiImage: image)
-//                .resizable()
-//                .aspectRatio(contentMode: isScaleToFill ? .fill : .fit)
-//                .overlay {
-//                    GeometryReader { (proxy: GeometryProxy) in
-//                        let size: CGSize = proxy.size
-//                        BoundingBoxView(
-//                            boundingBoxes: bboxes,
-//                            size: size,
-//                            rescaledSize: rescaledImageSize
-//                        )
-//                    }
-//                }
-//        }
-//        ZoomableScrollView(
-//            image: image,
-//            isScaleToFill: $isScaleToFill,
-//            size: screenSize
-//        )
-//        .frame(width: screenSize.width, height: screenSize.height)
-//        .overlay(alignment: .topLeading) {
-//            if let bbox: CGRect = barcodeBBox {
-//                BarCodeIndicatorView(
-//                    barcode: barcode,
-//                    width: bbox.width,
-//                    height: bbox.height,
-//                    offset: bbox.origin
-//                )
-//                .animation(.easeIn, value: barcodeBBox)
-//            }
-//        }
         ZoomableScrollView(
             isScaleToFill: $isScaleToFill,
             size: screenSize
@@ -288,7 +252,6 @@ fileprivate struct DisplayedImageView: View {
                 barcode: barcode,
                 isNutritionTableDetected: isNutritionTableDetected,
                 isLoadingInputProductDetailView: isLoadingInputProductDetailView,
-                didSearchButtonCliced: didSearchButtonCliced,
                 didAnalysisButtonCliced: didAnalysisButtonCliced,
                 isYoloInitializing: isYoloInitializing,
                 onYoloFinishedInitializing: onYoloFinishedInitializing
@@ -311,31 +274,18 @@ fileprivate struct DisplayedImageView: View {
         let barcode: String
         let isNutritionTableDetected: Bool
         let isLoadingInputProductDetailView: Bool
-        let didSearchButtonCliced: (() -> Void)?
         let didAnalysisButtonCliced: (() -> Void)?
         let isYoloInitializing: Bool
         let onYoloFinishedInitializing: (() -> Void)
         var body: some View {
             VStack(spacing: 16) {
-                HStack {
-                    Button {
-                        didSearchButtonCliced?()
-                    } label: {
-                        VStack {
-                            Image(systemName: "magnifyingglass.circle")
-                            Text("Search")
-                                .productFont(.bold, relativeTo: .title3)
-                        }
-                        .foregroundStyle(.secondary)
+                Button {
+                    /// To avoid sending multiple request to server at the same time
+                    if !isLoadingInputProductDetailView {
+                        didAnalysisButtonCliced?()
                     }
-                    .frame(maxWidth: .infinity)
-                    .hoverEffect()
-                    Button {
-                        /// To avoid sending multiple request to server at the same time
-                        if !isLoadingInputProductDetailView {
-                            didAnalysisButtonCliced?()
-                        }
-                    } label: {
+                } label: {
+                    Group {
                         if isLoadingInputProductDetailView {
                             ProgressView()
                         } else {
@@ -347,9 +297,11 @@ fileprivate struct DisplayedImageView: View {
                             .foregroundStyle(.secondary)
                         }
                     }
+                    .frame(height: 50)
                     .frame(maxWidth: .infinity)
-                    .hoverEffect()
                 }
+                .frame(maxWidth: .infinity)
+                .hoverEffect()
                 .buttonStyle(.plain)
                 Rectangle()
                     .frame(height: 1)

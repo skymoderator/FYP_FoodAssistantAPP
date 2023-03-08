@@ -12,21 +12,25 @@ class MainViewModel: ObservableObject {
     
     @Published var bottomBarVM: BottomBarViewModel
     @Published var cvm: CameraViewModel
-    @Published var foodDataService = FoodProductDataService()
+    @Published var foodDataService: FoodProductDataService
     
     var anyCancellables = Set<AnyCancellable>()
     
     init() {
         let cm = CameraService()
+        let foodDataService = FoodProductDataService()
         self._bottomBarVM = Published(wrappedValue: BottomBarViewModel())
-        // Note:
-        // Here we just initialize the camera service,
-        // but we don't start and configure the camera session yet
-        // because we need to add the scan barcode service to the camera service
-        // in the camera view model, so we need to wait until the camera view model
-        // is initialized, then we can start the camera session,
-        // thats why we are passing the camera service to the camera view model
-        self._cvm = Published(wrappedValue: CameraViewModel(cameraService: cm))
+        self._foodDataService = Published(wrappedValue: foodDataService)
+        /// Note:
+        /// Here we just initialize the camera service,
+        /// but we don't start and configure the camera session yet
+        /// because we need to add the scan barcode service to the camera service
+        /// in the camera view model, so we need to wait until the camera view model
+        /// is initialized, then we can start the camera session,
+        /// thats why we are passing the camera service to the camera view model
+        self._cvm = Published(
+            wrappedValue: CameraViewModel(cameraService: cm, foodDataService: foodDataService)
+        )
         
         bottomBarVM.objectWillChange.sink { [weak self] _ in
             // Because device rotation is not perform on main thread

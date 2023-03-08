@@ -67,6 +67,7 @@
 		889F29D82972CC1E00D10192 /* SequenceExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889F29D72972CC1E00D10192 /* SequenceExtension.swift */; };
 		889F29DA2976610000D10192 /* CameraBottomBarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889F29D92976610000D10192 /* CameraBottomBarViewModel.swift */; };
 		889F29DC2976C9AC00D10192 /* InputProductDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889F29DB2976C9AC00D10192 /* InputProductDetailViewModel.swift */; };
+		88A4B87A29B6343200F094FE /* SimilarProductsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A4B87929B6343200F094FE /* SimilarProductsView.swift */; };
 		88A7979129252728007AE689 /* ImagePickerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A7979029252728007AE689 /* ImagePickerService.swift */; };
 		88A7979329252AFC007AE689 /* CaptureSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A7979229252AFC007AE689 /* CaptureSource.swift */; };
 		88A7979529252C7F007AE689 /* BoundingBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A7979429252C7F007AE689 /* BoundingBoxView.swift */; };
@@ -181,6 +182,7 @@
 		889F29D72972CC1E00D10192 /* SequenceExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SequenceExtension.swift; sourceTree = "<group>"; };
 		889F29D92976610000D10192 /* CameraBottomBarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraBottomBarViewModel.swift; sourceTree = "<group>"; };
 		889F29DB2976C9AC00D10192 /* InputProductDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputProductDetailViewModel.swift; sourceTree = "<group>"; };
+		88A4B87929B6343200F094FE /* SimilarProductsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimilarProductsView.swift; sourceTree = "<group>"; };
 		88A7979029252728007AE689 /* ImagePickerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerService.swift; sourceTree = "<group>"; };
 		88A7979229252AFC007AE689 /* CaptureSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureSource.swift; sourceTree = "<group>"; };
 		88A7979429252C7F007AE689 /* BoundingBoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoundingBoxView.swift; sourceTree = "<group>"; };
@@ -259,6 +261,7 @@
 				8894EBCF29264A5D00204185 /* CameraView.swift */,
 				8868E67D291A87FF00545D7C /* VideoPreviewView.swift */,
 				88F213F529247A7600940928 /* ImagePicker.swift */,
+				88A4B87929B6343200F094FE /* SimilarProductsView.swift */,
 			);
 			path = Camera;
 			sourceTree = "<group>";
@@ -676,6 +679,7 @@
 				FEF71172295C27C80051A586 /* AppState.swift in Sources */,
 				FEF71178295C28850051A586 /* User.swift in Sources */,
 				FEF71176295C27EC0051A586 /* AuthService.swift in Sources */,
+				88A4B87A29B6343200F094FE /* SimilarProductsView.swift in Sources */,
 				8868E686291A94C900545D7C /* BoundingBox.swift in Sources */,
 				8894EBD929264CD900204185 /* SizeExtensions.swift in Sources */,
 				8894EBC129261D9D00204185 /* CGRectPreferenceKey.swift in Sources */,

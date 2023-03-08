@@ -5,16 +5,15 @@
 //  Created by Choi Wai Lap on 17/1/2023.
 //
 
-import Foundation
+import Combine
 
 class InputProductDetailViewModel: ObservableObject {
-    @Published var product: Product
-    @Published var boundingBox: BoundingBox?
-    @Published var nutritionTablePhoto: Photo?
-    @Published var barcode: String
-    @Published var name: String
+    let product: Product
+    let boundingBox: BoundingBox?
+    let nutritionTablePhoto: Photo?
+    @Published var barcode: String?
+    @Published var name: String?
     @Published var price: Double?
-    @Published var manufacturer: String?
     @Published var brand: String?
     @Published var energy: String?
     @Published var protein: String?
@@ -28,8 +27,10 @@ class InputProductDetailViewModel: ObservableObject {
     @Published var vitaminB3: String?
     @Published var vitaminB6: String?
     @Published var showDismissAlert: Bool = false
+    @Published var hasEditedAnything: Bool = false
     
     let editable: Bool
+    var cancellables = Set<AnyCancellable>()
     
     init(
         product: Product,
@@ -37,15 +38,14 @@ class InputProductDetailViewModel: ObservableObject {
         nutritionTablePhoto: Photo?,
         editable: Bool
     ) {
-        self._product = Published(wrappedValue: product)
-        self._boundingBox = Published(wrappedValue: boundingBox)
-        self._nutritionTablePhoto = Published(wrappedValue: nutritionTablePhoto)
+        self.product = product
+        self.boundingBox = boundingBox
+        self.nutritionTablePhoto = nutritionTablePhoto
         self.editable = editable
         
         barcode = product.barcode
         name = product.name
         price = product.prices.first?.price
-        manufacturer = product.manufacturer
         brand = product.brand
         energy = product.nutrition?.energy == nil ? nil : String(product.nutrition!.energy)
         protein = product.nutrition?.protein == nil ? nil : String(product.nutrition!.protein)
@@ -58,6 +58,10 @@ class InputProductDetailViewModel: ObservableObject {
         vitaminB2 = product.nutrition?.vitaminB2 == nil ? nil : String(product.nutrition!.vitaminB2!)
         vitaminB3 = product.nutrition?.vitaminB3 == nil ? nil : String(product.nutrition!.vitaminB3!)
         vitaminB6 = product.nutrition?.vitaminB6 == nil ? nil : String(product.nutrition!.vitaminB6!)
+    }
+    
+    func onAnyTextFieldChanged() {
+        self.hasEditedAnything = true
     }
     
     func onScanNutTableButTap() {
@@ -80,10 +84,10 @@ class InputProductDetailViewModel: ObservableObject {
             vitaminB6: Double(vitaminB6 ?? "")
         )
         let product: Product = .init(
-            name: name,
-            barcode: barcode,
+            name: name ?? "",
+            barcode: barcode ?? "",
             nutrition: information,
-            manufacturer: product.manufacturer,
+            manufacturer: nil,
             brand: product.brand,
             prices: product.prices,
             category1: product.category1,

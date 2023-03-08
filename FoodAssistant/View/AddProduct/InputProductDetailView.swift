@@ -72,17 +72,19 @@ struct InputProductDetailView: View {
         List {
             BarcodeSession(
                 barcode: $vm.barcode,
-                editable: vm.editable
+                editable: vm.editable,
+                onChanged: vm.onAnyTextFieldChanged
             )
             NameSession(
                 name: $vm.name,
-                editable: vm.editable
+                editable: vm.editable,
+                onChanged: vm.onAnyTextFieldChanged
             )
             InfoSession(
-                product: vm.product,
+                prices: vm.product.prices,
                 editable: vm.editable,
+                onChanged: vm.onAnyTextFieldChanged,
                 price: $vm.price,
-                manufacturer: $vm.manufacturer,
                 brand: $vm.brand
             )
             NutTableSession(
@@ -97,7 +99,7 @@ struct InputProductDetailView: View {
                 vitaminB2: $vm.vitaminB2,
                 vitaminB3: $vm.vitaminB3,
                 vitaminB6: $vm.vitaminB6,
-                editable: vm.editable
+                onChanged: vm.onAnyTextFieldChanged
             )
             if let bbox: BoundingBox = vm.boundingBox,
                let photo: Photo = vm.nutritionTablePhoto {
@@ -113,20 +115,18 @@ struct InputProductDetailView: View {
         .onDisappear(perform: onDisappear)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button {
-                    /// Only show the Done button (for uploading product information to server)
-                    /// when it is editable (that's means there is no record on server), otherwise,
-                    /// user should not be able to edit the inforamtion and thus no need to show the
-                    /// done button
-                    if vm.editable {
+                /// Only show the Done button (for uploading product information to server)
+                /// when it is the user has made any changes to the textfield, otherwise,
+                /// user should not be able to upload the inforamtion to server and thus
+                /// no need to show the done button
+                if vm.hasEditedAnything {
+                    Button {
                         vm.showDismissAlert = true
-                    } else {
-                        presentationMode.wrappedValue.dismiss()
+                    } label: {
+                        Text("Upload")
+                            .productFont(.bold, relativeTo: .body)
+                            .foregroundColor(.systemBlue)
                     }
-                } label: {
-                    Text("Done")
-                        .productFont(.bold, relativeTo: .body)
-                        .foregroundColor(.systemBlue)
                 }
             }
         }
@@ -143,26 +143,26 @@ struct InputProductDetailView: View {
                 Text("No thanks")
             }
         } message: {
-            Text("Looks like this product is not on our server records, do you want to upload this product information to our server?")
+            Text("Looks like you have made some changes to this product, do you want to upload this change to our server?")
         }
-        .interactiveDismissDisabled(true)
     }
 }
 
 fileprivate struct BarcodeSession: View {
-    @Binding var barcode: String
+    @Binding var barcode: String?
     let editable: Bool
+    let onChanged: () -> Void
     var body: some View {
         Section {
             ProductFontPlaceholderTextField(
-                text: Binding<String?>(
-                    get: { barcode },
-                    set: { barcode = $0 ?? "" }
-                ),
+                text: $barcode,
                 placeholder: "13-digit Product Barcode",
                 keyboardType: .numberPad,
                 editable: editable
             )
+            .onChange(of: barcode) { _ in
+                onChanged()
+            }
         } header: {
             Text("Barcode")
                 .productFont(.regular, relativeTo: .footnote)
@@ -171,18 +171,19 @@ fileprivate struct BarcodeSession: View {
 }
 
 fileprivate struct NameSession: View {
-    @Binding var name: String
+    @Binding var name: String?
     let editable: Bool
+    let onChanged: () -> Void
     var body: some View {
         Section {
             ProductFontPlaceholderTextField(
-                text: Binding<String?>(
-                    get: { name },
-                    set: { name = $0 ?? "" }
-                ),
+                text: $name,
                 placeholder: "Product Name (e.g Coca Cola)",
                 editable: editable
             )
+            .onChange(of: name) { _ in
+                onChanged()
+            }
         } header: {
             Text("Name")
                 .productFont(.regular, relativeTo: .footnote)
@@ -191,40 +192,28 @@ fileprivate struct NameSession: View {
 }
 
 fileprivate struct InfoSession: View {
-    let product: Product
+    let prices: [ProductPrice]
     let editable: Bool
+    let onChanged: () -> Void
     @State var showPopover = false
     @Binding var price: Double?
-    @Binding var manufacturer: String?
     @Binding var brand: String?
     var body: some View {
         Section {
             PriceRow(
-                prices: product.prices,
+                prices: prices,
                 editable: editable,
                 showPopover: $showPopover,
                 price: $price
-            )
-            Row(
-                image: "hammer.circle",
-                color: .systemOrange,
-                leading: "Manufacturer",
-                editable: editable,
-                trailig: $manufacturer
             )
             Row(
                 image: "bag.circle",
                 color: .systemBlue,
                 leading: "Brand",
                 editable: editable,
+                onChanged: onChanged,
                 trailig: $brand
             )
-//            Row(
-//                image: "cart.circle",
-//                color: .systemGreen,
-//                leading: "Supermarket",
-//                trailig: vm.product.supermarket?.rawValue ?? "Unknown"
-//            )
         } header: {
             Text("Information")
                 .productFont(.regular, relativeTo: .footnote)
@@ -264,6 +253,7 @@ fileprivate struct InfoSession: View {
         let color: Color
         let leading: String
         let editable: Bool
+        let onChanged: () -> Void
         @Binding var trailig: String?
         var body: some View {
             HStack {
@@ -274,13 +264,13 @@ fileprivate struct InfoSession: View {
                     .foregroundColor(.primary)
                 Spacer()
                 ProductFontPlaceholderTextField(
-                    text: Binding<String?>(
-                        get: { trailig == nil ? nil : trailig! },
-                        set: { trailig = $0 }
-                    ),
+                    text: $trailig,
                     placeholder: "Unknown",
                     editable: editable
                 )
+                .onChange(of: trailig) { _ in
+                    onChanged()
+                }
                 .fixedSize(horizontal: true, vertical: false)
             }
         }
@@ -470,7 +460,8 @@ fileprivate struct NutTableSession: View {
     @Binding var vitaminB2: String?
     @Binding var vitaminB3: String?
     @Binding var vitaminB6: String?
-    let editable: Bool
+    let editable: Bool = true
+    let onChanged: () -> Void
     
     var body: some View {
         Section {
@@ -478,13 +469,15 @@ fileprivate struct NutTableSession: View {
                 NutRow(
                     leading: "營養標籤",
                     unit: "",
-                    editable: false,
+                    editable: editable,
+                    onChanged: { },
                     trailing: Binding<String?>.constant("每100毫升")
                 )
                 NutRow(
                     leading: "Nutrition Information",
                     unit: "",
-                    editable: false,
+                    editable: editable,
+                    onChanged: { },
                     trailing: Binding<String?>.constant("Per 100mL")
                 )
             }
@@ -492,12 +485,14 @@ fileprivate struct NutTableSession: View {
                 leading: "熱量 / Energy",
                 unit: "千卡/kcal",
                 editable: editable,
+                onChanged: onChanged,
                 trailing: $energy
             )
             NutRow(
                 leading: "蛋白質 / Protein",
                 unit: "克/g",
                 editable: editable,
+                onChanged: onChanged,
                 trailing: $protein
             )
             VStack {
@@ -505,18 +500,21 @@ fileprivate struct NutTableSession: View {
                     leading: "脂肪總量 / Total Fat",
                     unit: "克/g",
                     editable: editable,
+                    onChanged: onChanged,
                     trailing: $totalFat
                 )
                 NutRow(
                     leading: "- 飽和脂肪 / Saturated Fat",
                     unit: "克/g",
                     editable: editable,
+                    onChanged: onChanged,
                     trailing: $saturatedFat
                 )
                 NutRow(
                     leading: "- 反式脂肪 / Trans Fat",
                     unit: "克/g",
                     editable: editable,
+                    onChanged: onChanged,
                     trailing: $transFat
                 )
             }
@@ -525,12 +523,14 @@ fileprivate struct NutTableSession: View {
                     leading: "碳水化合物 / Carbohydrates",
                     unit: "克/g",
                     editable: editable,
+                    onChanged: onChanged,
                     trailing: $carbohydrates
                 )
                 NutRow(
                     leading: "- 糖 / Sugar",
                     unit: "克/g",
                     editable: editable,
+                    onChanged: onChanged,
                     trailing: $sugars
                 )
             }
@@ -538,6 +538,7 @@ fileprivate struct NutTableSession: View {
                 leading: "鈉 / Sodium",
                 unit: "克/g",
                 editable: editable,
+                onChanged: onChanged,
                 trailing: $sodium
             )
             if vitaminB2 != nil {
@@ -545,6 +546,7 @@ fileprivate struct NutTableSession: View {
                     leading: "維他命B2 / Vitamin B2",
                     unit: "毫克/mg",
                     editable: editable,
+                    onChanged: onChanged,
                     trailing: $vitaminB2
                 )
             }
@@ -553,6 +555,7 @@ fileprivate struct NutTableSession: View {
                     leading: "維他命B3 / Vitamin B3",
                     unit: "毫克/mg",
                     editable: editable,
+                    onChanged: onChanged,
                     trailing: $vitaminB3
                 )
             }
@@ -561,6 +564,7 @@ fileprivate struct NutTableSession: View {
                     leading: "維他命B6 / Vitamin B6",
                     unit: "毫克/mg",
                     editable: editable,
+                    onChanged: onChanged,
                     trailing: $vitaminB6
                 )
             }
@@ -627,6 +631,7 @@ fileprivate struct NutTableSession: View {
         let leading: String
         let unit: String
         let editable: Bool
+        let onChanged: () -> Void
         @Binding var trailing: String?
         var body: some View {
             HStack {
@@ -641,6 +646,9 @@ fileprivate struct NutTableSession: View {
                         editable: editable
                     )
                     .fixedSize(horizontal: true, vertical: false)
+                    .onChange(of: trailing) { _ in
+                        onChanged()
+                    }
                     Text(unit)
                         .productFont(.regular, relativeTo: .body)
                         .foregroundColor(.secondary)
