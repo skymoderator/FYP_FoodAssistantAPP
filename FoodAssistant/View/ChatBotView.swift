@@ -102,6 +102,7 @@ struct ChatBotView: View {
     @State var prod_entity_cache = ""
     @State var messages: [ChatBotMessageVM] = []
     @FocusState private var messageFieldIsFocused: Bool
+    @Environment(\.dismiss) var dismiss
     var body: some View {
         NavigationView{
             VStack{
@@ -128,27 +129,47 @@ struct ChatBotView: View {
                         messageFieldIsFocused = true
                     }
                 }
-                .safeAreaInset(edge: .bottom) {
-                    HStack {
-                        TextField("Message...", text: $message)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .frame(minHeight: CGFloat(30))
-                            .focused($messageFieldIsFocused)
-                        Button(action: sendMessage) {
-                            Text("Send")
-                        }
-                    }.frame(minHeight: CGFloat(50)).padding()
-                }
+//                Spacer()
+                
             }
-            
             .navigationTitle("Chat Bot")
+            .toolbar {
+                Button {
+                    dismiss()
+                }label: {
+                    Image(systemName: "xmark.circle.fill")
+                }
+
+            }
+            .safeAreaInset(edge: .bottom, spacing:0) {
+                HStack {
+                    TextField("Message...", text: $message)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .frame(minHeight: CGFloat(30))
+                        .focused($messageFieldIsFocused)
+                    Button(action: sendMessage) {
+                        Text("Send")
+                    }
+                }.padding()
+                    .frame(minHeight: CGFloat(50))
+                    .background(.ultraThinMaterial, in: Rectangle())
+                    .cornerRadius([.topLeft, .topRight], 10)
+                
+     
+            }
+
+            
         }
+        
     }
         
     
     func sendMessage() {
         Task {
             do {
+                if(message ==  ""){
+                    return
+                }
                 messages.append(ChatBotMessageVM(chatbotMessage: ChatBotMessage(prod_entity: "", client_input: message)))
                 let responsemessage = try await AppState.shared.dataService.post(object: ChatBotMessage(prod_entity: prod_entity_cache, client_input: message), type: ChatBotMessage.self, host: "20.187.76.166", port: 9999, path: "/chatbot")
                 message = ""
