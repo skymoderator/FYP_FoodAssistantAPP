@@ -109,6 +109,30 @@ class APIService {
         return try await performCall(urlRequest: urlRequest)
     }
     
+    func post<T: Codable>(object: T, type: T.Type, host: String, port: Int, path: String) async throws -> T {
+        var components = URLComponents()
+        components.scheme = self.scheme
+        components.host = host
+        components.port = port
+        components.path = path //"/api/xxx/"
+        
+        guard let url: URL = components.url else {
+            preconditionFailure("Invalid URL components: \(components)")
+        }
+        var urlRequest = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
+        URLCache.shared.removeAllCachedResponses()
+        urlRequest.timeoutInterval = 5.0
+        urlRequest.httpMethod = "POST"
+        urlRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        do {
+            urlRequest.httpBody = try JSONEncoder().encode(object)
+        } catch let error {
+            print(error.localizedDescription)
+        }
+        
+        return try await performCall(urlRequest: urlRequest)
+    }
+    
     func post<T: Codable>(object: T, type: T.Type, path: String) async throws -> T{
         var urlRequest: URLRequest = makeURLRequest(from: path)
         urlRequest.httpMethod = "POST"

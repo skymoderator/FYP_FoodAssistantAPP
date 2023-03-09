@@ -13,7 +13,6 @@
 		8829B5472983B5B200A2DC0E /* BlurMaterialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8829B5462983B5B200A2DC0E /* BlurMaterialView.swift */; };
 		884099C429571FE900AFC290 /* UserDefaultExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 884099C329571FE900AFC290 /* UserDefaultExtension.swift */; };
 		8844E08D299E04B500133FE0 /* OrientationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8844E08C299E04B500133FE0 /* OrientationExtension.swift */; };
-		8844E09129A0D0A100133FE0 /* YOLOv4.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = 8844E09029A0D0A100133FE0 /* YOLOv4.mlpackage */; };
 		8845AB11293CBFB000BF6C5E /* RoundedRectangleCorners.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8845AB10293CBFB000BF6C5E /* RoundedRectangleCorners.swift */; };
 		8845AB13293CC29000BF6C5E /* NutritionTableDetectionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8845AB12293CC29000BF6C5E /* NutritionTableDetectionService.swift */; };
 		884E3157292A6311009DF3CA /* Product.swift in Sources */ = {isa = PBXBuildFile; fileRef = 884E3156292A6311009DF3CA /* Product.swift */; };
@@ -95,6 +94,8 @@
 		88F214042924CD3200940928 /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F214032924CD3200940928 /* ColorExtension.swift */; };
 		88F214062925117100940928 /* CameraBottomBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F214052925117100940928 /* CameraBottomBar.swift */; };
 		88F2140B29251B9300940928 /* SFButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F2140A29251B9300940928 /* SFButton.swift */; };
+		FE8237AD29B9BC9F006D9CE3 /* YOLOv4.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = FE8237AC29B9BC9F006D9CE3 /* YOLOv4.mlpackage */; };
+		FE8237AF29B9C156006D9CE3 /* ChatBotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE8237AE29B9C156006D9CE3 /* ChatBotView.swift */; };
 		FEF71172295C27C80051A586 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEF71171295C27C80051A586 /* AppState.swift */; };
 		FEF71174295C27E10051A586 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEF71173295C27E10051A586 /* APIService.swift */; };
 		FEF71176295C27EC0051A586 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEF71175295C27EC0051A586 /* AuthService.swift */; };
@@ -125,7 +126,6 @@
 		8829B5462983B5B200A2DC0E /* BlurMaterialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlurMaterialView.swift; sourceTree = "<group>"; };
 		884099C329571FE900AFC290 /* UserDefaultExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultExtension.swift; sourceTree = "<group>"; };
 		8844E08C299E04B500133FE0 /* OrientationExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrientationExtension.swift; sourceTree = "<group>"; };
-		8844E09029A0D0A100133FE0 /* YOLOv4.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; name = YOLOv4.mlpackage; path = "../../../../../../../../Developer/PyTorch Yolov4/YOLOv4.mlpackage"; sourceTree = "<group>"; };
 		8845AB10293CBFB000BF6C5E /* RoundedRectangleCorners.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedRectangleCorners.swift; sourceTree = "<group>"; };
 		8845AB12293CC29000BF6C5E /* NutritionTableDetectionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NutritionTableDetectionService.swift; sourceTree = "<group>"; };
 		884E3156292A6311009DF3CA /* Product.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Product.swift; sourceTree = "<group>"; };
@@ -209,6 +209,8 @@
 		88F214032924CD3200940928 /* ColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtension.swift; sourceTree = "<group>"; };
 		88F214052925117100940928 /* CameraBottomBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraBottomBar.swift; sourceTree = "<group>"; };
 		88F2140A29251B9300940928 /* SFButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SFButton.swift; sourceTree = "<group>"; };
+		FE8237AC29B9BC9F006D9CE3 /* YOLOv4.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = YOLOv4.mlpackage; sourceTree = "<group>"; };
+		FE8237AE29B9C156006D9CE3 /* ChatBotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBotView.swift; sourceTree = "<group>"; };
 		FEF71171295C27C80051A586 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		FEF71173295C27E10051A586 /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
 		FEF71175295C27EC0051A586 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
@@ -296,6 +298,7 @@
 				882D014A29277B9600609357 /* Setting */,
 				882D014929277B9200609357 /* Camera */,
 				882D014829277B8B00609357 /* Catagory */,
+				FE8237AE29B9C156006D9CE3 /* ChatBotView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -363,7 +366,7 @@
 			isa = PBXGroup;
 			children = (
 				8894EBC829262D2100204185 /* Info.plist */,
-				8844E09029A0D0A100133FE0 /* YOLOv4.mlpackage */,
+				FE8237AC29B9BC9F006D9CE3 /* YOLOv4.mlpackage */,
 				8894EBBF29261D8700204185 /* PreferenceKey */,
 				88A7979C2925F619007AE689 /* View Model */,
 				88F21407292518A900940928 /* Component */,
@@ -646,6 +649,7 @@
 				88F213F629247A7600940928 /* ImagePicker.swift in Sources */,
 				88A7979929254A08007AE689 /* MorphingView.swift in Sources */,
 				889F29CE2970F8C800D10192 /* ArrayExtension.swift in Sources */,
+				FE8237AF29B9C156006D9CE3 /* ChatBotView.swift in Sources */,
 				8894EBD029264A5D00204185 /* CameraView.swift in Sources */,
 				886ACEBC299B3DBA0042B180 /* ZoomableScrollView.swift in Sources */,
 				8868E683291A93BD00545D7C /* CameraService.swift in Sources */,
@@ -665,6 +669,7 @@
 				88F214062925117100940928 /* CameraBottomBar.swift in Sources */,
 				8894EBE1292661A100204185 /* BottomBar.swift in Sources */,
 				88A7979729253D4E007AE689 /* UIImageExtension.swift in Sources */,
+				FE8237AD29B9BC9F006D9CE3 /* YOLOv4.mlpackage in Sources */,
 				88F213F4292478D700940928 /* ImageRescaler.swift in Sources */,
 				88F214022924B50F00940928 /* LaunchScreen.swift in Sources */,
 				889F29D02971845B00D10192 /* ScrollerView.swift in Sources */,
@@ -709,7 +714,6 @@
 				88C229292952C6F6005E5A27 /* Supermarket.swift in Sources */,
 				88A7979529252C7F007AE689 /* BoundingBoxView.swift in Sources */,
 				886C76E429055D7000B1026D /* FoodAssistantApp.swift in Sources */,
-				8844E09129A0D0A100133FE0 /* YOLOv4.mlpackage in Sources */,
 				882631D2294C31D7003080DF /* ProductFontPlaceholderTextField.swift in Sources */,
 				889F29CC297000B300D10192 /* IdentifyEquateCodeHashable.swift in Sources */,
 				88F214042924CD3200940928 /* ColorExtension.swift in Sources */,
@@ -878,7 +882,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"FoodAssistant/Preview Content\"";
-				DEVELOPMENT_TEAM = 4BLFZ67N8X;
+				DEVELOPMENT_TEAM = QR86LD5729;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
