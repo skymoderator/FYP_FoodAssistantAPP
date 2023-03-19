@@ -262,7 +262,7 @@ let dummyMessages: [ChatBotMessage] = [
     ChatBotMessage(
         productEntity: "",
         clientInput: "",
-        intentType: .productPrice,
+        intentType: .productDetails,
         response: "I have found 1 product with the name lemon juice. You can have a look below." ,
         productsResponse: dummyProducts
     )

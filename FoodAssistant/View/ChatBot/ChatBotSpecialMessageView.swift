@@ -14,12 +14,15 @@ struct ChatBotSpecialMessageView: View {
     
     var body: some View {
         let intent: IntentType = message.intentType ?? .undefined
+        let products: [Product] = message.productsResponse
         if intent == .productPrice {
             ChatBotProductPriceCell(message: message, viewWidth: viewWidth)
         } else if intent == .findSimilarProduct {
-            ChatBotFindSimilarProductCell(productsResponse: message.productsResponse)
+            ChatBotFindSimilarProductCell(productsResponse: products)
         } else if intent == .productDetails {
-            ChatBotProductDetailCell(ns: ns, products: message.productsResponse)
+            ChatBotProductDetailCell(products: products, viewWidth: viewWidth)
+        } else if intent == .whereToBuyProduct {
+            ChatBotSupermarketCell(products: products, viewWidth: viewWidth)
         }
     }
 }

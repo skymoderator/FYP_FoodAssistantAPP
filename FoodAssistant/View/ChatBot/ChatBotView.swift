@@ -25,7 +25,7 @@ struct ChatBotView: View {
     
     @Environment(\.dismiss) var dismiss
     var body: some View {
-        NavigationView {
+        NavigationStack {
             ScrollViewReader { (svProxy: ScrollViewProxy) in
                 ScrollView {
                     VStack {
@@ -70,6 +70,11 @@ struct ChatBotView: View {
                 )
             }
             .background(ChatBotBackground())
+            .navigationDestination(
+                for: InputProductDetailView.Detail.self
+            ) { (detail: InputProductDetailView.Detail) in
+                InputProductDetailView(detail: detail)
+            }
         }
         .background {
             GeometryReader { (p: GeometryProxy) in

@@ -51,6 +51,7 @@
 		888AC17F29C6137F000E762A /* ChatBotPriceChartSeeMore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888AC17E29C6137F000E762A /* ChatBotPriceChartSeeMore.swift */; };
 		888AC18129C6B457000E762A /* ChatBotBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888AC18029C6B457000E762A /* ChatBotBackground.swift */; };
 		888AC18429C6BFCB000E762A /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888AC18329C6BFCB000E762A /* Constant.swift */; };
+		888AC18929C6F2B8000E762A /* ChatBotSupermarketCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888AC18829C6F2B8000E762A /* ChatBotSupermarketCell.swift */; };
 		8894EBC129261D9D00204185 /* CGRectPreferenceKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8894EBC029261D9D00204185 /* CGRectPreferenceKey.swift */; };
 		8894EBC329262C9800204185 /* ProductFontExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8894EBC229262C9800204185 /* ProductFontExtension.swift */; };
 		8894EBCB29262DB000204185 /* SwiftUIX in Frameworks */ = {isa = PBXBuildFile; productRef = 8894EBCA29262DB000204185 /* SwiftUIX */; };
@@ -185,6 +186,7 @@
 		888AC17E29C6137F000E762A /* ChatBotPriceChartSeeMore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBotPriceChartSeeMore.swift; sourceTree = "<group>"; };
 		888AC18029C6B457000E762A /* ChatBotBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBotBackground.swift; sourceTree = "<group>"; };
 		888AC18329C6BFCB000E762A /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
+		888AC18829C6F2B8000E762A /* ChatBotSupermarketCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBotSupermarketCell.swift; sourceTree = "<group>"; };
 		8894EBC029261D9D00204185 /* CGRectPreferenceKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGRectPreferenceKey.swift; sourceTree = "<group>"; };
 		8894EBC229262C9800204185 /* ProductFontExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProductFontExtension.swift; sourceTree = "<group>"; };
 		8894EBC829262D2100204185 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -284,6 +286,7 @@
 		882D014829277B8B00609357 /* Catagory */ = {
 			isa = PBXGroup;
 			children = (
+				888AC16529C0C4F3000E762A /* ProductInformationRow.swift */,
 				8894EBD229264AE700204185 /* CatagoryView.swift */,
 				889F29BC2964788400D10192 /* CatagoryDetailView.swift */,
 			);
@@ -463,9 +466,10 @@
 		888AC17029C43507000E762A /* SpecialCell */ = {
 			isa = PBXGroup;
 			children = (
+				888AC18729C6F224000E762A /* Detail */,
+				888AC18629C6F216000E762A /* Similar */,
+				888AC18529C6F204000E762A /* Where */,
 				888AC17729C5D8F6000E762A /* Price */,
-				888AC17329C48F1F000E762A /* ChatBotProductDetailCell.swift */,
-				888AC17529C48F61000E762A /* ChatBotFindSimilarProductCell.swift */,
 			);
 			path = SpecialCell;
 			sourceTree = "<group>";
@@ -480,6 +484,30 @@
 				888AC17E29C6137F000E762A /* ChatBotPriceChartSeeMore.swift */,
 			);
 			path = Price;
+			sourceTree = "<group>";
+		};
+		888AC18529C6F204000E762A /* Where */ = {
+			isa = PBXGroup;
+			children = (
+				888AC18829C6F2B8000E762A /* ChatBotSupermarketCell.swift */,
+			);
+			path = Where;
+			sourceTree = "<group>";
+		};
+		888AC18629C6F216000E762A /* Similar */ = {
+			isa = PBXGroup;
+			children = (
+				888AC17529C48F61000E762A /* ChatBotFindSimilarProductCell.swift */,
+			);
+			path = Similar;
+			sourceTree = "<group>";
+		};
+		888AC18729C6F224000E762A /* Detail */ = {
+			isa = PBXGroup;
+			children = (
+				888AC17329C48F1F000E762A /* ChatBotProductDetailCell.swift */,
+			);
+			path = Detail;
 			sourceTree = "<group>";
 		};
 		8894EBBF29261D8700204185 /* PreferenceKey */ = {
@@ -570,7 +598,6 @@
 				8829B5462983B5B200A2DC0E /* BlurMaterialView.swift */,
 				886ACEB9299B2A3C0042B180 /* PhotoDetailView.swift */,
 				886ACEBB299B3DBA0042B180 /* ZoomableScrollView.swift */,
-				888AC16529C0C4F3000E762A /* ProductInformationRow.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -797,6 +824,7 @@
 				8829B5472983B5B200A2DC0E /* BlurMaterialView.swift in Sources */,
 				88F2140B29251B9300940928 /* SFButton.swift in Sources */,
 				88F213FB29247C2100940928 /* IOU.swift in Sources */,
+				888AC18929C6F2B8000E762A /* ChatBotSupermarketCell.swift in Sources */,
 				88C229292952C6F6005E5A27 /* Supermarket.swift in Sources */,
 				888AC18429C6BFCB000E762A /* Constant.swift in Sources */,
 				88A7979529252C7F007AE689 /* BoundingBoxView.swift in Sources */,
