@@ -33,6 +33,24 @@
 		886C76F629055D7200B1026D /* FoodAssistantTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 886C76F529055D7200B1026D /* FoodAssistantTests.swift */; };
 		886C770029055D7200B1026D /* FoodAssistantUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 886C76FF29055D7200B1026D /* FoodAssistantUITests.swift */; };
 		886C770229055D7200B1026D /* FoodAssistantUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 886C770129055D7200B1026D /* FoodAssistantUITestsLaunchTests.swift */; };
+		888AC15C29C0353C000E762A /* YOLOv4.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = 888AC15B29C0353C000E762A /* YOLOv4.mlpackage */; };
+		888AC15E29C03EDF000E762A /* ChatBotMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888AC15D29C03EDF000E762A /* ChatBotMessage.swift */; };
+		888AC16229C03F60000E762A /* IntentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888AC16129C03F60000E762A /* IntentType.swift */; };
+		888AC16429C0A35C000E762A /* ChatBotViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888AC16329C0A35C000E762A /* ChatBotViewModel.swift */; };
+		888AC16629C0C4F3000E762A /* ProductInformationRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888AC16529C0C4F3000E762A /* ProductInformationRow.swift */; };
+		888AC16929C418CF000E762A /* ChatBotInputField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888AC16829C418CF000E762A /* ChatBotInputField.swift */; };
+		888AC16B29C41901000E762A /* ChatBotClientMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888AC16A29C41901000E762A /* ChatBotClientMessageView.swift */; };
+		888AC16D29C4192B000E762A /* ChatBotSpecialMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888AC16C29C4192B000E762A /* ChatBotSpecialMessageView.swift */; };
+		888AC16F29C4196A000E762A /* ChatBotMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888AC16E29C4196A000E762A /* ChatBotMessageView.swift */; };
+		888AC17229C43525000E762A /* ChatBotProductPriceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888AC17129C43525000E762A /* ChatBotProductPriceCell.swift */; };
+		888AC17429C48F1F000E762A /* ChatBotProductDetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888AC17329C48F1F000E762A /* ChatBotProductDetailCell.swift */; };
+		888AC17629C48F61000E762A /* ChatBotFindSimilarProductCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888AC17529C48F61000E762A /* ChatBotFindSimilarProductCell.swift */; };
+		888AC17929C5D906000E762A /* ChatBotSingleProductCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888AC17829C5D906000E762A /* ChatBotSingleProductCell.swift */; };
+		888AC17B29C5D9C9000E762A /* ChatBotPriceStatistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888AC17A29C5D9C9000E762A /* ChatBotPriceStatistics.swift */; };
+		888AC17D29C5DA7C000E762A /* ChatBotPriceMultipleProductsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888AC17C29C5DA7C000E762A /* ChatBotPriceMultipleProductsCell.swift */; };
+		888AC17F29C6137F000E762A /* ChatBotPriceChartSeeMore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888AC17E29C6137F000E762A /* ChatBotPriceChartSeeMore.swift */; };
+		888AC18129C6B457000E762A /* ChatBotBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888AC18029C6B457000E762A /* ChatBotBackground.swift */; };
+		888AC18429C6BFCB000E762A /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888AC18329C6BFCB000E762A /* Constant.swift */; };
 		8894EBC129261D9D00204185 /* CGRectPreferenceKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8894EBC029261D9D00204185 /* CGRectPreferenceKey.swift */; };
 		8894EBC329262C9800204185 /* ProductFontExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8894EBC229262C9800204185 /* ProductFontExtension.swift */; };
 		8894EBCB29262DB000204185 /* SwiftUIX in Frameworks */ = {isa = PBXBuildFile; productRef = 8894EBCA29262DB000204185 /* SwiftUIX */; };
@@ -94,7 +112,6 @@
 		88F214042924CD3200940928 /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F214032924CD3200940928 /* ColorExtension.swift */; };
 		88F214062925117100940928 /* CameraBottomBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F214052925117100940928 /* CameraBottomBar.swift */; };
 		88F2140B29251B9300940928 /* SFButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F2140A29251B9300940928 /* SFButton.swift */; };
-		FE8237AD29B9BC9F006D9CE3 /* YOLOv4.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = FE8237AC29B9BC9F006D9CE3 /* YOLOv4.mlpackage */; };
 		FE8237AF29B9C156006D9CE3 /* ChatBotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE8237AE29B9C156006D9CE3 /* ChatBotView.swift */; };
 		FEF71172295C27C80051A586 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEF71171295C27C80051A586 /* AppState.swift */; };
 		FEF71174295C27E10051A586 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEF71173295C27E10051A586 /* APIService.swift */; };
@@ -150,6 +167,24 @@
 		886C76FB29055D7200B1026D /* FoodAssistantUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FoodAssistantUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		886C76FF29055D7200B1026D /* FoodAssistantUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodAssistantUITests.swift; sourceTree = "<group>"; };
 		886C770129055D7200B1026D /* FoodAssistantUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodAssistantUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		888AC15B29C0353C000E762A /* YOLOv4.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = YOLOv4.mlpackage; sourceTree = "<group>"; };
+		888AC15D29C03EDF000E762A /* ChatBotMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBotMessage.swift; sourceTree = "<group>"; };
+		888AC16129C03F60000E762A /* IntentType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentType.swift; sourceTree = "<group>"; };
+		888AC16329C0A35C000E762A /* ChatBotViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBotViewModel.swift; sourceTree = "<group>"; };
+		888AC16529C0C4F3000E762A /* ProductInformationRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductInformationRow.swift; sourceTree = "<group>"; };
+		888AC16829C418CF000E762A /* ChatBotInputField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBotInputField.swift; sourceTree = "<group>"; };
+		888AC16A29C41901000E762A /* ChatBotClientMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBotClientMessageView.swift; sourceTree = "<group>"; };
+		888AC16C29C4192B000E762A /* ChatBotSpecialMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBotSpecialMessageView.swift; sourceTree = "<group>"; };
+		888AC16E29C4196A000E762A /* ChatBotMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBotMessageView.swift; sourceTree = "<group>"; };
+		888AC17129C43525000E762A /* ChatBotProductPriceCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBotProductPriceCell.swift; sourceTree = "<group>"; };
+		888AC17329C48F1F000E762A /* ChatBotProductDetailCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBotProductDetailCell.swift; sourceTree = "<group>"; };
+		888AC17529C48F61000E762A /* ChatBotFindSimilarProductCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBotFindSimilarProductCell.swift; sourceTree = "<group>"; };
+		888AC17829C5D906000E762A /* ChatBotSingleProductCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBotSingleProductCell.swift; sourceTree = "<group>"; };
+		888AC17A29C5D9C9000E762A /* ChatBotPriceStatistics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBotPriceStatistics.swift; sourceTree = "<group>"; };
+		888AC17C29C5DA7C000E762A /* ChatBotPriceMultipleProductsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBotPriceMultipleProductsCell.swift; sourceTree = "<group>"; };
+		888AC17E29C6137F000E762A /* ChatBotPriceChartSeeMore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBotPriceChartSeeMore.swift; sourceTree = "<group>"; };
+		888AC18029C6B457000E762A /* ChatBotBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBotBackground.swift; sourceTree = "<group>"; };
+		888AC18329C6BFCB000E762A /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
 		8894EBC029261D9D00204185 /* CGRectPreferenceKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGRectPreferenceKey.swift; sourceTree = "<group>"; };
 		8894EBC229262C9800204185 /* ProductFontExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProductFontExtension.swift; sourceTree = "<group>"; };
 		8894EBC829262D2100204185 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -209,7 +244,6 @@
 		88F214032924CD3200940928 /* ColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtension.swift; sourceTree = "<group>"; };
 		88F214052925117100940928 /* CameraBottomBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraBottomBar.swift; sourceTree = "<group>"; };
 		88F2140A29251B9300940928 /* SFButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SFButton.swift; sourceTree = "<group>"; };
-		FE8237AC29B9BC9F006D9CE3 /* YOLOv4.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = YOLOv4.mlpackage; sourceTree = "<group>"; };
 		FE8237AE29B9C156006D9CE3 /* ChatBotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBotView.swift; sourceTree = "<group>"; };
 		FEF71171295C27C80051A586 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		FEF71173295C27E10051A586 /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
@@ -292,13 +326,13 @@
 		8868E67C291A87EE00545D7C /* View */ = {
 			isa = PBXGroup;
 			children = (
+				888AC16729C418AA000E762A /* ChatBot */,
 				88BADF88297E8BC800E86C58 /* Login */,
 				88D053A7293E142800277155 /* AddProduct */,
 				882D014B29277BC500609357 /* Main */,
 				882D014A29277B9600609357 /* Setting */,
 				882D014929277B9200609357 /* Camera */,
 				882D014829277B8B00609357 /* Catagory */,
-				FE8237AE29B9C156006D9CE3 /* ChatBotView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -334,6 +368,8 @@
 				88C229282952C6F6005E5A27 /* Supermarket.swift */,
 				FEF71177295C28850051A586 /* User.swift */,
 				889F29D12971850300D10192 /* MenuItem.swift */,
+				888AC15D29C03EDF000E762A /* ChatBotMessage.swift */,
+				888AC16129C03F60000E762A /* IntentType.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -365,8 +401,8 @@
 		886C76E229055D7000B1026D /* FoodAssistant */ = {
 			isa = PBXGroup;
 			children = (
+				888AC15B29C0353C000E762A /* YOLOv4.mlpackage */,
 				8894EBC829262D2100204185 /* Info.plist */,
-				FE8237AC29B9BC9F006D9CE3 /* YOLOv4.mlpackage */,
 				8894EBBF29261D8700204185 /* PreferenceKey */,
 				88A7979C2925F619007AE689 /* View Model */,
 				88F21407292518A900940928 /* Component */,
@@ -377,6 +413,7 @@
 				8868E67C291A87EE00545D7C /* View */,
 				886C76E329055D7000B1026D /* FoodAssistantApp.swift */,
 				886C76E529055D7000B1026D /* ContentView.swift */,
+				888AC18329C6BFCB000E762A /* Constant.swift */,
 				886C76E729055D7200B1026D /* Assets.xcassets */,
 				886C76E929055D7200B1026D /* FoodAssistant.entitlements */,
 				886C76EA29055D7200B1026D /* Preview Content */,
@@ -409,6 +446,42 @@
 			path = FoodAssistantUITests;
 			sourceTree = "<group>";
 		};
+		888AC16729C418AA000E762A /* ChatBot */ = {
+			isa = PBXGroup;
+			children = (
+				888AC17029C43507000E762A /* SpecialCell */,
+				FE8237AE29B9C156006D9CE3 /* ChatBotView.swift */,
+				888AC16829C418CF000E762A /* ChatBotInputField.swift */,
+				888AC16A29C41901000E762A /* ChatBotClientMessageView.swift */,
+				888AC16C29C4192B000E762A /* ChatBotSpecialMessageView.swift */,
+				888AC16E29C4196A000E762A /* ChatBotMessageView.swift */,
+				888AC18029C6B457000E762A /* ChatBotBackground.swift */,
+			);
+			path = ChatBot;
+			sourceTree = "<group>";
+		};
+		888AC17029C43507000E762A /* SpecialCell */ = {
+			isa = PBXGroup;
+			children = (
+				888AC17729C5D8F6000E762A /* Price */,
+				888AC17329C48F1F000E762A /* ChatBotProductDetailCell.swift */,
+				888AC17529C48F61000E762A /* ChatBotFindSimilarProductCell.swift */,
+			);
+			path = SpecialCell;
+			sourceTree = "<group>";
+		};
+		888AC17729C5D8F6000E762A /* Price */ = {
+			isa = PBXGroup;
+			children = (
+				888AC17129C43525000E762A /* ChatBotProductPriceCell.swift */,
+				888AC17829C5D906000E762A /* ChatBotSingleProductCell.swift */,
+				888AC17A29C5D9C9000E762A /* ChatBotPriceStatistics.swift */,
+				888AC17C29C5DA7C000E762A /* ChatBotPriceMultipleProductsCell.swift */,
+				888AC17E29C6137F000E762A /* ChatBotPriceChartSeeMore.swift */,
+			);
+			path = Price;
+			sourceTree = "<group>";
+		};
 		8894EBBF29261D8700204185 /* PreferenceKey */ = {
 			isa = PBXGroup;
 			children = (
@@ -430,6 +503,7 @@
 				889F29C52967C7C400D10192 /* AllergyViewModel.swift */,
 				889F29D92976610000D10192 /* CameraBottomBarViewModel.swift */,
 				889F29DB2976C9AC00D10192 /* InputProductDetailViewModel.swift */,
+				888AC16329C0A35C000E762A /* ChatBotViewModel.swift */,
 			);
 			path = "View Model";
 			sourceTree = "<group>";
@@ -496,6 +570,7 @@
 				8829B5462983B5B200A2DC0E /* BlurMaterialView.swift */,
 				886ACEB9299B2A3C0042B180 /* PhotoDetailView.swift */,
 				886ACEBB299B3DBA0042B180 /* ZoomableScrollView.swift */,
+				888AC16529C0C4F3000E762A /* ProductInformationRow.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -648,15 +723,21 @@
 			files = (
 				88F213F629247A7600940928 /* ImagePicker.swift in Sources */,
 				88A7979929254A08007AE689 /* MorphingView.swift in Sources */,
+				888AC17B29C5D9C9000E762A /* ChatBotPriceStatistics.swift in Sources */,
 				889F29CE2970F8C800D10192 /* ArrayExtension.swift in Sources */,
+				888AC16229C03F60000E762A /* IntentType.swift in Sources */,
 				FE8237AF29B9C156006D9CE3 /* ChatBotView.swift in Sources */,
+				888AC17229C43525000E762A /* ChatBotProductPriceCell.swift in Sources */,
+				888AC17429C48F1F000E762A /* ChatBotProductDetailCell.swift in Sources */,
 				8894EBD029264A5D00204185 /* CameraView.swift in Sources */,
 				886ACEBC299B3DBA0042B180 /* ZoomableScrollView.swift in Sources */,
 				8868E683291A93BD00545D7C /* CameraService.swift in Sources */,
 				884E3157292A6311009DF3CA /* Product.swift in Sources */,
 				8894EBF529274CA100204185 /* CatagoryViewModel.swift in Sources */,
 				8894EBD529264B3400204185 /* SettingView.swift in Sources */,
+				888AC16929C418CF000E762A /* ChatBotInputField.swift in Sources */,
 				889F29C42967C75500D10192 /* AllergyView.swift in Sources */,
+				888AC15E29C03EDF000E762A /* ChatBotMessage.swift in Sources */,
 				889F29D42971C44D00D10192 /* MenuView.swift in Sources */,
 				88A7979329252AFC007AE689 /* CaptureSource.swift in Sources */,
 				8868E688291A972F00545D7C /* SessionSetupResult.swift in Sources */,
@@ -668,14 +749,16 @@
 				88F213FD292499F700940928 /* CameraViewModel.swift in Sources */,
 				88F214062925117100940928 /* CameraBottomBar.swift in Sources */,
 				8894EBE1292661A100204185 /* BottomBar.swift in Sources */,
+				888AC15C29C0353C000E762A /* YOLOv4.mlpackage in Sources */,
 				88A7979729253D4E007AE689 /* UIImageExtension.swift in Sources */,
-				FE8237AD29B9BC9F006D9CE3 /* YOLOv4.mlpackage in Sources */,
 				88F213F4292478D700940928 /* ImageRescaler.swift in Sources */,
 				88F214022924B50F00940928 /* LaunchScreen.swift in Sources */,
 				889F29D02971845B00D10192 /* ScrollerView.swift in Sources */,
 				8894EBC329262C9800204185 /* ProductFontExtension.swift in Sources */,
 				FEF71174295C27E10051A586 /* APIService.swift in Sources */,
+				888AC16F29C4196A000E762A /* ChatBotMessageView.swift in Sources */,
 				8894EBF729274FC400204185 /* NativeSearchBar.swift in Sources */,
+				888AC16629C0C4F3000E762A /* ProductInformationRow.swift in Sources */,
 				889F29CA296D708800D10192 /* UIDeviceExtension.swift in Sources */,
 				88F213F929247B2B00940928 /* NMS.swift in Sources */,
 				88C2293229541631005E5A27 /* GeneralView.swift in Sources */,
@@ -697,12 +780,15 @@
 				889F29DC2976C9AC00D10192 /* InputProductDetailViewModel.swift in Sources */,
 				882631D0294C2EF6003080DF /* InputProductDetailView.swift in Sources */,
 				884F0B6A291BEC2700B5FEC3 /* Photo.swift in Sources */,
+				888AC16B29C41901000E762A /* ChatBotClientMessageView.swift in Sources */,
 				8844E08D299E04B500133FE0 /* OrientationExtension.swift in Sources */,
 				8868E68A291B9CE100545D7C /* AlertError.swift in Sources */,
 				8894EBDD29264E9000204185 /* TabBar.swift in Sources */,
 				889F29C62967C7C400D10192 /* AllergyViewModel.swift in Sources */,
 				886C76E629055D7000B1026D /* ContentView.swift in Sources */,
+				888AC17929C5D906000E762A /* ChatBotSingleProductCell.swift in Sources */,
 				889F29D82972CC1E00D10192 /* SequenceExtension.swift in Sources */,
+				888AC17D29C5DA7C000E762A /* ChatBotPriceMultipleProductsCell.swift in Sources */,
 				8845AB11293CBFB000BF6C5E /* RoundedRectangleCorners.swift in Sources */,
 				88D053B92946D5F700277155 /* PreviewContextMenuExtension.swift in Sources */,
 				88BADF8A297E8BD500E86C58 /* LoginView.swift in Sources */,
@@ -712,20 +798,26 @@
 				88F2140B29251B9300940928 /* SFButton.swift in Sources */,
 				88F213FB29247C2100940928 /* IOU.swift in Sources */,
 				88C229292952C6F6005E5A27 /* Supermarket.swift in Sources */,
+				888AC18429C6BFCB000E762A /* Constant.swift in Sources */,
 				88A7979529252C7F007AE689 /* BoundingBoxView.swift in Sources */,
 				886C76E429055D7000B1026D /* FoodAssistantApp.swift in Sources */,
 				882631D2294C31D7003080DF /* ProductFontPlaceholderTextField.swift in Sources */,
+				888AC18129C6B457000E762A /* ChatBotBackground.swift in Sources */,
 				889F29CC297000B300D10192 /* IdentifyEquateCodeHashable.swift in Sources */,
 				88F214042924CD3200940928 /* ColorExtension.swift in Sources */,
 				88D053B5293EFF8800277155 /* ScanBarcodeService.swift in Sources */,
+				888AC17F29C6137F000E762A /* ChatBotPriceChartSeeMore.swift in Sources */,
 				88D053AD293EE3E200277155 /* NutritionInformation.swift in Sources */,
 				889F29C8296954B400D10192 /* DeviceRotationExtension.swift in Sources */,
 				88C22930295414BD005E5A27 /* SettingViewModel.swift in Sources */,
+				888AC16D29C4192B000E762A /* ChatBotSpecialMessageView.swift in Sources */,
+				888AC16429C0A35C000E762A /* ChatBotViewModel.swift in Sources */,
 				88D053B3293EF7C400277155 /* BottomBarViewModel.swift in Sources */,
 				FEF7117A295C29850051A586 /* FoodProductDataService.swift in Sources */,
 				88D053BB2946D62D00277155 /* PreviewContextView.swift in Sources */,
 				8894EBD729264B6C00204185 /* MainViewModel.swift in Sources */,
 				884099C429571FE900AFC290 /* UserDefaultExtension.swift in Sources */,
+				888AC17629C48F61000E762A /* ChatBotFindSimilarProductCell.swift in Sources */,
 				8894EBDF2926544200204185 /* SafeAreaInset.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -882,7 +974,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"FoodAssistant/Preview Content\"";
-				DEVELOPMENT_TEAM = QR86LD5729;
+				DEVELOPMENT_TEAM = 4BLFZ67N8X;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;

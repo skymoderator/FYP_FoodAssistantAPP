@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import Charts
 
 struct Product: IdentifyEquateCodeHashable {
     
@@ -98,7 +99,8 @@ struct Product: IdentifyEquateCodeHashable {
     }
 }
 
-struct ProductPrice: Hashable, Codable {
+struct ProductPrice: IdentifyEquateCodeHashable {
+    let id = UUID()
     let price: Double
     let supermarket: Supermarket
     let date: Date

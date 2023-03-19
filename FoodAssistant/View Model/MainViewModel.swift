@@ -16,6 +16,8 @@ class MainViewModel: ObservableObject {
     
     var anyCancellables = Set<AnyCancellable>()
     
+    @Published var showChatBot: Bool = false
+    
     init() {
         let cm = CameraService()
         let foodDataService = FoodProductDataService()
@@ -105,7 +107,8 @@ class MainViewModel: ObservableObject {
     }
     
     func cameraBottomBarLeadingLeadingButTap() {
-        cvm.pickerService.showImagePicker.toggle()
+        showChatBot.toggle()
+        cvm.cameraService.stop()
     }
     
     func cameraBottomBarLeadingButTap() {
@@ -125,6 +128,10 @@ class MainViewModel: ObservableObject {
             }
             bottomBarVM.objectWillChange.send()
         }
+    }
+    
+    func onChatBotViewDissmissed() {
+        cvm.cameraService.start()
     }
     
     func onDeviceRotate(

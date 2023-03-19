@@ -46,7 +46,10 @@ struct ProductFontPlaceholderTextField: View {
         })
             .disabled(!editable)
             .productFont(.regular, relativeTo: .body)
-            .frame(width: isTextNilOrEmpty ? placeholder.productAttributeWidth(.regular, relativeTo: .body) : nil)
+            .frame(
+                width: isTextNilOrEmpty ? placeholder.productAttributeWidth(.regular, relativeTo: .body) : nil,
+                alignment: .leading
+            )
             .background {
                 Text(placeholder)
                     .productFont(.regular, relativeTo: .body)

@@ -107,7 +107,7 @@ fileprivate struct LeadingLeadingButton: View {
     let size: CGSize
     let onTap: () -> Void
     var body: some View {
-        SFButton("photo", action: onTap)
+        SFButton("captions.bubble", action: onTap)
             .scaledToFit()
             .padding(12)
             .frame(

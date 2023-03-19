@@ -227,7 +227,7 @@ fileprivate struct AlphabetSession: View, Equatable {
             .padding(.top)
             if isExpanded {
                 ForEach(products) { (p: Product) in
-                    Row(
+                    ProductInformationRow(
                         ns: ns,
                         product: p,
                         color: color,
@@ -244,70 +244,6 @@ fileprivate struct AlphabetSession: View, Equatable {
                 Color.clear.task(id: minY.isLess(than: .zero)) { onRectUpdate(minY) }
             }
         }
-    }
-}
-
-fileprivate struct Row: View {
-    @Environment(\.colorScheme) var scheme
-    let ns: Namespace.ID
-    let product: Product
-    let color: Color
-    let onEnterInputView: () -> Void
-    let onBackFromInputView: () -> Void
-    
-    var detail: InputProductDetailView.Detail {
-        InputProductDetailView.Detail(
-            product: product,
-            onAppear: onEnterInputView,
-            onDisappear: onBackFromInputView
-        )
-    }
-    
-    var body: some View {
-        HStack(spacing: 16) {
-            Image(systemName: "fork.knife.circle")
-                .foregroundColor(.white)
-                .padding(6)
-                .background(color)
-                .clipShape(Circle())
-            VStack(alignment: .leading) {
-                Text(product.name)
-                    .multilineTextAlignment(.leading)
-                    .foregroundColor(.primary)
-                    .productFont(.bold, relativeTo: .title3)
-                HStack(alignment: .top) {
-                    Image(systemName: "barcode")
-                        .foregroundColor(.secondary)
-                    Text("Barcode: \(product.barcode)")
-                        .foregroundColor(.secondary)
-                        .productFont(.regular, relativeTo: .body)
-                        .lineLimit(2)
-                        .multilineTextAlignment(.leading)
-                }
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            Text(
-                product.prices.first?.price == nil ?
-                "NA" : "$\(product.prices.first!.price.formatted())"
-            )
-            .foregroundColor(.primary)
-            .productFont(.bold, relativeTo: .body)
-            .padding(8)
-            .background(.secondary.opacity(scheme == .dark ? 0.4 : 0.2))
-            .clipShape(Capsule())
-        }
-        .matchedGeometryEffect(id: "\(product.barcode)-\(product.name)", in: ns)
-        .previewContextMenu(
-            destination: InputProductDetailView(detail: detail),
-            preview: InputProductDetailView(
-                detail: InputProductDetailView.Detail(product: product)
-            ),
-            navigationValue: CatagoryViewModel
-                .NavigationRoute
-                .inputProductDetailView(detail),
-            presentAsSheet: false
-        )
-        .padding(.horizontal)
     }
 }
 

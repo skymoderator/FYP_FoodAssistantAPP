@@ -12,68 +12,58 @@ struct ContentView: View {
     
     @StateObject var mvm = MainViewModel()
     @Namespace var nspace
-    @State var showChatBot = false
     var body: some View {
         GeometryReader { (proxy: GeometryProxy) in
             let screenSize: CGSize = proxy.size
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 0) {
-                            CatagoryView(
-                                foodDataService: mvm.foodDataService,
-                                screenSize: screenSize,
-                                onScanBarcodeViewLoad: mvm.onScanBarcodeViewLoad,
-                                onScanBarcodeViewUnload: mvm.onScanBarcodeViewUnload
-                            )
-                            CameraView(
-                                cvm: mvm.cvm,
-                                screenSize: screenSize
-                            )
-                            SettingView(screenSize: screenSize)
-                        }
-                    }
-                    .introspectScrollView { (s: UIScrollView) in
-                        if mvm.bottomBarVM.tabSV == nil {
-                            mvm.bottomBarVM.tabSV = s
-                            mvm.bottomBarVM.viewWidth = screenSize.width
-                            s.delegate = mvm.bottomBarVM
-                            s.isPagingEnabled = true
-                            mvm.bottomBarVM.scrollTo(page: .two, animated: false)
-                        }
-                    }
-                    .toolbar(.hidden, for: .tabBar)
-                    .frame(width: screenSize.width, height: screenSize.height)
-                    .onRotate { (o: UIDeviceOrientation) in
-                        mvm.onDeviceRotate(
-                            oldScreenSize: screenSize,
-                            orientation: o
-                        )
-                    }
-            .overlay(alignment: .bottom) {
-                VStack{
-                    Text("Chat Bot")
-                        .onTapGesture {
-                            showChatBot.toggle()
-                        }.fullScreenCover(isPresented: $showChatBot){
-                            ChatBotView()
-                        }
-                    BottomBar(
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 0) {
+                    CatagoryView(
+                        foodDataService: mvm.foodDataService,
                         screenSize: screenSize,
-                        onTabBarLeadingButtonTap: mvm.bottomTabBarOnLeadingButTap,
-                        onTabBarCenterButtonTap: mvm.bottomTabBarOnCenterButTap,
-                        isTabBarCenterButtonMorphing: mvm.isCenterButMorphing,
-                        onTabBarTrailingButtonTap: mvm.bottomTabBarOnTrailingButTap,
-                        normalizedCurrentTabOffset: mvm.bottomBarVM.normalizedCurrentTabOffset,
-                        tabScrollProgress: mvm.bottomBarVM.tabScrollProgress,
-                        onCameraBottonBarLeadingLeadingButTap: mvm.cameraBottomBarLeadingLeadingButTap,
-                        onCameraBottonBarLeadingButTap: mvm.cameraBottomBarLeadingButTap,
-                        onCameraBottonBarTrailingButTap: mvm.cameraBottomBarTrailingButTap,
-                        onCameraBottonBarTrailingTrailingButTap: mvm.cameraBottomBarTrailingTrailingButTap,
-                        isPhotoCaptured: mvm.isCameraViewPhotoCaptured,
-                        isScaleToFit: mvm.isCameraViewCapturedPhotoScaleToFit,
-                        isFlashLightOn: mvm.isCameraViewFlashLightOn
+                        onScanBarcodeViewLoad: mvm.onScanBarcodeViewLoad,
+                        onScanBarcodeViewUnload: mvm.onScanBarcodeViewUnload
                     )
+                    CameraView(
+                        cvm: mvm.cvm,
+                        screenSize: screenSize
+                    )
+                    SettingView(screenSize: screenSize)
                 }
-                
+            }
+            .introspectScrollView { (s: UIScrollView) in
+                if mvm.bottomBarVM.tabSV == nil {
+                    mvm.bottomBarVM.tabSV = s
+                    mvm.bottomBarVM.viewWidth = screenSize.width
+                    s.delegate = mvm.bottomBarVM
+                    s.isPagingEnabled = true
+                    mvm.bottomBarVM.scrollTo(page: .two, animated: false)
+                }
+            }
+            .toolbar(.hidden, for: .tabBar)
+            .frame(width: screenSize.width, height: screenSize.height)
+            .onRotate { (o: UIDeviceOrientation) in
+                mvm.onDeviceRotate(
+                    oldScreenSize: screenSize,
+                    orientation: o
+                )
+            }
+            .overlay(alignment: .bottom) {
+                BottomBar(
+                    screenSize: screenSize,
+                    onTabBarLeadingButtonTap: mvm.bottomTabBarOnLeadingButTap,
+                    onTabBarCenterButtonTap: mvm.bottomTabBarOnCenterButTap,
+                    isTabBarCenterButtonMorphing: mvm.isCenterButMorphing,
+                    onTabBarTrailingButtonTap: mvm.bottomTabBarOnTrailingButTap,
+                    normalizedCurrentTabOffset: mvm.bottomBarVM.normalizedCurrentTabOffset,
+                    tabScrollProgress: mvm.bottomBarVM.tabScrollProgress,
+                    onCameraBottonBarLeadingLeadingButTap: mvm.cameraBottomBarLeadingLeadingButTap,
+                    onCameraBottonBarLeadingButTap: mvm.cameraBottomBarLeadingButTap,
+                    onCameraBottonBarTrailingButTap: mvm.cameraBottomBarTrailingButTap,
+                    onCameraBottonBarTrailingTrailingButTap: mvm.cameraBottomBarTrailingTrailingButTap,
+                    isPhotoCaptured: mvm.isCameraViewPhotoCaptured,
+                    isScaleToFit: mvm.isCameraViewCapturedPhotoScaleToFit,
+                    isFlashLightOn: mvm.isCameraViewFlashLightOn
+                )
                 .frame(
                     width: screenSize.width,
                     height: bottomBarHeight(screenHeight: screenSize.height),
@@ -87,6 +77,9 @@ struct ContentView: View {
             .environmentObject(mvm)
         }
         .edgesIgnoringSafeArea(.all)
+        .sheet(isPresented: $mvm.showChatBot, onDismiss: mvm.onChatBotViewDissmissed) {
+            ChatBotView(dataSource: mvm.foodDataService)
+        }
     }
     
     func bottomBarHeight(screenHeight: CGFloat) -> CGFloat {
