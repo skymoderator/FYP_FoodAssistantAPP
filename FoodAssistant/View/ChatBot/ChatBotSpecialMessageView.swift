@@ -17,9 +17,7 @@ struct ChatBotSpecialMessageView: View {
         let products: [Product] = message.productsResponse
         if intent == .productPrice {
             ChatBotProductPriceCell(message: message, viewWidth: viewWidth)
-        } else if intent == .findSimilarProduct {
-            ChatBotFindSimilarProductCell(productsResponse: products)
-        } else if intent == .productDetails {
+        } else if intent == .productDetails || intent == .findSimilarProduct {
             ChatBotProductDetailCell(products: products, viewWidth: viewWidth)
         } else if intent == .whereToBuyProduct {
             ChatBotSupermarketCell(products: products, viewWidth: viewWidth)
