@@ -36,6 +36,11 @@ struct ChatBotSupermarketCell: View {
                         .frame(width: max(0, viewWidth - 48), height: rowHeight, alignment: .leading)
                         .background(Color.black.brightness(scheme == .light ? 0.95 : 0.2))
                         .cornerRadius(20, style: .continuous)
+                        .previewContextMenu(
+                            destination: ChatBotProductList(products: productsAtThatSM),
+                            preview: ChatBotProductList(products: productsAtThatSM),
+                            navigationValue: products
+                        )
                 }
             }
             .padding(.horizontal)

@@ -25,13 +25,14 @@ struct ChatBotView: View {
     
     @Environment(\.dismiss) var dismiss
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $vm.navigationPath) {
             ScrollViewReader { (svProxy: ScrollViewProxy) in
                 ScrollView {
                     VStack {
                         ForEach(vm.messages) { (message: ChatBotMessage) in
 //                        ForEach(dummyMessages) { (message: ChatBotMessage) in
                             ChatBotMessageView(
+                                path: $vm.navigationPath,
                                 ns: ns,
                                 viewWidth: max(0, vm.fullViewRectExcludingNavArea.width),
                                 message: message
@@ -74,6 +75,10 @@ struct ChatBotView: View {
                 for: InputProductDetailView.Detail.self
             ) { (detail: InputProductDetailView.Detail) in
                 InputProductDetailView(detail: detail)
+            }
+            .navigationDestination(for: [Product].self) { (products: [Product]) in
+                ChatBotProductList(products: products)
+                    .equatable(by: products)
             }
         }
         .background {

@@ -9,11 +9,16 @@ import SwiftUI
 import Charts
 
 extension View {
-    func chatBotPriceChartSeeMore(products: [Product], colorLegends: [String : Color]) -> some View {
+    func chatBotPriceChartSeeMore(
+        products: [Product],
+        colorLegends: [String : Color],
+        action: (() -> Void)? = nil
+    ) -> some View {
         self.modifier(
             ChatBotPriceChartSeeMoreModifier(
                 products: products,
-                colorLegends: colorLegends
+                colorLegends: colorLegends,
+                action: action ?? { }
             )
         )
     }
@@ -22,6 +27,7 @@ extension View {
 struct ChatBotPriceChartSeeMoreModifier: ViewModifier {
     let products: [Product]
     let colorLegends: [String : Color]
+    let action: () -> Void
     func body(content: Content) -> some View {
         content
             .chartForegroundStyleScale { (id: String) in
@@ -48,9 +54,7 @@ struct ChatBotPriceChartSeeMoreModifier: ViewModifier {
                 }
                 .overlay(alignment: .bottom) {
                     if products.count >= 3 {
-                        Button {
-                            
-                        } label: {
+                        Button(action: action) {
                             Text("See More")
                                 .productFont(.bold, relativeTo: .body)
                                 .foregroundStyle(.primary)

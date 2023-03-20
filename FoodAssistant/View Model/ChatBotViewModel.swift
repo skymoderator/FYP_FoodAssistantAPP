@@ -14,6 +14,7 @@ class ChatBotViewModel: ObservableObject {
     @Published var cachedProductEntity: String = ""
     @Published var messages: [ChatBotMessage] = []
     @Published var fullViewRectExcludingNavArea: CGRect = .zero
+    @Published var navigationPath = NavigationPath()
     
     var anyCancellables = Set<AnyCancellable>()
     

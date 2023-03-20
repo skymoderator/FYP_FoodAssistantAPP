@@ -7,6 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		881213A429C7E1DB00F82A4A /* ChatBotPriceMultiProductsSingleDayCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881213A329C7E1DB00F82A4A /* ChatBotPriceMultiProductsSingleDayCard.swift */; };
+		881213A629C7E24500F82A4A /* ChatBotPriceMultiProductsMultiDaysCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881213A529C7E24500F82A4A /* ChatBotPriceMultiProductsMultiDaysCard.swift */; };
+		881213A829C7E44F00F82A4A /* ChatBotProductList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881213A729C7E44F00F82A4A /* ChatBotProductList.swift */; };
+		881213AA29C7E4E800F82A4A /* ChatBotProductCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881213A929C7E4E800F82A4A /* ChatBotProductCell.swift */; };
+		881213AC29C8987600F82A4A /* ChatBotPriceMultiProductsSingleDifferentDayCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881213AB29C8987600F82A4A /* ChatBotPriceMultiProductsSingleDifferentDayCard.swift */; };
+		881213AE29C898B100F82A4A /* ChatBotPriceMultiProductsSingleSameDayMultiProductsCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881213AD29C898B100F82A4A /* ChatBotPriceMultiProductsSingleSameDayMultiProductsCard.swift */; };
+		881213B029C898CE00F82A4A /* ChatBotPriceMultiProductsSingleSameDaySingleProductCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881213AF29C898CE00F82A4A /* ChatBotPriceMultiProductsSingleSameDaySingleProductCard.swift */; };
+		881213B229C899FD00F82A4A /* ChatBotSingleProductSingleDayCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881213B129C899FD00F82A4A /* ChatBotSingleProductSingleDayCard.swift */; };
+		881213B429C89A2100F82A4A /* ChatBotSingleProductWeekDaysCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881213B329C89A2100F82A4A /* ChatBotSingleProductWeekDaysCard.swift */; };
+		881213B629C89A4000F82A4A /* ChatBotSingleProductManyDaysCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881213B529C89A4000F82A4A /* ChatBotSingleProductManyDaysCard.swift */; };
 		882631D0294C2EF6003080DF /* InputProductDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882631CF294C2EF6003080DF /* InputProductDetailView.swift */; };
 		882631D2294C31D7003080DF /* ProductFontPlaceholderTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882631D1294C31D7003080DF /* ProductFontPlaceholderTextField.swift */; };
 		882631D5294C3899003080DF /* Popovers in Frameworks */ = {isa = PBXBuildFile; productRef = 882631D4294C3899003080DF /* Popovers */; };
@@ -138,6 +148,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		881213A329C7E1DB00F82A4A /* ChatBotPriceMultiProductsSingleDayCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBotPriceMultiProductsSingleDayCard.swift; sourceTree = "<group>"; };
+		881213A529C7E24500F82A4A /* ChatBotPriceMultiProductsMultiDaysCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBotPriceMultiProductsMultiDaysCard.swift; sourceTree = "<group>"; };
+		881213A729C7E44F00F82A4A /* ChatBotProductList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBotProductList.swift; sourceTree = "<group>"; };
+		881213A929C7E4E800F82A4A /* ChatBotProductCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBotProductCell.swift; sourceTree = "<group>"; };
+		881213AB29C8987600F82A4A /* ChatBotPriceMultiProductsSingleDifferentDayCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBotPriceMultiProductsSingleDifferentDayCard.swift; sourceTree = "<group>"; };
+		881213AD29C898B100F82A4A /* ChatBotPriceMultiProductsSingleSameDayMultiProductsCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBotPriceMultiProductsSingleSameDayMultiProductsCard.swift; sourceTree = "<group>"; };
+		881213AF29C898CE00F82A4A /* ChatBotPriceMultiProductsSingleSameDaySingleProductCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBotPriceMultiProductsSingleSameDaySingleProductCard.swift; sourceTree = "<group>"; };
+		881213B129C899FD00F82A4A /* ChatBotSingleProductSingleDayCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBotSingleProductSingleDayCard.swift; sourceTree = "<group>"; };
+		881213B329C89A2100F82A4A /* ChatBotSingleProductWeekDaysCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBotSingleProductWeekDaysCard.swift; sourceTree = "<group>"; };
+		881213B529C89A4000F82A4A /* ChatBotSingleProductManyDaysCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBotSingleProductManyDaysCard.swift; sourceTree = "<group>"; };
 		882631CF294C2EF6003080DF /* InputProductDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputProductDetailView.swift; sourceTree = "<group>"; };
 		882631D1294C31D7003080DF /* ProductFontPlaceholderTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductFontPlaceholderTextField.swift; sourceTree = "<group>"; };
 		8829B5462983B5B200A2DC0E /* BlurMaterialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlurMaterialView.swift; sourceTree = "<group>"; };
@@ -281,6 +301,46 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8812139F29C7E15A00F82A4A /* MultiProduct */ = {
+			isa = PBXGroup;
+			children = (
+				888AC17C29C5DA7C000E762A /* ChatBotPriceMultipleProductsCell.swift */,
+				881213A229C7E1AA00F82A4A /* MultiDay */,
+				881213A129C7E1A200F82A4A /* SingleDay */,
+			);
+			path = MultiProduct;
+			sourceTree = "<group>";
+		};
+		881213A029C7E16500F82A4A /* SingleProduct */ = {
+			isa = PBXGroup;
+			children = (
+				888AC17829C5D906000E762A /* ChatBotSingleProductCell.swift */,
+				881213B129C899FD00F82A4A /* ChatBotSingleProductSingleDayCard.swift */,
+				881213B329C89A2100F82A4A /* ChatBotSingleProductWeekDaysCard.swift */,
+				881213B529C89A4000F82A4A /* ChatBotSingleProductManyDaysCard.swift */,
+			);
+			path = SingleProduct;
+			sourceTree = "<group>";
+		};
+		881213A129C7E1A200F82A4A /* SingleDay */ = {
+			isa = PBXGroup;
+			children = (
+				881213A329C7E1DB00F82A4A /* ChatBotPriceMultiProductsSingleDayCard.swift */,
+				881213AB29C8987600F82A4A /* ChatBotPriceMultiProductsSingleDifferentDayCard.swift */,
+				881213AD29C898B100F82A4A /* ChatBotPriceMultiProductsSingleSameDayMultiProductsCard.swift */,
+				881213AF29C898CE00F82A4A /* ChatBotPriceMultiProductsSingleSameDaySingleProductCard.swift */,
+			);
+			path = SingleDay;
+			sourceTree = "<group>";
+		};
+		881213A229C7E1AA00F82A4A /* MultiDay */ = {
+			isa = PBXGroup;
+			children = (
+				881213A529C7E24500F82A4A /* ChatBotPriceMultiProductsMultiDaysCard.swift */,
+			);
+			path = MultiDay;
+			sourceTree = "<group>";
+		};
 		882D014829277B8B00609357 /* Catagory */ = {
 			isa = PBXGroup;
 			children = (
@@ -467,6 +527,7 @@
 				888AC18729C6F224000E762A /* DetailAndSimilar */,
 				888AC18529C6F204000E762A /* Where */,
 				888AC17729C5D8F6000E762A /* Price */,
+				881213A729C7E44F00F82A4A /* ChatBotProductList.swift */,
 			);
 			path = SpecialCell;
 			sourceTree = "<group>";
@@ -474,11 +535,11 @@
 		888AC17729C5D8F6000E762A /* Price */ = {
 			isa = PBXGroup;
 			children = (
-				888AC17129C43525000E762A /* ChatBotProductPriceCell.swift */,
-				888AC17829C5D906000E762A /* ChatBotSingleProductCell.swift */,
+				881213A029C7E16500F82A4A /* SingleProduct */,
+				8812139F29C7E15A00F82A4A /* MultiProduct */,
 				888AC17A29C5D9C9000E762A /* ChatBotPriceStatistics.swift */,
-				888AC17C29C5DA7C000E762A /* ChatBotPriceMultipleProductsCell.swift */,
 				888AC17E29C6137F000E762A /* ChatBotPriceChartSeeMore.swift */,
+				888AC17129C43525000E762A /* ChatBotProductPriceCell.swift */,
 			);
 			path = Price;
 			sourceTree = "<group>";
@@ -587,6 +648,7 @@
 				8829B5462983B5B200A2DC0E /* BlurMaterialView.swift */,
 				886ACEB9299B2A3C0042B180 /* PhotoDetailView.swift */,
 				886ACEBB299B3DBA0042B180 /* ZoomableScrollView.swift */,
+				881213A929C7E4E800F82A4A /* ChatBotProductCell.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -737,6 +799,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				881213A629C7E24500F82A4A /* ChatBotPriceMultiProductsMultiDaysCard.swift in Sources */,
 				88F213F629247A7600940928 /* ImagePicker.swift in Sources */,
 				88A7979929254A08007AE689 /* MorphingView.swift in Sources */,
 				888AC17B29C5D9C9000E762A /* ChatBotPriceStatistics.swift in Sources */,
@@ -750,13 +813,18 @@
 				8868E683291A93BD00545D7C /* CameraService.swift in Sources */,
 				884E3157292A6311009DF3CA /* Product.swift in Sources */,
 				8894EBF529274CA100204185 /* CatagoryViewModel.swift in Sources */,
+				881213B229C899FD00F82A4A /* ChatBotSingleProductSingleDayCard.swift in Sources */,
 				8894EBD529264B3400204185 /* SettingView.swift in Sources */,
 				888AC16929C418CF000E762A /* ChatBotInputField.swift in Sources */,
 				889F29C42967C75500D10192 /* AllergyView.swift in Sources */,
+				881213B029C898CE00F82A4A /* ChatBotPriceMultiProductsSingleSameDaySingleProductCard.swift in Sources */,
 				888AC15E29C03EDF000E762A /* ChatBotMessage.swift in Sources */,
+				881213B429C89A2100F82A4A /* ChatBotSingleProductWeekDaysCard.swift in Sources */,
 				889F29D42971C44D00D10192 /* MenuView.swift in Sources */,
 				88A7979329252AFC007AE689 /* CaptureSource.swift in Sources */,
+				881213A429C7E1DB00F82A4A /* ChatBotPriceMultiProductsSingleDayCard.swift in Sources */,
 				8868E688291A972F00545D7C /* SessionSetupResult.swift in Sources */,
+				881213B629C89A4000F82A4A /* ChatBotSingleProductManyDaysCard.swift in Sources */,
 				8845AB13293CC29000BF6C5E /* NutritionTableDetectionService.swift in Sources */,
 				88D053AF293EE54E00277155 /* Ingredient.swift in Sources */,
 				8868E67E291A87FF00545D7C /* VideoPreviewView.swift in Sources */,
@@ -797,6 +865,8 @@
 				882631D0294C2EF6003080DF /* InputProductDetailView.swift in Sources */,
 				884F0B6A291BEC2700B5FEC3 /* Photo.swift in Sources */,
 				888AC16B29C41901000E762A /* ChatBotClientMessageView.swift in Sources */,
+				881213AC29C8987600F82A4A /* ChatBotPriceMultiProductsSingleDifferentDayCard.swift in Sources */,
+				881213A829C7E44F00F82A4A /* ChatBotProductList.swift in Sources */,
 				8844E08D299E04B500133FE0 /* OrientationExtension.swift in Sources */,
 				8868E68A291B9CE100545D7C /* AlertError.swift in Sources */,
 				8894EBDD29264E9000204185 /* TabBar.swift in Sources */,
@@ -819,6 +889,7 @@
 				88A7979529252C7F007AE689 /* BoundingBoxView.swift in Sources */,
 				886C76E429055D7000B1026D /* FoodAssistantApp.swift in Sources */,
 				882631D2294C31D7003080DF /* ProductFontPlaceholderTextField.swift in Sources */,
+				881213AE29C898B100F82A4A /* ChatBotPriceMultiProductsSingleSameDayMultiProductsCard.swift in Sources */,
 				888AC18129C6B457000E762A /* ChatBotBackground.swift in Sources */,
 				889F29CC297000B300D10192 /* IdentifyEquateCodeHashable.swift in Sources */,
 				88F214042924CD3200940928 /* ColorExtension.swift in Sources */,
@@ -827,6 +898,7 @@
 				88D053AD293EE3E200277155 /* NutritionInformation.swift in Sources */,
 				889F29C8296954B400D10192 /* DeviceRotationExtension.swift in Sources */,
 				88C22930295414BD005E5A27 /* SettingViewModel.swift in Sources */,
+				881213AA29C7E4E800F82A4A /* ChatBotProductCell.swift in Sources */,
 				888AC16D29C4192B000E762A /* ChatBotSpecialMessageView.swift in Sources */,
 				888AC16429C0A35C000E762A /* ChatBotViewModel.swift in Sources */,
 				88D053B3293EF7C400277155 /* BottomBarViewModel.swift in Sources */,

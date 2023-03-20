@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ChatBotMessageView: View {
+    @Binding var path: NavigationPath
     let ns: Namespace.ID
     let viewWidth: CGFloat
     var message: ChatBotMessage
@@ -25,7 +26,12 @@ struct ChatBotMessageView: View {
                     .frame(width: viewWidth * 3/4, alignment: .leading)
                     .fixedSize(horizontal: true, vertical: true)
                     .padding(.leading)
-                ChatBotSpecialMessageView(ns: ns, message: message, viewWidth: viewWidth)
+                ChatBotSpecialMessageView(
+                    path: $path,
+                    ns: ns,
+                    message: message,
+                    viewWidth: viewWidth
+                )
             }
             .frame(width: viewWidth, alignment: .leading)
         } else {
