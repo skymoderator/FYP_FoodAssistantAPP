@@ -10,6 +10,7 @@ import Introspect
 
 struct CatagoryView: View {
     
+    @EnvironmentObject var mvm: MainViewModel
     @StateObject var cvm: CatagoryViewModel
     @Namespace var ns
     let screenSize: CGSize
@@ -66,7 +67,14 @@ struct CatagoryView: View {
 //                backgroundColor: .systemGroupedBackground
 //            )
             .searchSuggestions {
-                SearchSuggestion(search: cvm.searchedCatagory, products: cvm.foodsService.products)
+                SearchSuggestion(
+                    path: $cvm.navigationPath,
+                    search: cvm.searchedCatagory,
+                    products: cvm.foodsService.products,
+                    onClick: cvm.onSearchSuggestionClicked,
+                    onEnter: { cvm.onNavigateToInputView(mvm: mvm, isEntering: true) },
+                    onLeave: { cvm.onNavigateToInputView(mvm: mvm, isEntering: false) }
+                )
             }
             .navigationDestination(for: CatagoryViewModel.NavigationRoute.self) {
                 (detail: CatagoryViewModel.NavigationRoute) in

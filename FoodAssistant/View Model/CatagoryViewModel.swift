@@ -106,4 +106,24 @@ class CatagoryViewModel: ObservableObject {
         }
     }
     
+    func onSearchSuggestionClicked(product: Product) {
+        let detail = InputProductDetailView.Detail(
+            product: product,
+            editable: false
+        )
+        navigationPath.append(
+            CatagoryViewModel
+                .NavigationRoute
+                .inputProductDetailView(detail)
+        )
+        
+    }
+    
+    func onNavigateToInputView(mvm: MainViewModel, isEntering: Bool) {
+        withAnimation(.spring()) {
+            mvm.bottomBarVM.setSrollable(to: !isEntering)
+            mvm.bottomBarVM.showBar = !isEntering
+        }
+    }
+    
 }

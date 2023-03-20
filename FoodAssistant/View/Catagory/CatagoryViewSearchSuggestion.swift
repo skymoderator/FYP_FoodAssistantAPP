@@ -10,19 +10,27 @@ import SwiftUI
 extension CatagoryView {
     struct SearchSuggestion: View {
         @Namespace var ns
+        @Binding var path: NavigationPath
         @Binding var search: String
         let products: [Product]
+        let onClick: (Product) -> Void
+        var onEnter: () -> Void
+        var onLeave: () -> Void
         var body: some View {
             let results: [Product] = products
                 .filter({ $0.name.lowercased().contains(search.lowercased()) })
             ForEach(results) { (product: Product) in
-                ProductInformationRow(
-                    ns: ns,
-                    product: product,
-                    color: .random,
-                    onEnterInputView: { },
-                    onBackFromInputView: { }
-                )
+                Button {
+                    onClick(product)
+                } label: {
+                    ProductInformationRow(
+                        ns: ns,
+                        product: product,
+                        color: .systemBlue,
+                        onEnterInputView: onEnter,
+                        onBackFromInputView: onLeave
+                    )
+                }
             }
             if !search.isEmpty && !results.isEmpty {
                 Rectangle()
