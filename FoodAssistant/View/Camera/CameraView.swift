@@ -91,8 +91,19 @@ struct CameraView: View {
                 InputProductDetailView(detail: cvm.detail!)
             }
         }
-        .sheet(isPresented: $cvm.showSimilarProductView) {
-            SimilarProductView(products: cvm.similarProducts)
+        .sheet(
+            isPresented: Binding<Bool>(
+                get: { cvm.matchedBarcodeProduct != nil },
+                set: { (isPresented: Bool) in
+                    if !isPresented {
+                        cvm.matchedBarcodeProduct = nil
+                    }
+                }
+            )
+        ) {
+            NavigationStack {
+                InputProductDetailView(detail: cvm.matchedBarcodeProduct!)
+            }
         }
         .alert(
             "Error",

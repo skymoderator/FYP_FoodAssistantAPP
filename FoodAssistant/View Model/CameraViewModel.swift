@@ -26,7 +26,6 @@ class CameraViewModel: ObservableObject {
     // MARK: - Barcode Header
     @Published var isEditing = false
     // MARK: - Displayed Image View Header Buttons
-    @Published var showSimilarProductView: Bool = false
     /// When set, the `CameraView` will automatically present the `InputProductDetailView` sheet view,
     /// and reset to nil when dismissed. Setting this variable to nil will also dismiss the `InputProductDetailView` as well.
     @Published var detail: InputProductDetailView.Detail? {
@@ -36,6 +35,10 @@ class CameraViewModel: ObservableObject {
             }
         }
     }
+    /// When user clicks the search button on barcode header, and there is a matching product whose barcode is the same
+    /// as user inputted on the header, then this value will be set and a `InputProductDetailView` sheet view
+    /// will be presented accordingly. Setting this value to nil will dismiss the sheet
+    @Published var matchedBarcodeProduct: InputProductDetailView.Detail?
     /// It takes time for server to perform second stage. During the mean time, this variable will control whether or not
     /// to display the activity indicator view on button to let user know that the app is waiting for server response, not
     /// freezing
@@ -323,9 +326,14 @@ class CameraViewModel: ObservableObject {
         }
     }
     
-    /// Show similiar products list view after user has clicked on the search button on the barcode header
+    /// Present `InputProductDetailView` sheet after user has clicked on the search button on the barcode header
+    /// and there is matching product whose barcode is the same as that on header
     func onSearchButtonPressed() {
-        showSimilarProductView.toggle()
+        if scanBarcode.barcode.isEmpty { return }
+        guard let product: Product = foodDataService.products.first(where: { (p: Product) in
+            p.barcode == scanBarcode.barcode
+        }) else { return }
+        self.matchedBarcodeProduct = .init(product: product, editable: false)
     }
     
     /// Returns similiar products based on scanned/manually-typped barcode
