@@ -7,30 +7,32 @@
 
 import SwiftUI
 
-struct ChatBotProductDetailCell: View {
-    let products: [Product]
-    let viewWidth: CGFloat
-    var body: some View {
-        let count: CGFloat = CGFloat(products.count)
-        let rowWidth: CGFloat = max(0, viewWidth - 48)
-        let padding: CGFloat = 16
-        let totalWidth: CGFloat = rowWidth*count + padding*max(0, count-1)
-        let height: CGFloat = 100
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: padding) {
-                ForEach(products) { product in
-                    ChatBotProductCell(
-                        product: product,
-                        color: .systemBlue,
-                        width: rowWidth,
-                        height: height
-                    )
+extension ChatBotSpecialMessageView {
+    struct DetailCell: View {
+        let products: [Product]
+        let viewWidth: CGFloat
+        var body: some View {
+            let count: CGFloat = CGFloat(products.count)
+            let rowWidth: CGFloat = max(0, viewWidth - 48)
+            let padding: CGFloat = 16
+            let totalWidth: CGFloat = rowWidth*count + padding*max(0, count-1)
+            let height: CGFloat = 100
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: padding) {
+                    ForEach(products) { product in
+                        ChatBotProductCell(
+                            product: product,
+                            color: .systemBlue,
+                            width: rowWidth,
+                            height: height
+                        )
+                    }
                 }
+                .frame(width: totalWidth)
+                .padding(.horizontal)
             }
-            .frame(width: totalWidth)
-            .padding(.horizontal)
+            .frame(width: viewWidth, height: height)
         }
-        .frame(width: viewWidth, height: height)
     }
 }
 

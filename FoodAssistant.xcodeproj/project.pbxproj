@@ -14,9 +14,11 @@
 		881213AC29C8987600F82A4A /* ChatBotPriceMultiProductsSingleDifferentDayCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881213AB29C8987600F82A4A /* ChatBotPriceMultiProductsSingleDifferentDayCard.swift */; };
 		881213AE29C898B100F82A4A /* ChatBotPriceMultiProductsSingleSameDayMultiProductsCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881213AD29C898B100F82A4A /* ChatBotPriceMultiProductsSingleSameDayMultiProductsCard.swift */; };
 		881213B029C898CE00F82A4A /* ChatBotPriceMultiProductsSingleSameDaySingleProductCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881213AF29C898CE00F82A4A /* ChatBotPriceMultiProductsSingleSameDaySingleProductCard.swift */; };
-		881213B229C899FD00F82A4A /* ChatBotSingleProductSingleDayCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881213B129C899FD00F82A4A /* ChatBotSingleProductSingleDayCard.swift */; };
-		881213B429C89A2100F82A4A /* ChatBotSingleProductWeekDaysCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881213B329C89A2100F82A4A /* ChatBotSingleProductWeekDaysCard.swift */; };
-		881213B629C89A4000F82A4A /* ChatBotSingleProductManyDaysCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881213B529C89A4000F82A4A /* ChatBotSingleProductManyDaysCard.swift */; };
+		881213B229C899FD00F82A4A /* ChatBotSingleProductCellSingleDayCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881213B129C899FD00F82A4A /* ChatBotSingleProductCellSingleDayCard.swift */; };
+		881213B429C89A2100F82A4A /* ChatBotSingleProductCellWeekDaysCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881213B329C89A2100F82A4A /* ChatBotSingleProductCellWeekDaysCard.swift */; };
+		881213B629C89A4000F82A4A /* ChatBotSingleProductCellManyDaysCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881213B529C89A4000F82A4A /* ChatBotSingleProductCellManyDaysCard.swift */; };
+		881213B829C8A3FD00F82A4A /* ChatBotSupermarketCellSupermarketCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881213B729C8A3FD00F82A4A /* ChatBotSupermarketCellSupermarketCard.swift */; };
+		881213BA29C8A45300F82A4A /* ChatBotSupermarketCellProductIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881213B929C8A45300F82A4A /* ChatBotSupermarketCellProductIcon.swift */; };
 		882631D0294C2EF6003080DF /* InputProductDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882631CF294C2EF6003080DF /* InputProductDetailView.swift */; };
 		882631D2294C31D7003080DF /* ProductFontPlaceholderTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882631D1294C31D7003080DF /* ProductFontPlaceholderTextField.swift */; };
 		882631D5294C3899003080DF /* Popovers in Frameworks */ = {isa = PBXBuildFile; productRef = 882631D4294C3899003080DF /* Popovers */; };
@@ -155,9 +157,11 @@
 		881213AB29C8987600F82A4A /* ChatBotPriceMultiProductsSingleDifferentDayCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBotPriceMultiProductsSingleDifferentDayCard.swift; sourceTree = "<group>"; };
 		881213AD29C898B100F82A4A /* ChatBotPriceMultiProductsSingleSameDayMultiProductsCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBotPriceMultiProductsSingleSameDayMultiProductsCard.swift; sourceTree = "<group>"; };
 		881213AF29C898CE00F82A4A /* ChatBotPriceMultiProductsSingleSameDaySingleProductCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBotPriceMultiProductsSingleSameDaySingleProductCard.swift; sourceTree = "<group>"; };
-		881213B129C899FD00F82A4A /* ChatBotSingleProductSingleDayCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBotSingleProductSingleDayCard.swift; sourceTree = "<group>"; };
-		881213B329C89A2100F82A4A /* ChatBotSingleProductWeekDaysCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBotSingleProductWeekDaysCard.swift; sourceTree = "<group>"; };
-		881213B529C89A4000F82A4A /* ChatBotSingleProductManyDaysCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBotSingleProductManyDaysCard.swift; sourceTree = "<group>"; };
+		881213B129C899FD00F82A4A /* ChatBotSingleProductCellSingleDayCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBotSingleProductCellSingleDayCard.swift; sourceTree = "<group>"; };
+		881213B329C89A2100F82A4A /* ChatBotSingleProductCellWeekDaysCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBotSingleProductCellWeekDaysCard.swift; sourceTree = "<group>"; };
+		881213B529C89A4000F82A4A /* ChatBotSingleProductCellManyDaysCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBotSingleProductCellManyDaysCard.swift; sourceTree = "<group>"; };
+		881213B729C8A3FD00F82A4A /* ChatBotSupermarketCellSupermarketCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBotSupermarketCellSupermarketCard.swift; sourceTree = "<group>"; };
+		881213B929C8A45300F82A4A /* ChatBotSupermarketCellProductIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBotSupermarketCellProductIcon.swift; sourceTree = "<group>"; };
 		882631CF294C2EF6003080DF /* InputProductDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputProductDetailView.swift; sourceTree = "<group>"; };
 		882631D1294C31D7003080DF /* ProductFontPlaceholderTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductFontPlaceholderTextField.swift; sourceTree = "<group>"; };
 		8829B5462983B5B200A2DC0E /* BlurMaterialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlurMaterialView.swift; sourceTree = "<group>"; };
@@ -315,9 +319,9 @@
 			isa = PBXGroup;
 			children = (
 				888AC17829C5D906000E762A /* ChatBotSingleProductCell.swift */,
-				881213B129C899FD00F82A4A /* ChatBotSingleProductSingleDayCard.swift */,
-				881213B329C89A2100F82A4A /* ChatBotSingleProductWeekDaysCard.swift */,
-				881213B529C89A4000F82A4A /* ChatBotSingleProductManyDaysCard.swift */,
+				881213B129C899FD00F82A4A /* ChatBotSingleProductCellSingleDayCard.swift */,
+				881213B329C89A2100F82A4A /* ChatBotSingleProductCellWeekDaysCard.swift */,
+				881213B529C89A4000F82A4A /* ChatBotSingleProductCellManyDaysCard.swift */,
 			);
 			path = SingleProduct;
 			sourceTree = "<group>";
@@ -548,6 +552,8 @@
 			isa = PBXGroup;
 			children = (
 				888AC18829C6F2B8000E762A /* ChatBotSupermarketCell.swift */,
+				881213B729C8A3FD00F82A4A /* ChatBotSupermarketCellSupermarketCard.swift */,
+				881213B929C8A45300F82A4A /* ChatBotSupermarketCellProductIcon.swift */,
 			);
 			path = Where;
 			sourceTree = "<group>";
@@ -813,24 +819,25 @@
 				8868E683291A93BD00545D7C /* CameraService.swift in Sources */,
 				884E3157292A6311009DF3CA /* Product.swift in Sources */,
 				8894EBF529274CA100204185 /* CatagoryViewModel.swift in Sources */,
-				881213B229C899FD00F82A4A /* ChatBotSingleProductSingleDayCard.swift in Sources */,
+				881213B229C899FD00F82A4A /* ChatBotSingleProductCellSingleDayCard.swift in Sources */,
 				8894EBD529264B3400204185 /* SettingView.swift in Sources */,
 				888AC16929C418CF000E762A /* ChatBotInputField.swift in Sources */,
 				889F29C42967C75500D10192 /* AllergyView.swift in Sources */,
 				881213B029C898CE00F82A4A /* ChatBotPriceMultiProductsSingleSameDaySingleProductCard.swift in Sources */,
 				888AC15E29C03EDF000E762A /* ChatBotMessage.swift in Sources */,
-				881213B429C89A2100F82A4A /* ChatBotSingleProductWeekDaysCard.swift in Sources */,
+				881213B429C89A2100F82A4A /* ChatBotSingleProductCellWeekDaysCard.swift in Sources */,
 				889F29D42971C44D00D10192 /* MenuView.swift in Sources */,
 				88A7979329252AFC007AE689 /* CaptureSource.swift in Sources */,
 				881213A429C7E1DB00F82A4A /* ChatBotPriceMultiProductsSingleDayCard.swift in Sources */,
 				8868E688291A972F00545D7C /* SessionSetupResult.swift in Sources */,
-				881213B629C89A4000F82A4A /* ChatBotSingleProductManyDaysCard.swift in Sources */,
+				881213B629C89A4000F82A4A /* ChatBotSingleProductCellManyDaysCard.swift in Sources */,
 				8845AB13293CC29000BF6C5E /* NutritionTableDetectionService.swift in Sources */,
 				88D053AF293EE54E00277155 /* Ingredient.swift in Sources */,
 				8868E67E291A87FF00545D7C /* VideoPreviewView.swift in Sources */,
 				889F29DA2976610000D10192 /* CameraBottomBarViewModel.swift in Sources */,
 				8868E680291A886600545D7C /* CameraPreview.swift in Sources */,
 				88F213FD292499F700940928 /* CameraViewModel.swift in Sources */,
+				881213B829C8A3FD00F82A4A /* ChatBotSupermarketCellSupermarketCard.swift in Sources */,
 				88F214062925117100940928 /* CameraBottomBar.swift in Sources */,
 				8894EBE1292661A100204185 /* BottomBar.swift in Sources */,
 				888AC15C29C0353C000E762A /* YOLOv4.mlpackage in Sources */,
@@ -846,6 +853,7 @@
 				889F29CA296D708800D10192 /* UIDeviceExtension.swift in Sources */,
 				88F213F929247B2B00940928 /* NMS.swift in Sources */,
 				88C2293229541631005E5A27 /* GeneralView.swift in Sources */,
+				881213BA29C8A45300F82A4A /* ChatBotSupermarketCellProductIcon.swift in Sources */,
 				889F29BD2964788400D10192 /* CatagoryDetailView.swift in Sources */,
 				88A7979129252728007AE689 /* ImagePickerService.swift in Sources */,
 				FEF71172295C27C80051A586 /* AppState.swift in Sources */,

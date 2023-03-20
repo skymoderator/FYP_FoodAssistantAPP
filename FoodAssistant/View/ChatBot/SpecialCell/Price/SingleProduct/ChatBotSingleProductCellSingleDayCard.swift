@@ -1,5 +1,5 @@
 //
-//  ChatBotPriceMultiProductsSingleSameDaySingleProductCard.swift
+//  ChatBotSingleProductSingleDayCard.swift
 //  FoodAssistant
 //
 //  Created by Choi Wai Lap on 20/3/2023.
@@ -8,17 +8,12 @@
 import SwiftUI
 import Charts
 
-extension ChatBotSpecialMessageView.PriceCell.MultipleProductsCell.SingleDayCard {
-    struct SingleProductCard: View {
-        let product: Product
-        let detail: InputProductDetailView.Detail
-        init(product: Product) {
-            self.product = product
-            self.detail = .init(product: product, editable: false)
-        }
+extension ChatBotSpecialMessageView.PriceCell.SingleProductCell {
+    struct SingleDayCard: View {
+        let price: ProductPrice
+        let name: String
         var body: some View {
             VStack {
-                let price: ProductPrice = product.prices.first!
                 Text("On \(price.date.formatted(.dateTime.day().month().year()))")
                     .productFont(.bold, relativeTo: .title2)
                     .foregroundColor(.primary)
@@ -29,23 +24,18 @@ extension ChatBotSpecialMessageView.PriceCell.MultipleProductsCell.SingleDayCard
                     .padding(.horizontal)
                     .background(.systemBlue)
                     .clipShape(Capsule())
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-                Text("\(product.name)")
+                    .frame(maxHeight: .infinity, alignment: .center)
+                Text("\(name)")
                     .productFont(.bold, relativeTo: .title2)
                     .multilineTextAlignment(.center)
-                    .foregroundColor(.primary)
+                    .foregroundColor(.secondary)
             }
-            .previewContextMenu(
-                destination: InputProductDetailView(detail: detail),
-                preview: InputProductDetailView(detail: detail),
-                navigationValue: detail,
-                presentAsSheet: false
-            )
+            .frame(maxWidth: .infinity)
         }
     }
 }
 
-struct ChatBotPriceMultiProductsSingleSameDaySingleProductCard_Previews: PreviewProvider {
+struct ChatBotSingleProductCellSingleDayCard_Previews: PreviewProvider {
     @State static var path = NavigationPath()
     static var previews: some View {
         GeometryReader { (proxy: GeometryProxy) in
