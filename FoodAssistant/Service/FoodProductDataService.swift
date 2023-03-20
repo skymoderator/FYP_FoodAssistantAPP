@@ -28,7 +28,7 @@ class FoodProductDataService: ObservableObject {
                 latest: true
             )
             .sink { [weak self] _ in
-//                self?.loadData()
+                self?.loadData()
             }
             .store(in: &subscriptions)
     }

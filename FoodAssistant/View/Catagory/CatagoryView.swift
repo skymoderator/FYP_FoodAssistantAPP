@@ -59,11 +59,15 @@ struct CatagoryView: View {
                     MenuView(menuItem: cvm.toolBarItem)
                 }
             }
-            .nativeSearchBar(
-                text: cvm.searchedCatagory,
-                placeHolder: "Search Catagory",
-                backgroundColor: .systemGroupedBackground
-            )
+            .searchable(text: cvm.searchedCatagory, prompt: "e.g. Coke - Bottle 1.25L")
+//            .nativeSearchBar(
+//                text: cvm.searchedCatagory,
+//                placeHolder: "Search Catagory",
+//                backgroundColor: .systemGroupedBackground
+//            )
+            .searchSuggestions {
+                SearchSuggestion(search: cvm.searchedCatagory, products: cvm.foodsService.products)
+            }
             .navigationDestination(for: CatagoryViewModel.NavigationRoute.self) {
                 (detail: CatagoryViewModel.NavigationRoute) in
                 switch detail {

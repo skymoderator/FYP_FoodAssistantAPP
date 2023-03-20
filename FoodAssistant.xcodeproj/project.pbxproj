@@ -19,6 +19,7 @@
 		881213B629C89A4000F82A4A /* ChatBotSingleProductCellManyDaysCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881213B529C89A4000F82A4A /* ChatBotSingleProductCellManyDaysCard.swift */; };
 		881213B829C8A3FD00F82A4A /* ChatBotSupermarketCellSupermarketCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881213B729C8A3FD00F82A4A /* ChatBotSupermarketCellSupermarketCard.swift */; };
 		881213BA29C8A45300F82A4A /* ChatBotSupermarketCellProductIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881213B929C8A45300F82A4A /* ChatBotSupermarketCellProductIcon.swift */; };
+		881213BC29C8ACFD00F82A4A /* CatagoryViewSearchSuggestion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881213BB29C8ACFD00F82A4A /* CatagoryViewSearchSuggestion.swift */; };
 		882631D0294C2EF6003080DF /* InputProductDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882631CF294C2EF6003080DF /* InputProductDetailView.swift */; };
 		882631D2294C31D7003080DF /* ProductFontPlaceholderTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882631D1294C31D7003080DF /* ProductFontPlaceholderTextField.swift */; };
 		882631D5294C3899003080DF /* Popovers in Frameworks */ = {isa = PBXBuildFile; productRef = 882631D4294C3899003080DF /* Popovers */; };
@@ -162,6 +163,7 @@
 		881213B529C89A4000F82A4A /* ChatBotSingleProductCellManyDaysCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBotSingleProductCellManyDaysCard.swift; sourceTree = "<group>"; };
 		881213B729C8A3FD00F82A4A /* ChatBotSupermarketCellSupermarketCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBotSupermarketCellSupermarketCard.swift; sourceTree = "<group>"; };
 		881213B929C8A45300F82A4A /* ChatBotSupermarketCellProductIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBotSupermarketCellProductIcon.swift; sourceTree = "<group>"; };
+		881213BB29C8ACFD00F82A4A /* CatagoryViewSearchSuggestion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatagoryViewSearchSuggestion.swift; sourceTree = "<group>"; };
 		882631CF294C2EF6003080DF /* InputProductDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputProductDetailView.swift; sourceTree = "<group>"; };
 		882631D1294C31D7003080DF /* ProductFontPlaceholderTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductFontPlaceholderTextField.swift; sourceTree = "<group>"; };
 		8829B5462983B5B200A2DC0E /* BlurMaterialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlurMaterialView.swift; sourceTree = "<group>"; };
@@ -351,6 +353,7 @@
 				888AC16529C0C4F3000E762A /* ProductInformationRow.swift */,
 				8894EBD229264AE700204185 /* CatagoryView.swift */,
 				889F29BC2964788400D10192 /* CatagoryDetailView.swift */,
+				881213BB29C8ACFD00F82A4A /* CatagoryViewSearchSuggestion.swift */,
 			);
 			path = Catagory;
 			sourceTree = "<group>";
@@ -892,6 +895,7 @@
 				88F2140B29251B9300940928 /* SFButton.swift in Sources */,
 				88F213FB29247C2100940928 /* IOU.swift in Sources */,
 				888AC18929C6F2B8000E762A /* ChatBotSupermarketCell.swift in Sources */,
+				881213BC29C8ACFD00F82A4A /* CatagoryViewSearchSuggestion.swift in Sources */,
 				88C229292952C6F6005E5A27 /* Supermarket.swift in Sources */,
 				888AC18429C6BFCB000E762A /* Constant.swift in Sources */,
 				88A7979529252C7F007AE689 /* BoundingBoxView.swift in Sources */,
