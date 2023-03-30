@@ -27,7 +27,8 @@ struct InventoryView: View {
                     InventoryListView(
                         searchingText: $vm.searchingText,
                         editingInventory: $vm.editingInventory,
-                        inventories: vm.inventories
+                        inventories: vm.inventories,
+                        summaryType: vm.summaryType
                     )
                 }
             }
@@ -35,13 +36,10 @@ struct InventoryView: View {
             .productLargeNavigationBar()
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        vm.editingInventory = Inventory()
-                    } label: {
-                        Image(systemName: "plus")
-                            .foregroundColor(.systemBlue)
-                            .fontWeight(.bold)
-                    }
+                    MenuBarItems(
+                        editingInventory: $vm.editingInventory,
+                        summaryType: $vm.summaryType
+                    )
                 }
             }
         }
@@ -76,6 +74,7 @@ fileprivate struct InventoryListView: View {
     @Binding var searchingText: String
     @Binding var editingInventory: Inventory?
     let inventories: [Inventory]
+    let summaryType: InventoryViewModel.SummaryCategory?
     var filteredInventories: [Inventory] {
         if searchingText.isEmpty {
             return inventories
@@ -89,7 +88,8 @@ fileprivate struct InventoryListView: View {
         List(filteredInventories) { (inventory: Inventory) in
             InventoryCell(
                 editingInventory: $editingInventory,
-                inventory: inventory
+                inventory: inventory,
+                summaryType: summaryType
             )
         }
         .searchable(text: $searchingText, prompt: "e.g. BBQ List")
@@ -100,6 +100,7 @@ fileprivate struct InventoryListView: View {
 fileprivate struct InventoryCell: View {
     @Binding var editingInventory: Inventory?
     let inventory: Inventory
+    let summaryType: InventoryViewModel.SummaryCategory?
     var body: some View {
         let products: [Product] = inventory.products
         let count: Int = products.count
@@ -138,28 +139,45 @@ fileprivate struct InventoryCell: View {
                     }
                     .animation(.easeInOut, value: products)
                 }
-                Graph(products: products)
+                if let summaryType {
+                    Graph(
+                        products: products,
+                        summaryType: summaryType
+                    )
+                }
             }
+            .padding(.top, summaryType == nil ? 0 : 16)
+            .animation(.easeInOut, value: summaryType   )
         }
     }
-    
 }
 
 fileprivate struct Graph: View {
     let products: [Product]
+    let summaryType: InventoryViewModel.SummaryCategory
+    var datas: [Double] {
+        switch summaryType {
+        case .energy:
+            return products.compactMap(\.nutrition?.sugars)
+        case .sugar:
+            return products.compactMap(\.nutrition?.sugars)
+        case .carbohydrates:
+            return products.compactMap(\.nutrition?.carbohydrates)
+        }
+    }
     var body: some View {
-        let grams: [Double] = products.compactMap(\.nutrition?.sugars)
+        let grams: [Double] = datas
         if !grams.isEmpty {
             VStack(alignment: .leading, spacing: 8) {
                 let average: Double = grams.reduce(Double.zero, +)/Double(grams.count)
-                Text("Sugar Consumption")
+                Text("\(summaryType.rawValue) Consumption")
                     .productFont(.bold, relativeTo: .headline)
                     .foregroundColor(.primary)
                 Divider()
-                Chart(products) { (product: Product) in
+                Chart(0..<datas.count, id: \.self) { (index: Int) in
                     BarMark(
-                        x: .value("product", String(product.name.prefix(2))),
-                        y: .value("sugars", product.nutrition?.sugars ?? 0)
+                        x: .value("index", "\(index)"),
+                        y: .value("data", datas[index])
                     )
                     .foregroundStyle(.gray.opacity(0.3))
                     RuleMark(y: .value("average", average))
@@ -170,6 +188,7 @@ fileprivate struct Graph: View {
                         }
                         .lineStyle(StrokeStyle(lineWidth: 3))
                 }
+                .chartLegend(.hidden)
                 .chartYAxis {
                     AxisMarks(position: .leading) {
                         AxisGridLine().foregroundStyle(.clear)
@@ -185,6 +204,55 @@ fileprivate struct Graph: View {
                     .foregroundColor(.secondary)
             }
             .padding(.vertical)
+        } else {
+            Chart {
+                
+            }
+            .overlay {
+                Text("No Data...")
+                    .productFont(.bold, relativeTo: .title3)
+                    .foregroundColor(.systemBlue)
+            }
+        }
+    }
+}
+
+fileprivate struct MenuBarItems: View {
+    @Binding var editingInventory: Inventory?
+    @Binding var summaryType: InventoryViewModel.SummaryCategory?
+    var body: some View {
+        Menu {
+            Button {
+                editingInventory = Inventory()
+            } label: {
+                Label("Add Inventory", systemImage: "plus")
+            }
+            Menu {
+                ForEach(InventoryViewModel.SummaryCategory.allCases, id: \.self) {
+                    (type: InventoryViewModel.SummaryCategory) in
+                    let isSelected: Bool = summaryType == type
+                    Button {
+                        summaryType = type
+                    } label: {
+                        if isSelected {
+                            Label(type.rawValue, systemImage: "checkmark")
+                        } else {
+                            Text(type.rawValue)
+                        }
+                    }
+                }
+                Divider()
+                Button {
+                    summaryType = nil
+                } label: {
+                    Label("Hide", systemImage: "eye.slash")
+                }
+                .foregroundColor(.systemRed)
+            } label: {
+                Label("Summary", systemImage: "info.circle")
+            }
+        } label: {
+            Image(systemName: "ellipsis.circle")
         }
     }
 }

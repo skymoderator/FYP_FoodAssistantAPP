@@ -13,6 +13,7 @@ class InventoryViewModel: ObservableObject {
     @Published var inventories: [Inventory]
     @Published var searchingText: String
     @Published var editingInventory: Inventory?
+    @Published var summaryType: SummaryCategory? = nil
     
     var anyCancellables = Set<AnyCancellable>()
     init(dataSource: FoodProductDataService) {
@@ -46,5 +47,13 @@ class InventoryViewModel: ObservableObject {
     
     deinit {
         updateInventories()
+    }
+}
+
+extension InventoryViewModel {
+    enum SummaryCategory: String, CaseIterable {
+        case energy = "Energy"
+        case sugar = "Sugar"
+        case carbohydrates = "Carbohydrates"
     }
 }

@@ -8,7 +8,6 @@
 import Foundation
 import Combine
 import UIKit
-import SwiftyJSON
 
 class APIService {
     

@@ -113,7 +113,6 @@
 		88A7979529252C7F007AE689 /* BoundingBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A7979429252C7F007AE689 /* BoundingBoxView.swift */; };
 		88A7979729253D4E007AE689 /* UIImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A7979629253D4E007AE689 /* UIImageExtension.swift */; };
 		88A7979929254A08007AE689 /* MorphingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A7979829254A08007AE689 /* MorphingView.swift */; };
-		88B518EB29D563B400D7D8C5 /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = 88B518EA29D563B400D7D8C5 /* SwiftyJSON */; };
 		88BADF8A297E8BD500E86C58 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BADF89297E8BD500E86C58 /* LoginView.swift */; };
 		88C2292E29535BAC005E5A27 /* SwiftDate in Frameworks */ = {isa = PBXBuildFile; productRef = 88C2292D29535BAC005E5A27 /* SwiftDate */; };
 		88C22930295414BD005E5A27 /* SettingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C2292F295414BD005E5A27 /* SettingViewModel.swift */; };
@@ -297,7 +296,6 @@
 				88C2292E29535BAC005E5A27 /* SwiftDate in Frameworks */,
 				882631D5294C3899003080DF /* Popovers in Frameworks */,
 				8894EBCB29262DB000204185 /* SwiftUIX in Frameworks */,
-				88B518EB29D563B400D7D8C5 /* SwiftyJSON in Frameworks */,
 				8894EBCE29262DF000204185 /* Introspect in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -708,7 +706,6 @@
 				8894EBCD29262DF000204185 /* Introspect */,
 				882631D4294C3899003080DF /* Popovers */,
 				88C2292D29535BAC005E5A27 /* SwiftDate */,
-				88B518EA29D563B400D7D8C5 /* SwiftyJSON */,
 			);
 			productName = FoodAssistant;
 			productReference = 886C76E029055D7000B1026D /* FoodAssistant.app */;
@@ -787,7 +784,6 @@
 				8894EBCC29262DF000204185 /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */,
 				882631D3294C3899003080DF /* XCRemoteSwiftPackageReference "Popovers" */,
 				88C2292C29535BAC005E5A27 /* XCRemoteSwiftPackageReference "SwiftDate" */,
-				88B518E929D563B400D7D8C5 /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
 			);
 			productRefGroup = 886C76E129055D7000B1026D /* Products */;
 			projectDirPath = "";
@@ -1338,14 +1334,6 @@
 				kind = branch;
 			};
 		};
-		88B518E929D563B400D7D8C5 /* XCRemoteSwiftPackageReference "SwiftyJSON" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/SwiftyJSON/SwiftyJSON.git";
-			requirement = {
-				branch = master;
-				kind = branch;
-			};
-		};
 		88C2292C29535BAC005E5A27 /* XCRemoteSwiftPackageReference "SwiftDate" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/malcommac/SwiftDate.git";
@@ -1371,11 +1359,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 8894EBCC29262DF000204185 /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */;
 			productName = Introspect;
-		};
-		88B518EA29D563B400D7D8C5 /* SwiftyJSON */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 88B518E929D563B400D7D8C5 /* XCRemoteSwiftPackageReference "SwiftyJSON" */;
-			productName = SwiftyJSON;
 		};
 		88C2292D29535BAC005E5A27 /* SwiftDate */ = {
 			isa = XCSwiftPackageProductDependency;
