@@ -6,8 +6,10 @@
 //
 
 import Combine
+import SwiftUI
 
 class InputProductDetailViewModel: ObservableObject {
+    @EnvironmentObject var mvm: MainViewModel
     let product: Product
     let boundingBox: BoundingBox?
     let nutritionTablePhoto: Photo?
@@ -30,18 +32,21 @@ class InputProductDetailViewModel: ObservableObject {
     @Published var hasEditedAnything: Bool = false
     
     let editable: Bool
+    let onUpload: ((Product) -> Void)?
     var cancellables = Set<AnyCancellable>()
     
     init(
         product: Product,
         boundingBox: BoundingBox?,
         nutritionTablePhoto: Photo?,
-        editable: Bool
+        editable: Bool,
+        onUpload: ((Product) -> Void)?
     ) {
         self.product = product
         self.boundingBox = boundingBox
         self.nutritionTablePhoto = nutritionTablePhoto
         self.editable = editable
+        self.onUpload = onUpload
         
         barcode = product.barcode
         name = product.name
@@ -69,8 +74,9 @@ class InputProductDetailViewModel: ObservableObject {
     }
     
     func uploadProductInformationToServer() {
-        guard editable else { return }
+//        guard editable else { return }
         let information: NutritionInformation = .init(
+            id: product.nutrition?.id ?? 0,
             energy: Int(energy ?? "") ?? 0,
             protein: Double(protein ?? "") ?? 0,
             total_fat: Double(totalFat ?? "") ?? 0,
@@ -79,32 +85,24 @@ class InputProductDetailViewModel: ObservableObject {
             carbohydrates: Double(carbohydrates ?? "") ?? 0,
             sugars: Double(sugars ?? "") ?? 0,
             sodium: Double(sodium ?? "") ?? 0,
+            cholesterol: product.nutrition?.cholesterol ?? 0,
             vitaminB2: Double(vitaminB2 ?? ""),
             vitaminB3: Double(vitaminB3 ?? ""),
             vitaminB6: Double(vitaminB6 ?? "")
         )
         let product: Product = .init(
+            id: product.id,
             name: name ?? "",
             barcode: barcode ?? "",
             nutrition: information,
             manufacturer: nil,
             brand: product.brand,
-            prices: product.prices,
+            prices: [],
             category1: product.category1,
             category2: product.category2,
             category3: product.category3,
             photo: product.photo
         )
-        // TODO: To upload the product data to the server for update
-        Task {
-            do {
-                try await AppState
-                    .shared
-                    .dataService
-                    .post(object: product, type: Product.self, path: "")
-            } catch {
-                print(error)
-            }
-        }
+        onUpload?(product)
     }
 }

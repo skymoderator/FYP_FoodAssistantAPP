@@ -15,7 +15,11 @@ struct ChatBotProductCell: View {
     let height: CGFloat
     
     var detail: InputProductDetailView.Detail {
-        InputProductDetailView.Detail(product: product, editable: false)
+        InputProductDetailView
+            .Detail(
+                product: product,
+                editable: false
+            )
     }
     
     var body: some View {

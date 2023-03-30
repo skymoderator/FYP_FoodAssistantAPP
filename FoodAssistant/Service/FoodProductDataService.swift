@@ -34,6 +34,7 @@ class FoodProductDataService: ObservableObject {
     }
     
     func loadData() {
+        isLoading = true
         AppState
             .shared
             .dataService
@@ -55,7 +56,9 @@ class FoodProductDataService: ObservableObject {
                     break
                 }
             } receiveValue: { [weak self] (products: [Product]) in
-                self?.products = products
+                self?.products = products.filter { (p: Product) in
+                    !p.name.lowercased().contains("condom".lowercased())
+                }
                 print("Successfully loaded \(products.count) food products.")
             }
             .store(in: &subscriptions)
@@ -86,15 +89,23 @@ class FoodProductDataService: ObservableObject {
             .store(in: &subscriptions)
     }
     
-    func putData(product: Product) -> AnyPublisher<Product, Error> {
-        AppState
-            .shared
-            .dataService
-            .put(
-                object: product,
-                type: Product.self,
-                path: "/api/foodproducts/\(product.id)"
-            )
+    func putData(product: Product) {
+        Task { [weak self] in
+            guard let self = self else { return }
+            let refinedProduct: Product = try await AppState
+                .shared
+                .dataService
+                .put(
+                    object: product,
+                    type: Product.self, path: "/api/foodproducts/" + product.barcode)
+            guard let id: Int = products.firstIndex(of: product) else {
+                return
+            }
+            await MainActor.run { [weak self] in
+                guard let self = self else { return }
+                self.products[id] = refinedProduct
+            }
+        }
     }
     
     func postProcessing() {

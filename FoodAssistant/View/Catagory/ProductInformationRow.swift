@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ProductInformationRow: View {
     @Environment(\.colorScheme) var scheme
+    @EnvironmentObject var mvm: MainViewModel
     let ns: Namespace.ID
     let product: Product
     let color: Color
@@ -19,7 +20,8 @@ struct ProductInformationRow: View {
         InputProductDetailView.Detail(
             product: product,
             onAppear: onEnterInputView,
-            onDisappear: onBackFromInputView
+            onDisappear: onBackFromInputView,
+            onUpload: mvm.foodDataService.putData
         )
     }
     

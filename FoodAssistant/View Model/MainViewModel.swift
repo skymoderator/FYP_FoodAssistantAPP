@@ -31,7 +31,10 @@ class MainViewModel: ObservableObject {
         /// is initialized, then we can start the camera session,
         /// thats why we are passing the camera service to the camera view model
         self._cvm = Published(
-            wrappedValue: CameraViewModel(cameraService: cm, foodDataService: foodDataService)
+            wrappedValue: CameraViewModel(
+                cameraService: cm,
+                foodDataService: foodDataService
+            )
         )
         
         bottomBarVM.objectWillChange.sink { [weak self] _ in

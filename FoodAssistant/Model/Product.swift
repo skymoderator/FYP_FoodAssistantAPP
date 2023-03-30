@@ -11,7 +11,7 @@ import Charts
 
 struct Product: IdentifyEquateCodeHashable {
     
-    let id = UUID()
+    let id: String
     /// Note:
     /// Because in the `InputFoodProductDetailView`, user can modify the product's name
     /// therefore we are declaring it to be `var` instead of `let` to let `name` be modifiable
@@ -29,6 +29,7 @@ struct Product: IdentifyEquateCodeHashable {
     let photo: Photo?
     
     init(
+        id: String = UUID().description,
         name: String = "",
         barcode: String = "",
         nutrition: NutritionInformation? = nil,
@@ -40,6 +41,7 @@ struct Product: IdentifyEquateCodeHashable {
         category3: String? = nil,
         photo: Photo? = nil
     ) {
+        self.id = id
         self.name = name
         self.barcode = barcode
         self.nutrition = nutrition
@@ -54,10 +56,11 @@ struct Product: IdentifyEquateCodeHashable {
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
         name = try container.decode(String.self, forKey: .name)
         barcode = try container.decode(String.self, forKey: .barcode)
         if container.contains(.nutrition){
-            nutrition = try container.decode(NutritionInformation.self, forKey: .nutrition)
+            nutrition = try container.decodeIfPresent(NutritionInformation.self, forKey: .nutrition)
         }else{
             nutrition = nil
         }
@@ -73,15 +76,16 @@ struct Product: IdentifyEquateCodeHashable {
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(name, forKey: .name)
-        try container.encode(barcode, forKey: .barcode)
-        try container.encode(nutrition, forKey: .nutrition)
-        try container.encode(manufacturer, forKey: .manufacturer)
-        try container.encode(brand, forKey: .brand)
-        try container.encode(prices, forKey: .prices)
-        try container.encode(category1, forKey: .category1)
-        try container.encode(category2, forKey: .category2)
-        try container.encode(category3, forKey: .category3)
+        try container.encodeIfPresent(id, forKey: .id)
+        try container.encodeIfPresent(name, forKey: .name)
+        try container.encodeIfPresent(barcode, forKey: .barcode)
+        try container.encodeIfPresent(nutrition, forKey: .nutrition)
+        try container.encodeIfPresent(manufacturer, forKey: .manufacturer)
+        try container.encodeIfPresent(brand, forKey: .brand)
+        try container.encodeIfPresent(prices, forKey: .prices)
+        try container.encodeIfPresent(category1, forKey: .category1)
+        try container.encodeIfPresent(category2, forKey: .category2)
+        try container.encodeIfPresent(category3, forKey: .category3)
     }
     
     enum CodingKeys: String, CodingKey {

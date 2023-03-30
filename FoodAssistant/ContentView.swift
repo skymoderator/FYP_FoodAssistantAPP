@@ -27,7 +27,11 @@ struct ContentView: View {
                         cvm: mvm.cvm,
                         screenSize: screenSize
                     )
-                    SettingView(screenSize: screenSize)
+//                    SettingView(screenSize: screenSize)
+                    InventoryView(
+                        screenSize: screenSize,
+                        dataSource: mvm.foodDataService
+                    )
                 }
             }
             .introspectScrollView { (s: UIScrollView) in

@@ -128,7 +128,7 @@ struct TabBar: View {
                         .opacity(2 - normalizedCurrentTabOffset)
                 }
                 .mask {
-                    SFButton("gear.circle")
+                    SFButton("folder")
                         .scaledToFit()
                 }
                 .frame(width: size, height: size - (isPortrait ? 0 : 10))

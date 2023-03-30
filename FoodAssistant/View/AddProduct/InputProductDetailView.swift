@@ -32,6 +32,9 @@ struct InputProductDetailView: View {
         /// onDisappear: Similarly, reset back the logics performed on onAppear
         /// when view disappears
         let onDisappear: (() -> Void)?
+        /// onUpload: Handler that update the newly returned product
+        /// after uploading the product info the server
+        let onUpload: ((Product) -> Void)?
         
         init(
             product: Product,
@@ -39,7 +42,8 @@ struct InputProductDetailView: View {
             nutritionTablePhoto: Photo? = nil,
             editable: Bool = false,
             onAppear: (() -> Void)? = nil,
-            onDisappear: (() -> Void)? = nil
+            onDisappear: (() -> Void)? = nil,
+            onUpload: ((Product) -> Void)? = nil
         ) {
             self.product = product
             self.boundingBox = boundingBox
@@ -47,6 +51,7 @@ struct InputProductDetailView: View {
             self.editable = editable
             self.onAppear = onAppear
             self.onDisappear = onDisappear
+            self.onUpload = onUpload
         }
     }
     
@@ -61,7 +66,8 @@ struct InputProductDetailView: View {
                 product: detail.product,
                 boundingBox: detail.boundingBox,
                 nutritionTablePhoto: detail.nutritionTablePhoto,
-                editable: detail.editable
+                editable: detail.editable,
+                onUpload: detail.onUpload
             )
         )
         self.onAppear = detail.onAppear
@@ -469,14 +475,14 @@ fileprivate struct NutTableSession: View {
                 NutRow(
                     leading: "營養標籤",
                     unit: "",
-                    editable: editable,
+                    editable: false,
                     onChanged: { },
                     trailing: Binding<String?>.constant("每100毫升")
                 )
                 NutRow(
                     leading: "Nutrition Information",
                     unit: "",
-                    editable: editable,
+                    editable: false,
                     onChanged: { },
                     trailing: Binding<String?>.constant("Per 100mL")
                 )

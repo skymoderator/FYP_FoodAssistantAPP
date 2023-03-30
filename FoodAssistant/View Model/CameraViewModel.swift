@@ -172,7 +172,8 @@ class CameraViewModel: ObservableObject {
                             boundingBox: ntDetection.boundingBox,
                             nutritionTablePhoto: displayedPhoto,
                             /// This product is on the server record, so its inforamtion cannot be editable
-                            editable: false
+                            editable: false,
+                            onUpload: foodDataService.putData
                         )
                     }
                 } catch {
@@ -190,7 +191,8 @@ class CameraViewModel: ObservableObject {
                             boundingBox: ntDetection.boundingBox,
                             nutritionTablePhoto: displayedPhoto,
                             /// This product is not on the server record, so its inforamtion is editable
-                            editable: true
+                            editable: true,
+                            onUpload: foodDataService.putData
                         )
                     }
                 } catch {

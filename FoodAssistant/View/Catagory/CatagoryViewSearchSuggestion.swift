@@ -17,8 +17,12 @@ extension CatagoryView {
         var onEnter: () -> Void
         var onLeave: () -> Void
         var body: some View {
+            let search: String = search.lowercased()
             let results: [Product] = products
-                .filter({ $0.name.lowercased().contains(search.lowercased()) })
+                .filter({
+                    $0.name.lowercased().contains(search) ||
+                    $0.barcode.contains(search)
+                })
             ForEach(results) { (product: Product) in
                 Button {
                     onClick(product)

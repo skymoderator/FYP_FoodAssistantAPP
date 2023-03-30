@@ -6,6 +6,7 @@
 //
 
 import SwiftDate
+import Foundation
 
 let dummyProducts: [Product] = [
     Product(
@@ -224,7 +225,21 @@ let dummyProducts: [Product] = [
     Product(
         name: "Coke - Can 330mL x 8",
         barcode: "4890008100941",
-        nutrition: nil,
+        nutrition: .init(
+            id: UUID().hashValue,
+            energy: 20,
+            protein: 200,
+            total_fat: 20,
+            saturated_fat: 200,
+            trans_fat: 20,
+            carbohydrates: 200,
+            sugars: 20,
+            sodium: 200,
+            cholesterol: 20,
+            vitaminB2: 200,
+            vitaminB3: 20,
+            vitaminB6: 200
+        ),
         manufacturer: nil,
         brand: "Coca Cola",
         prices: [
@@ -242,7 +257,21 @@ let dummyProducts: [Product] = [
     Product(
         name: "Coke Plus (Zero Sugar) - Bottle 500mL",
         barcode: "4890008101238",
-        nutrition: nil,
+        nutrition: .init(
+            id: UUID().hashValue,
+            energy: 10,
+            protein: 100,
+            total_fat: 10,
+            saturated_fat: 100,
+            trans_fat: 10,
+            carbohydrates: 100,
+            sugars: 10,
+            sodium: 100,
+            cholesterol: 10,
+            vitaminB2: 100,
+            vitaminB3: 10,
+            vitaminB6: 100
+        ),
         manufacturer: nil,
         brand: "Coca Cola",
         prices: [
@@ -265,5 +294,13 @@ let dummyMessages: [ChatBotMessage] = [
         intentType: .productPrice,
         response: "I have found 1 product with the name lemon juice. You can have a look below." ,
         productsResponse: dummyProducts
+    )
+]
+
+let dummyInventory: [Inventory] = [
+    Inventory(
+        name: "BBQ List",
+        description: "My dummy list",
+        products: dummyProducts
     )
 ]
