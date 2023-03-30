@@ -39,6 +39,7 @@ struct EditInventoryView: View {
                     )
                     SimilarProductsSession(
                         inventory: $inventory,
+                        sortBy: $sortBy,
                         similarProducts: similarProducts
                     )
                 }
@@ -184,13 +185,35 @@ fileprivate struct DetailSession: View {
 
 fileprivate struct SimilarProductsSession: View {
     @Binding var inventory: Inventory?
+    @Binding var sortBy: SortBy
     let similarProducts: [Product]
+    func data(_ product: Product) -> Double {
+        guard let n: NutritionInformation = product.nutrition else {
+            return 0
+        }
+        return sortBy == .sugar ? n.sugars : sortBy == .energy ? Double(n.energy) : n.carbohydrates
+    }
     var body: some View {
         if !similarProducts.isEmpty {
             Section {
-                ForEach(similarProducts.sorted(by: { (a: Product, b: Product) in
-                    isAdded(product: a) ? false : isAdded(product: b)
-                })) { (product: Product) in
+                ForEach(
+                    similarProducts
+                        .sorted(by: { (a: Product, b: Product) in
+                            switch sortBy {
+                            case .name:
+                                return a.name < b.name
+                            case .energy:
+                                return a.nutrition?.energy ?? 0 < b.nutrition?.energy ?? 0
+                            case .sugar:
+                                return a.nutrition?.sugars ?? 0 < b.nutrition?.sugars ?? 0
+                            case .carbohydrates:
+                                return a.nutrition?.carbohydrates ?? 0 < b.nutrition?.carbohydrates ?? 0
+                            }
+                        })
+                        .sorted(by: { (a: Product, b: Product) in
+                        isAdded(product: a) ? false : isAdded(product: b)
+                    })
+                ) { (product: Product) in
                     let added: Bool = isAdded(product: product)
                     HStack {
                         if !added {
@@ -206,6 +229,12 @@ fileprivate struct SimilarProductsSession: View {
                             .productFont(.regular, relativeTo: .body)
                             .strikethrough(added, color: .systemRed)
                             .foregroundColor(.primary)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        if sortBy != .name {
+                            Text("\(data(product).formatted())g")
+                                .productFont(.regular, relativeTo: .body)
+                                .foregroundColor(.secondary)
+                        }
                     }
                 }
                 .animation(.easeInOut, value: similarProducts)
@@ -256,7 +285,7 @@ fileprivate struct ProductsSession: View {
                                 if sortBy == .sugar {
                                     Text("\((product.nutrition?.sugars ?? 0).formatted())g")
                                 } else if sortBy == .energy {
-                                    Text("\((product.nutrition?.sugars ?? 0).formatted())kJ")
+                                    Text("\((product.nutrition?.energy ?? 0).formatted())kJ")
                                 } else if sortBy == .carbohydrates {
                                     Text("\((product.nutrition?.carbohydrates ?? 0).formatted())g")
                                 }

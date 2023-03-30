@@ -126,4 +126,8 @@ class CatagoryViewModel: ObservableObject {
         }
     }
     
+    func onRefresh() {
+        foodsService.loadData()
+    }
+    
 }

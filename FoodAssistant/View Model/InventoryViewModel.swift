@@ -34,12 +34,25 @@ class InventoryViewModel: ObservableObject {
         
         self._foodDataService = Published(wrappedValue: dataSource)
         foodDataService.objectWillChange.sink { [weak self] in
-            self?.objectWillChange.send()
+            guard let self = self else { return }
+            self.updateInventories()
+            self.objectWillChange.send()
         }
         .store(in: &anyCancellables)
     }
     
     func updateInventories() {
+        if foodDataService.products.isEmpty {
+            return
+        }
+        /// - Note: Since Inventories are stored in user default, which maybe outdated
+        /// in term of product information, so everytime user launch the page,
+        /// we need to refetch the products to update them with latest information
+        for (index, inv) in self.inventories.enumerated() {
+            /// - Note: using compactMap because if the locally stored product is not present in database
+            /// that means the product is possibly deleted recently, so we need to sync this deletion here
+            self.inventories[index].products = inv.products.compactMap(self.foodDataService.updateProduct)
+        }
         if let encoded: Data = try? JSONEncoder().encode(inventories) {
             UserDefaults.standard.set(encoded, forKey: "inventories")
         }

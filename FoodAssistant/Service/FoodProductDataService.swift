@@ -34,7 +34,7 @@ class FoodProductDataService: ObservableObject {
     }
     
     func loadData() {
-        isLoading = true
+//        isLoading = true
         AppState
             .shared
             .dataService
@@ -136,5 +136,17 @@ class FoodProductDataService: ObservableObject {
         return products.filter {
             $0.barcode.contains(barcode)
         }
+    }
+    
+    /// Update the given product with latest info
+    ///
+    /// - Parameters:
+    ///     - oldProduct: The old product to be updated
+    /// - Returns: The same product but with newest information
+    func updateProduct(oldProduct: Product) -> Product? {
+        guard let index: Int = products.firstIndex(of: oldProduct) else {
+            return nil
+        }
+        return products[index]
     }
 }

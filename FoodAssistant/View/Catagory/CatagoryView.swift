@@ -41,7 +41,8 @@ struct CatagoryView: View {
                             products: cvm.catProductsDict,
                             colors: cvm.colors,
                             ns: ns,
-                            screenHeight: screenSize.height
+                            screenHeight: screenSize.height,
+                            onRefresh: cvm.onRefresh
                         )
                     } else {
                         GalleryView(
@@ -130,6 +131,7 @@ fileprivate struct ListView: View {
     let colors: [String : Color]
     let ns: Namespace.ID
     let screenHeight: CGFloat
+    let onRefresh: () -> Void
     
     var body: some View {
         List {
@@ -148,6 +150,9 @@ fileprivate struct ListView: View {
                     .frame(height: screenHeight/8)
                     .opacity(0)
             }
+        }
+        .refreshable {
+            onRefresh()
         }
         .edgesIgnoringSafeArea(.bottom)
     }

@@ -28,7 +28,8 @@ struct InventoryView: View {
                         searchingText: $vm.searchingText,
                         editingInventory: $vm.editingInventory,
                         inventories: vm.inventories,
-                        summaryType: vm.summaryType
+                        summaryType: vm.summaryType,
+                        onRefresh: vm.updateInventories
                     )
                 }
             }
@@ -75,6 +76,7 @@ fileprivate struct InventoryListView: View {
     @Binding var editingInventory: Inventory?
     let inventories: [Inventory]
     let summaryType: InventoryViewModel.SummaryCategory?
+    let onRefresh: () -> Void
     var filteredInventories: [Inventory] {
         if searchingText.isEmpty {
             return inventories
@@ -93,6 +95,9 @@ fileprivate struct InventoryListView: View {
             )
         }
         .searchable(text: $searchingText, prompt: "e.g. BBQ List")
+        .refreshable {
+            onRefresh()
+        }
         .animation(.easeInOut, value: filteredInventories)
     }
 }
@@ -112,7 +117,7 @@ fileprivate struct InventoryCell: View {
                     Image(systemName: "list.bullet.circle.fill")
                         .resizable()
                         .scaledToFit()
-                        .foregroundColor(.random)
+                        .foregroundColor(inventory.color)
                         .frame(width: 20, height: 20)
                     VStack(alignment: .leading) {
                         Text(inventory.name)
@@ -146,24 +151,36 @@ fileprivate struct InventoryCell: View {
                     )
                 }
             }
-            .padding(.top, summaryType == nil ? 0 : 16)
-            .animation(.easeInOut, value: summaryType   )
         }
+        .padding(.top)
+        .animation(.easeInOut, value: summaryType)
+        .listRowInsets(
+            EdgeInsets(
+                top: 0,
+                leading: 16,
+                bottom: 16,
+                trailing: 16
+            )
+        )
     }
 }
 
 fileprivate struct Graph: View {
+    @State private var isAppeared: Bool = false
     let products: [Product]
     let summaryType: InventoryViewModel.SummaryCategory
     var datas: [Double] {
+        var data: [Double]
+        let products: [Product] = products.sorted(by: \.id)
         switch summaryType {
         case .energy:
-            return products.compactMap(\.nutrition?.sugars)
+            data = products.compactMap(\.nutrition?.energy).compactMap({Double($0)})
         case .sugar:
-            return products.compactMap(\.nutrition?.sugars)
+            data = products.compactMap(\.nutrition?.sugars)
         case .carbohydrates:
-            return products.compactMap(\.nutrition?.carbohydrates)
+            data = products.compactMap(\.nutrition?.carbohydrates)
         }
+        return data.filter({ $0 > 0 })
     }
     var body: some View {
         let grams: [Double] = datas
@@ -173,7 +190,6 @@ fileprivate struct Graph: View {
                 Text("\(summaryType.rawValue) Consumption")
                     .productFont(.bold, relativeTo: .headline)
                     .foregroundColor(.primary)
-                Divider()
                 Chart(0..<datas.count, id: \.self) { (index: Int) in
                     BarMark(
                         x: .value("index", "\(index)"),
@@ -203,16 +219,10 @@ fileprivate struct Graph: View {
                     .productFont(.regular, relativeTo: .body)
                     .foregroundColor(.secondary)
             }
-            .padding(.vertical)
-        } else {
-            Chart {
-                
-            }
-            .overlay {
-                Text("No Data...")
-                    .productFont(.bold, relativeTo: .title3)
-                    .foregroundColor(.systemBlue)
-            }
+            .frame(maxHeight: isAppeared ? .infinity : 0)
+            .animation(.easeInOut, value: isAppeared)
+            .onAppear { isAppeared = true }
+            .onDisappear { isAppeared = false }
         }
     }
 }
