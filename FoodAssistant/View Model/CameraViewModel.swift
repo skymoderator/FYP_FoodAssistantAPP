@@ -164,8 +164,8 @@ class CameraViewModel: ObservableObject {
             do {
                 var product: Product = try await getProductIfItExistOnServer()
                 do {
-                    let nutritionInfo: NutritionInformation = try await performSecondStage(on: croppedTable)
-                    product.nutrition = nutritionInfo
+//                    let nutritionInfo: NutritionInformation = try await performSecondStage(on: croppedTable)
+//                    product.nutrition = nutritionInfo
                     await MainActor.run { [product] in
                         self.detail = InputProductDetailView.Detail(
                             product: product,

@@ -321,17 +321,24 @@ fileprivate struct InfoSession: View {
 }
 
 fileprivate struct PricePopover: View {
-    let datas: [(Date, Double)]
+    @State var selectedSupermarket: Supermarket
+    let superMarkets: [Supermarket]
+    let datas: [Supermarket : [(Date, Double)]]
     let minPrice: Double
     let maxPrice: Double
     let avgPrice: Double
     init(prices: [ProductPrice]) {
-        let dates: [Date] = prices.map { $0.date }
-        let prices: [Double] = prices.map { $0.price }
-        datas = zip(dates, prices).map { ($0, $1) }
-        minPrice = prices.min() ?? 0
-        maxPrice = prices.max() ?? 0
-        avgPrice = prices.reduce(0.0, +)/Double(prices.count)
+        superMarkets = Array(Set(prices.map(\.supermarket)))
+        datas = Dictionary(uniqueKeysWithValues: superMarkets.map({ (s: Supermarket) in
+            let prices: [ProductPrice] = prices.filter { $0.supermarket == s }
+            let dates: [Date] = prices.map { $0.date }
+            let price: [Double] = prices.map { $0.price }
+            return (s, Array(zip(dates, price)))
+        }))
+        minPrice = prices.min(by: { $0.price < $1.price })?.price ?? 0
+        maxPrice = prices.max(by: { $0.price > $1.price })?.price ?? 0
+        avgPrice = prices.reduce(0.0, { $0 + $1.price })/Double(prices.count)
+        selectedSupermarket = superMarkets.first ?? .aeon
     }
     var body: some View {
         Templates.Container(
@@ -345,10 +352,16 @@ fileprivate struct PricePopover: View {
                     Text("Price Trend")
                         .foregroundColor(.primary)
                         .productFont(.bold, relativeTo: .title2)
-                    Text("Source: Centre for Food Safety. [Learn More](https://data.gov.hk/en-data/dataset/cc-pricewatch-pricewatch)")
+                    Text("Source: Consumer Conucil. [Learn More](https://data.gov.hk/en-data/dataset/cc-pricewatch-pricewatch)")
                         .foregroundColor(.secondary)
                         .productFont(.regular, relativeTo: .body)
-                    Chart(datas, id: \.0) { (data: (Date, Double)) in
+                    Picker(selection: $selectedSupermarket) {
+                        ForEach(superMarkets, id: \.self) { (sm: Supermarket) in
+                            Text(sm.rawValue)
+                        }
+                    }
+                        .pickerStyle(.segmented)
+                    Chart(datas[selectedSupermarket] ?? [], id: \.0) { (data: (Date, Double)) in
                         LineMark(
                             x: .value("Date", data.0),
                             y: .value("Price", data.1)
@@ -614,7 +627,7 @@ fileprivate struct NutTableSession: View {
                 Text("Nutrition Table")
                     .foregroundColor(.primary)
                     .productFont(.bold, relativeTo: .title3)
-                Text("This product contains lots of sugar, think twice before eating")
+                Text("Source: A.I. Nutrition Information Extraction Pipeline")
                 Chart(datas, id: \.0) { (data: (String, Double)) in
                     BarMark(
                         x: .value("Nutrition Info", data.0),
