@@ -13,7 +13,7 @@ class InventoryViewModel: ObservableObject {
     @Published var inventories: [Inventory]
     @Published var searchingText: String
     @Published var editingInventory: Inventory?
-    @Published var summaryType: SummaryCategory? = nil
+    @Published var summaryType: SummaryCategory? = .energy
     
     var anyCancellables = Set<AnyCancellable>()
     init(dataSource: FoodProductDataService) {
