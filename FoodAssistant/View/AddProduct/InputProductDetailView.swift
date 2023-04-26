@@ -555,7 +555,7 @@ fileprivate struct NutTableSession: View {
             }
             NutRow(
                 leading: "鈉 / Sodium",
-                unit: "克/g",
+                unit: "毫克/mg",
                 editable: editable,
                 onChanged: onChanged,
                 trailing: $sodium
