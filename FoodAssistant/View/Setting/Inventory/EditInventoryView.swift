@@ -12,7 +12,7 @@ struct EditInventoryView: View {
     @State var showSearchProductView: Bool = false
     @State var searchedProduct: Product?
     @State var similarProducts: [Product] = []
-    @State fileprivate var sortBy: SortBy = .name
+    @State fileprivate var sortBy: SortBy = .sugar
     @Binding var inventory: Inventory?
     @Binding var inventories: [Inventory]
     
