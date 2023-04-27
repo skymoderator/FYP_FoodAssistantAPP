@@ -308,7 +308,8 @@ fileprivate struct DisplayedImageView: View {
                     /// To avoid sending multiple request to server at the same time
                     if !isLoadingInputProductDetailView {
                         didAnalysisButtonCliced?()
-                    }
+                        print("pressed")
+                    } else { print("isLoadingInputProductDetailView") }
                 } label: {
                     Group {
                         if isLoadingInputProductDetailView {

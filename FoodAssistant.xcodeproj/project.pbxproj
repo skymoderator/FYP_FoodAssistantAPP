@@ -784,6 +784,7 @@
 				8894EBCC29262DF000204185 /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */,
 				882631D3294C3899003080DF /* XCRemoteSwiftPackageReference "Popovers" */,
 				88C2292C29535BAC005E5A27 /* XCRemoteSwiftPackageReference "SwiftDate" */,
+				8843CC1729FA99B600C23012 /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
 			);
 			productRefGroup = 886C76E129055D7000B1026D /* Products */;
 			projectDirPath = "";
@@ -1316,6 +1317,14 @@
 			requirement = {
 				branch = main;
 				kind = branch;
+			};
+		};
+		8843CC1729FA99B600C23012 /* XCRemoteSwiftPackageReference "SwiftyJSON" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SwiftyJSON/SwiftyJSON.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
 			};
 		};
 		8894EBC929262DB000204185 /* XCRemoteSwiftPackageReference "SwiftUIX" */ = {

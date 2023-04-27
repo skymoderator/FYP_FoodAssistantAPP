@@ -183,7 +183,7 @@ public class CameraService: NSObject, Identifiable, ObservableObject {
             var defaultVideoDevice: AVCaptureDevice?
             
             // if let backCameraDevice = AVCaptureDevice.default(.builtInUltraWideCamera, for: .video, position: .back) {
-            if let backCameraDevice: AVCaptureDevice = AVCaptureDevice.default(.builtInDualCamera, for: .video, position: .back) {
+            if let backCameraDevice: AVCaptureDevice = AVCaptureDevice.default(.builtInUltraWideCamera, for: .video, position: .back) {
                 // If a rear dual camera is not available, default to the rear wide angle camera.
                 defaultVideoDevice = backCameraDevice
             } else if let frontCameraDevice: AVCaptureDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front) {
@@ -353,7 +353,12 @@ public class CameraService: NSObject, Identifiable, ObservableObject {
         }
     }
     
-    public func focus(with focusMode: AVCaptureDevice.FocusMode, exposureMode: AVCaptureDevice.ExposureMode, at devicePoint: CGPoint, monitorSubjectAreaChange: Bool) {
+    public func focus(
+        with focusMode: AVCaptureDevice.FocusMode,
+        exposureMode: AVCaptureDevice.ExposureMode,
+        at devicePoint: CGPoint,
+        monitorSubjectAreaChange: Bool
+    ) {
         sessionQueue.async { [weak self] in
             guard let self = self else { return }
             guard let device = self.videoDeviceInput?.device else { return }
