@@ -43,7 +43,7 @@ class CameraViewModel: ObservableObject {
     /// to display the activity indicator view on button to let user know that the app is waiting for server response, not
     /// freezing
     @Published var isLoadingInputProductDetailView: Bool = false
-    @Published var errorMessage: String?
+    @Published var warningMessage: String?
     // MARK: Cancellables to Store All Subscribers
     var anyCancellables = Set<AnyCancellable>()
     
@@ -148,7 +148,12 @@ class CameraViewModel: ObservableObject {
     /// Show the `InputProductDetailView` via sheet
     func didAnalysisButtonCliced() {
         /// Don't do anything if user didn't input/scan the barcode or the model is still initializing
-        if scanBarcode.barcode.isEmpty || ntDetection.model == nil {
+        if ntDetection.model == nil {
+            warningMessage = "Model is still initializing, please try again later."
+            return
+        }
+        if scanBarcode.barcode.isEmpty {
+            warningMessage = "Barcode is missing! Please scan the barcode first before analysing the product."
             return
         }
         
@@ -184,7 +189,7 @@ class CameraViewModel: ObservableObject {
                     print("Couldn't post image: \(error)")
                     await MainActor.run {
                         isLoadingInputProductDetailView = false
-                        errorMessage = error.localizedDescription
+                        warningMessage = error.localizedDescription
                     }
                 }
             } catch {
@@ -206,7 +211,7 @@ class CameraViewModel: ObservableObject {
                     print("Couldn't post image: \(error)")
                     await MainActor.run {
                         isLoadingInputProductDetailView = false
-                        errorMessage = error.localizedDescription
+                        warningMessage = error.localizedDescription
                     }
                 }
             }

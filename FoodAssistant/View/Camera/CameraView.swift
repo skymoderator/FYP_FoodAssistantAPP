@@ -121,10 +121,10 @@ struct CameraView: View {
             Text(cvm.scanBarcode.errorMessage ?? "")
         }
         .alert(
-            "Error",
+            "Warning",
             isPresented: Binding<Bool>(
-                get: { cvm.errorMessage != nil },
-                set: { _ in cvm.errorMessage = nil }
+                get: { cvm.warningMessage != nil },
+                set: { _ in cvm.warningMessage = nil }
             )
         ) {
             Button(role: .cancel) {
@@ -133,7 +133,7 @@ struct CameraView: View {
                 Text("OK")
             }
         } message: {
-            Text(cvm.errorMessage ?? "")
+            Text(cvm.warningMessage ?? "")
         }
     }
 }
