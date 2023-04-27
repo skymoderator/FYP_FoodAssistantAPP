@@ -43,6 +43,7 @@ class CameraViewModel: ObservableObject {
     /// to display the activity indicator view on button to let user know that the app is waiting for server response, not
     /// freezing
     @Published var isLoadingInputProductDetailView: Bool = false
+    @Published var errorMessage: String?
     // MARK: Cancellables to Store All Subscribers
     var anyCancellables = Set<AnyCancellable>()
     
@@ -181,7 +182,10 @@ class CameraViewModel: ObservableObject {
                     }
                 } catch {
                     print("Couldn't post image: \(error)")
-                    isLoadingInputProductDetailView = false
+                    await MainActor.run {
+                        isLoadingInputProductDetailView = false
+                        errorMessage = error.localizedDescription
+                    }
                 }
             } catch {
                 do {
@@ -200,7 +204,10 @@ class CameraViewModel: ObservableObject {
                     }
                 } catch {
                     print("Couldn't post image: \(error)")
-                    isLoadingInputProductDetailView = false
+                    await MainActor.run {
+                        isLoadingInputProductDetailView = false
+                        errorMessage = error.localizedDescription
+                    }
                 }
             }
         }
