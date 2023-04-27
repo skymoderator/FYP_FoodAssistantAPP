@@ -179,4 +179,9 @@ class MainViewModel: ObservableObject {
         }
     }
     
+    func onCategoryViewAddProductButtonClicked() {
+        bottomBarVM.scrollTo(page: .two, animated: false)
+        cvm.warningMessage = "To add product to the database, please scan the barcode and nutrition table here."
+    }
+    
 }

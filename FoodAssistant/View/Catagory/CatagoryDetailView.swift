@@ -265,7 +265,10 @@ fileprivate struct TinyDivider: View {
 
 struct CatagoryDetailView_Previews: PreviewProvider {
     @StateObject static var mvm = MainViewModel()
-    @StateObject static var cvm = CatagoryViewModel(foodService: FoodProductDataService())
+    @StateObject static var cvm = CatagoryViewModel(
+        foodService: FoodProductDataService(),
+        onAddProductButtonClicked: { }
+    )
     static let category: String = "Beer / Wines / Spirits"
     static let detail = CatagoryDetailView.CategoryDetail(
         category: category,

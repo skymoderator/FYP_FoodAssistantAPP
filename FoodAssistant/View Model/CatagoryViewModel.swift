@@ -40,6 +40,8 @@ class CatagoryViewModel: ObservableObject {
     @Published var colors: [String : Color] = [:]
     @Published var navigationPath = NavigationPath()
     
+    let onAddProductButtonClicked: () -> Void
+    
     var searchedCatagory: Binding<String> {
         Binding<String>(get: {
             self._searchedCatagory
@@ -79,12 +81,17 @@ class CatagoryViewModel: ObservableObject {
             ButtonItem(label: "Add Product", systemName: "plus") {
                 /// TODO: Navigate user to `CameraView` and prompt a message asking user
                 /// to scan the barcode/product in that view
+                self.onAddProductButtonClicked()
             }
         }
     }
     
-    init(foodService: FoodProductDataService) {
+    init(
+        foodService: FoodProductDataService,
+        onAddProductButtonClicked: @escaping () -> Void
+    ) {
         self._foodsService = Published(wrappedValue: foodService)
+        self.onAddProductButtonClicked = onAddProductButtonClicked
         foodsService.objectWillChange.sink { [weak self] _ in
             self?.objectWillChange.send()
         }

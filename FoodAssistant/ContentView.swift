@@ -21,7 +21,8 @@ struct ContentView: View {
                         foodDataService: mvm.foodDataService,
                         screenSize: screenSize,
                         onScanBarcodeViewLoad: mvm.onScanBarcodeViewLoad,
-                        onScanBarcodeViewUnload: mvm.onScanBarcodeViewUnload
+                        onScanBarcodeViewUnload: mvm.onScanBarcodeViewUnload,
+                        onAddProductButtonClicked: mvm.onCategoryViewAddProductButtonClicked
                     )
                     CameraView(
                         cvm: mvm.cvm,

@@ -21,9 +21,15 @@ struct CatagoryView: View {
         foodDataService: FoodProductDataService,
         screenSize: CGSize,
         onScanBarcodeViewLoad: @escaping () -> Void,
-        onScanBarcodeViewUnload: @escaping () -> Void
+        onScanBarcodeViewUnload: @escaping () -> Void,
+        onAddProductButtonClicked: @escaping () -> Void
     ) {
-        self._cvm = StateObject(wrappedValue: CatagoryViewModel(foodService: foodDataService))
+        self._cvm = StateObject(
+            wrappedValue: CatagoryViewModel(
+                foodService: foodDataService,
+                onAddProductButtonClicked: onAddProductButtonClicked
+            )
+        )
         self.screenSize = screenSize
         self.onScanBarcodeViewLoad = onScanBarcodeViewLoad
         self.onScanBarcodeViewUnload = onScanBarcodeViewUnload
@@ -324,7 +330,8 @@ struct ProductView_Previews: PreviewProvider {
                 foodDataService: FoodProductDataService(),
                 screenSize: size,
                 onScanBarcodeViewLoad: { },
-                onScanBarcodeViewUnload: { }
+                onScanBarcodeViewUnload: { },
+                onAddProductButtonClicked: { }
             )
         }
     }
