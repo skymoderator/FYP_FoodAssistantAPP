@@ -130,4 +130,8 @@ class CatagoryViewModel: ObservableObject {
         foodsService.loadData()
     }
     
+    func onProductDetailUpload(product: Product) {
+        foodsService.putData(product: product)
+    }
+    
 }

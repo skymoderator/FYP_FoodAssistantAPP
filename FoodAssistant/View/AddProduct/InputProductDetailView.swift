@@ -105,6 +105,7 @@ struct InputProductDetailView: View {
                 vitaminB2: $vm.vitaminB2,
                 vitaminB3: $vm.vitaminB3,
                 vitaminB6: $vm.vitaminB6,
+                isDrink: vm.isDrink,
                 onChanged: vm.onAnyTextFieldChanged
             )
             if let bbox: BoundingBox = vm.boundingBox,
@@ -479,6 +480,7 @@ fileprivate struct NutTableSession: View {
     @Binding var vitaminB2: String?
     @Binding var vitaminB3: String?
     @Binding var vitaminB6: String?
+    let isDrink: Bool
     let editable: Bool = true
     let onChanged: () -> Void
     
@@ -490,14 +492,18 @@ fileprivate struct NutTableSession: View {
                     unit: "",
                     editable: false,
                     onChanged: { },
-                    trailing: Binding<String?>.constant("每100毫升")
+                    trailing: Binding<String?>.constant(
+                        isDrink ? "每100毫升" : "每100克"
+                    )
                 )
                 NutRow(
                     leading: "Nutrition Information",
                     unit: "",
                     editable: false,
                     onChanged: { },
-                    trailing: Binding<String?>.constant("Per 100mL")
+                    trailing: Binding<String?>.constant(
+                        isDrink ? "Per 100mL" : "Per 100g"
+                    )
                 )
             }
             NutRow(

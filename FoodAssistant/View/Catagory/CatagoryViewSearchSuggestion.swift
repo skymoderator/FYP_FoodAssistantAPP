@@ -16,6 +16,7 @@ extension CatagoryView {
         let onClick: (Product) -> Void
         var onEnter: () -> Void
         var onLeave: () -> Void
+        let onProductDetailUpload: (Product) -> Void
         var body: some View {
             let search: String = search.lowercased()
             let results: [Product] = products
@@ -32,7 +33,8 @@ extension CatagoryView {
                         product: product,
                         color: .systemBlue,
                         onEnterInputView: onEnter,
-                        onBackFromInputView: onLeave
+                        onBackFromInputView: onLeave,
+                        onProductDetailUpload: onProductDetailUpload
                     )
                 }
             }

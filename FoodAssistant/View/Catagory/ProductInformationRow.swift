@@ -15,13 +15,14 @@ struct ProductInformationRow: View {
     let color: Color
     let onEnterInputView: () -> Void
     let onBackFromInputView: () -> Void
+    let onProductDetailUpload: (Product) -> Void
     
     var detail: InputProductDetailView.Detail {
         InputProductDetailView.Detail(
             product: product,
             onAppear: onEnterInputView,
             onDisappear: onBackFromInputView,
-            onUpload: mvm.foodDataService.putData
+            onUpload: onProductDetailUpload
         )
     }
     

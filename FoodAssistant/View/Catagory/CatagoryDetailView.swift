@@ -22,14 +22,17 @@ struct CatagoryDetailView: View {
     
     let detail: CategoryDetail
     let screenHeight: CGFloat
+    let onProductDetailUpload: (Product) -> Void
     
     init(
         detail: CategoryDetail,
-        screenHeight: CGFloat
+        screenHeight: CGFloat,
+        onProductDetailUpload: @escaping (Product) -> Void
     ) {
         self._cdvm = StateObject(wrappedValue: CatagoryDetailViewModel(products: detail.products))
         self.detail = detail
         self.screenHeight = screenHeight
+        self.onProductDetailUpload = onProductDetailUpload
     }
     
     var body: some View {
@@ -87,7 +90,8 @@ struct CatagoryDetailView: View {
                     },
                     onBackFromInputView: {
                         cdvm.onNavigateToInputView(mvm: mvm, isEntering: false)
-                    }
+                    },
+                    onProductDetailUpload: onProductDetailUpload
                 )
                 .equatable()
             }
@@ -158,6 +162,7 @@ fileprivate struct AlphabetSessions: View, Equatable {
     let parentSize: CGSize
     let onEnterInputView: () -> Void
     let onBackFromInputView: () -> Void
+    let onProductDetailUpload: (Product) -> Void
     var body: some View {
         LazyVStack(spacing: 0) {
             ForEach(characters) { (pc: PC) in
@@ -175,7 +180,8 @@ fileprivate struct AlphabetSessions: View, Equatable {
                     ns: ns,
                     onEnterInputView: onEnterInputView,
                     onBackFromInputView: onBackFromInputView,
-                    oldMinY: pc.minY
+                    oldMinY: pc.minY,
+                    onProductDetailUpload: onProductDetailUpload
                 )
                 .equatable()
             }
@@ -205,6 +211,7 @@ fileprivate struct AlphabetSession: View, Equatable {
     let onEnterInputView: () -> Void
     let onBackFromInputView: () -> Void
     let oldMinY: CGFloat
+    let onProductDetailUpload: (Product) -> Void
     var body: some View {
         VStack(alignment: .leading) {
             Button {
@@ -232,7 +239,8 @@ fileprivate struct AlphabetSession: View, Equatable {
                         product: p,
                         color: color,
                         onEnterInputView: onEnterInputView,
-                        onBackFromInputView: onBackFromInputView
+                        onBackFromInputView: onBackFromInputView,
+                        onProductDetailUpload: onProductDetailUpload
                     )
                 }
             }
@@ -269,7 +277,11 @@ struct CatagoryDetailView_Previews: PreviewProvider {
         GeometryReader { (proxy: GeometryProxy) in
             let height: CGFloat = proxy.size.height
             NavigationStack {
-                CatagoryDetailView(detail: detail, screenHeight: height)
+                CatagoryDetailView(
+                    detail: detail,
+                    screenHeight: height,
+                    onProductDetailUpload: mvm.foodDataService.putData
+                )
             }
         }
     }

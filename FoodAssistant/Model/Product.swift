@@ -101,6 +101,10 @@ struct Product: IdentifyEquateCodeHashable {
         case category3 = "category_3"
         case photo = "photo"
     }
+    
+    var isDrink: Bool {
+        category1 == "Drinks" || category2 == "Drinks" || category3 == "Drinks"
+    }
 }
 
 struct ProductPrice: IdentifyEquateCodeHashable {

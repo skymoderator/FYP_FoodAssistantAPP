@@ -42,7 +42,8 @@ struct CatagoryView: View {
                             colors: cvm.colors,
                             ns: ns,
                             screenHeight: screenSize.height,
-                            onRefresh: cvm.onRefresh
+                            onRefresh: cvm.onRefresh,
+                            onProductDetailUpload: cvm.onProductDetailUpload
                         )
                     } else {
                         GalleryView(
@@ -50,7 +51,8 @@ struct CatagoryView: View {
                             filteredCats: cvm.filteredCats,
                             products: cvm.catProductsDict,
                             colors: cvm.colors,
-                            screenHeight: screenSize.height
+                            screenHeight: screenSize.height,
+                            onProductDetailUpload: cvm.onProductDetailUpload
                         )
                     }
                 }
@@ -74,14 +76,19 @@ struct CatagoryView: View {
                     products: cvm.foodsService.products,
                     onClick: cvm.onSearchSuggestionClicked,
                     onEnter: { cvm.onNavigateToInputView(mvm: mvm, isEntering: true) },
-                    onLeave: { cvm.onNavigateToInputView(mvm: mvm, isEntering: false) }
+                    onLeave: { cvm.onNavigateToInputView(mvm: mvm, isEntering: false) },
+                    onProductDetailUpload: cvm.onProductDetailUpload
                 )
             }
             .navigationDestination(for: CatagoryViewModel.NavigationRoute.self) {
                 (detail: CatagoryViewModel.NavigationRoute) in
                 switch detail {
                 case .categoryDetailView(let categoryDetail):
-                    CatagoryDetailView(detail: categoryDetail, screenHeight: screenSize.height)
+                    CatagoryDetailView(
+                        detail: categoryDetail,
+                        screenHeight: screenSize.height,
+                        onProductDetailUpload: cvm.onProductDetailUpload
+                    )
                 case .inputProductDetailView(let detail):
                     InputProductDetailView(detail: detail)
                 }
@@ -132,6 +139,7 @@ fileprivate struct ListView: View {
     let ns: Namespace.ID
     let screenHeight: CGFloat
     let onRefresh: () -> Void
+    let onProductDetailUpload: (Product) -> Void
     
     var body: some View {
         List {
@@ -142,7 +150,8 @@ fileprivate struct ListView: View {
                         ns: ns,
                         products: products[cat] ?? [],
                         color: colors[cat] ?? .black,
-                        screenHeight: screenHeight
+                        screenHeight: screenHeight,
+                        onProductDetailUpload: onProductDetailUpload
                     )
                 }
             } footer: {
@@ -163,6 +172,7 @@ fileprivate struct ListView: View {
         let products: [Product]
         let color: Color
         let screenHeight: CGFloat
+        let onProductDetailUpload: (Product) -> Void
         
         @ViewBuilder
         func destination(isPreview: Bool) -> some View {
@@ -173,7 +183,8 @@ fileprivate struct ListView: View {
                     color: color,
                     isPreview: isPreview
                 ),
-                screenHeight: screenHeight
+                screenHeight: screenHeight,
+                onProductDetailUpload: onProductDetailUpload
             )
         }
         
@@ -216,6 +227,7 @@ fileprivate struct GalleryView: View {
     let products: [String : [Product]]
     let colors: [String : Color]
     let screenHeight: CGFloat
+    let onProductDetailUpload: (Product) -> Void
     
     var body: some View {
         ScrollView {
@@ -228,7 +240,8 @@ fileprivate struct GalleryView: View {
                             ns: ns,
                             products: products[cat] ?? [],
                             color: colors[cat] ?? .black,
-                            screenHeight: screenHeight
+                            screenHeight: screenHeight,
+                            onProductDetailUpload: onProductDetailUpload
                         )
                     }
                 }
@@ -243,6 +256,7 @@ fileprivate struct GalleryView: View {
         let products: [Product]
         let color: Color
         let screenHeight: CGFloat
+        let onProductDetailUpload: (Product) -> Void
         
         @ViewBuilder
         func destination(isPreview: Bool) -> some View {
@@ -253,7 +267,8 @@ fileprivate struct GalleryView: View {
                     color: color,
                     isPreview: isPreview
                 ),
-                screenHeight: screenHeight
+                screenHeight: screenHeight,
+                onProductDetailUpload: onProductDetailUpload
             )
         }
         

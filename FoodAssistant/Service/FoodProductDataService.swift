@@ -35,6 +35,10 @@ class FoodProductDataService: ObservableObject {
     
     func loadData() {
 //        isLoading = true
+        let filteredCategories: [String] = [
+            "Personal care",
+            "Household / Pet food and care"
+        ]
         AppState
             .shared
             .dataService
@@ -57,7 +61,8 @@ class FoodProductDataService: ObservableObject {
                 }
             } receiveValue: { [weak self] (products: [Product]) in
                 self?.products = products.filter { (p: Product) in
-                    !p.name.lowercased().contains("condom".lowercased())
+                    !p.name.lowercased().contains("condom".lowercased()) &&
+                    !filteredCategories.contains(p.category1 ?? "")
                 }
                 print("Successfully loaded \(products.count) food products.")
             }

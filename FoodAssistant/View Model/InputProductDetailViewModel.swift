@@ -32,6 +32,7 @@ class InputProductDetailViewModel: ObservableObject {
     @Published var hasEditedAnything: Bool = false
     
     let editable: Bool
+    let isDrink: Bool
     let onUpload: ((Product) -> Void)?
     var cancellables = Set<AnyCancellable>()
     
@@ -46,6 +47,7 @@ class InputProductDetailViewModel: ObservableObject {
         self.boundingBox = boundingBox
         self.nutritionTablePhoto = nutritionTablePhoto
         self.editable = editable
+        self.isDrink = product.isDrink
         self.onUpload = onUpload
         
         barcode = product.barcode
