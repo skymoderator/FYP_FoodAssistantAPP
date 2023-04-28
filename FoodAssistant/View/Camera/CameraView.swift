@@ -308,8 +308,8 @@ fileprivate struct DisplayedImageView: View {
                     /// To avoid sending multiple request to server at the same time
                     if !isLoadingInputProductDetailView {
                         didAnalysisButtonCliced?()
-                        print("pressed")
-                    } else { print("isLoadingInputProductDetailView") }
+                    }
+                    UIImpactFeedbackGenerator(style: .light).impactOccurred()
                 } label: {
                     Group {
                         if isLoadingInputProductDetailView {
